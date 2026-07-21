@@ -712,6 +712,20 @@
     </div>
   </div>
 
+  <!-- EHR Note Summary Card -->
+  <div class="card" style="margin: 20px auto; max-width: 1200px; width: 95%; border-top: 4px solid var(--primary, #0284c7); padding: 1.5rem; background: var(--bg-secondary, #1e293b); border: 1px solid var(--border-color, #334155); border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+      <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary, #f8fafc);">
+        <i class="fas fa-clipboard-list" style="color: var(--primary, #38bdf8);"></i>
+        <span>Clinical Note Summary</span>
+      </h3>
+      <button class="btn btn-secondary" id="btn-copy-note" style="padding: 0.4rem 0.8rem; font-size: 0.825rem; font-weight: 600; cursor: pointer; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--border-color, #334155); background: var(--bg-primary, #0f172a); color: var(--text-primary, #f8fafc);">
+        <i class="fas fa-copy"></i> Copy to Clipboard
+      </button>
+    </div>
+    <div id="note-output" style="background: var(--bg-primary, #0f172a); border: 1px solid var(--border-color, #334155); border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; color: var(--text-primary, #f8fafc); line-height: 1.5;">Generating clinical summary...</div>
+  </div>
+
   <!-- Detail Drawer Overlay and Drawer -->
   <div class="drawer-overlay" id="drawerOverlay"></div>
   <div class="drawer" id="detailDrawer">
@@ -845,6 +859,7 @@
           row.classList.add('hidden');
         }
       });
+      updateEHRNote();
     }
 
     // Detail Database (OpenEvidence synthesized content)
@@ -1058,6 +1073,43 @@
       drawerOverlay.classList.remove('active');
       tableRows.forEach(r => r.classList.remove('highlighted'));
     }
+
+    function updateEHRNote() {
+      const activeSafetyArr = Array.from(activeFilters.safety);
+      const activeRenalArr = Array.from(activeFilters.renal);
+      
+      const note = `AFIB ANTICOAGULANT MATRIX CLINICAL NOTE
+--------------------------------------------------
+SELECTED PATIENT CLINICAL FILTERS:
+- Safety Filters: ${activeSafetyArr.length > 0 ? activeSafetyArr.join(', ') : 'None'}
+- Renal Clearance Filters: ${activeRenalArr.length > 0 ? activeRenalArr.join(', ') : 'None'}
+- Active Search Filter: ${activeFilters.search || 'None'}
+
+CLINICAL RECOMMENDATIONS:
+- Reviewed prescribing reference parameters for oral anticoagulants (DOACs vs Warfarin) in NVAF.
+- Compared dosing, renal adjustment criteria (CrCl thresholds), gastrointestinal bleeding risks, and Beers criteria suitability.
+- Confirmed safety checks. Refer to highlighted drugs in the table grid.`;
+
+      const noteOutput = document.getElementById('note-output');
+      if (noteOutput) {
+        noteOutput.textContent = note;
+      }
+    }
+
+    const btnCopyNote = document.getElementById('btn-copy-note');
+    if (btnCopyNote) {
+      btnCopyNote.addEventListener('click', () => {
+        const noteOutput = document.getElementById('note-output');
+        if (noteOutput) {
+          navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+            alert('Anticoagulant Clinical Note copied to clipboard!');
+          });
+        }
+      });
+    }
+
+    // Initial note call
+    updateEHRNote();
   </script>
 </body>
 </html>

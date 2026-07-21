@@ -466,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Scroll to results
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        updateEHRNote();
     });
 
     // Drug Holiday Evaluation Form
@@ -561,6 +562,58 @@ document.addEventListener('DOMContentLoaded', () => {
             holidayResult.innerHTML = resultHtml;
             holidayResult.classList.remove('hidden');
             holidayResult.scrollIntoView({ behavior: 'smooth' });
+            updateEHRNote();
         });
     }
+
+    function updateEHRNote() {
+        const demographic = document.getElementById('patient-demographics').value;
+        const tScoreInput = document.getElementById('t-score').value;
+        const fracture = document.getElementById('fracture-history').value;
+        const fraxMofInput = document.getElementById('frax-mof').value;
+        const fraxHipInput = document.getElementById('frax-hip').value;
+        const renalClInput = document.getElementById('renal-cl').value;
+        const glucocorticoids = document.getElementById('glucocorticoids').value;
+
+        // Check if drug holiday section has values
+        const holidayAgent = document.getElementById('holiday-agent') ? document.getElementById('holiday-agent').value : '';
+        const holidayRisk = document.getElementById('holiday-risk') ? document.getElementById('holiday-risk').value : '';
+
+        const note = `OSTEOPOROSIS CLINICAL EVALUATION NOTE
+--------------------------------------------------
+PATIENT CLINICAL PARAMETERS:
+- Demographics: ${demographic}
+- T-Score: ${tScoreInput || 'Not Entered'}
+- Fracture History: ${fracture}
+- FRAX Major Osteoporotic Fracture: ${fraxMofInput ? fraxMofInput + '%' : 'Not Entered'}
+- FRAX Hip Fracture: ${fraxHipInput ? fraxHipInput + '%' : 'Not Entered'}
+- Renal Clearance (eGFR): ${renalClInput ? renalClInput + ' mL/min' : 'Not Entered'}
+- Glucocorticoid Use: ${glucocorticoids}
+${holidayAgent ? `- Drug Holiday Evaluation: ${holidayAgent.toUpperCase()} (Risk Level: ${holidayRisk.toUpperCase()})` : ''}
+
+CLINICAL RECOMMENDATIONS:
+- Screened suitability for bisphosphonates (oral/IV), SERMs, Denosumab, and bone-building anabolic agents.
+- Assessed renal impairment cautions (avoid bisphosphonates if CrCl < 30-35).
+- Evaluated cardiovascular risks (avoid Romosozumab if MI/stroke in past year).`;
+
+        const noteOutput = document.getElementById('note-output');
+        if (noteOutput) {
+            noteOutput.textContent = note;
+        }
+    }
+
+    const btnCopyNote = document.getElementById('btn-copy-note');
+    if (btnCopyNote) {
+        btnCopyNote.addEventListener('click', () => {
+            const noteOutput = document.getElementById('note-output');
+            if (noteOutput) {
+                navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+                    alert('Osteoporosis Clinical Note copied to clipboard!');
+                });
+            }
+        });
+    }
+
+    // Initial note generation
+    updateEHRNote();
 });

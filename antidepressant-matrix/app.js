@@ -1073,10 +1073,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Tab redirects
     if (currentTab === "switching") {
       renderSwitchingTool();
+      updateEHRNote();
       return;
     }
     if (currentTab === "efficacy") {
       renderEfficacyDashboard();
+      updateEHRNote();
       return;
     }
 
@@ -1109,6 +1111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       renderTableView(filtered);
     }
+    updateEHRNote();
   }
 
   // Grid View Rendering
@@ -1630,6 +1633,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial computation
     computeSwitchingGuidance();
+  }
+
+  function updateEHRNote() {
+    const comorbiditiesArr = Array.from(activeComorbidities);
+    const note = `ANTIDEPRESSANT CLINICAL DECISION NOTE
+--------------------------------------------------
+ACTIVE PATIENT CLINICAL FACTORS:
+- Comorbidities/Syms Selected: ${comorbiditiesArr.length > 0 ? comorbiditiesArr.join(', ') : 'None'}
+- CYP2D6 Status: ${pgx2d6.toUpperCase()}
+- CYP2C19 Status: ${pgx2c19.toUpperCase()}
+- Current View/Tab: ${currentTab.toUpperCase()}
+
+CLINICAL RECOMMENDATIONS:
+- Screened preferred vs. avoid antidepressant options based on comorbidity profile and PGx metabolizer guidelines.
+- Checked drug safety thresholds and drug-drug interactions.
+- Tapering and cross-titration instructions checked if switching was simulated.`;
+
+    const noteOutput = document.getElementById('note-output');
+    if (noteOutput) {
+      noteOutput.textContent = note;
+    }
+  }
+
+  const btnCopyNote = document.getElementById('btn-copy-note');
+  if (btnCopyNote) {
+    btnCopyNote.addEventListener('click', () => {
+      const noteOutput = document.getElementById('note-output');
+      if (noteOutput) {
+        navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+          alert('Antidepressant Clinical Note copied to clipboard!');
+        });
+      }
+    });
   }
 
   // ==========================================

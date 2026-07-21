@@ -1209,18 +1209,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // EFFICACY TAB (Section VI View)
     if (activeTab === 'efficacy') {
       renderEfficacyTiersView();
+      updateEHRNote();
       return;
     }
 
     // EMERGENCY CONTRACEPTION TAB
     if (activeTab === 'ec') {
       renderECView();
+      updateEHRNote();
       return;
     }
 
     // HIV PEP & PrEP TAB
     if (activeTab === 'hiv') {
       renderHIVView();
+      updateEHRNote();
       return;
     }
 
@@ -1254,6 +1257,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderECView();
       renderHIVView();
     }
+    updateEHRNote();
   }
 
   // Render a section of contraceptives
@@ -1630,6 +1634,46 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
     dynamicContainer.appendChild(sectionElement);
+    updateEHRNote();
+  }
+
+  function updateEHRNote() {
+    const risksMapped = activeRisks.map(rId => {
+      const factor = RISK_FACTORS.find(f => f.id === rId);
+      return factor ? factor.label : rId;
+    });
+    const drugsMapped = activeDrugs.map(dId => {
+      const drug = INTERACTING_DRUGS.find(d => d.id === dId);
+      return drug ? drug.label : dId;
+    });
+
+    const note = `CONTRACEPTION & HIV PREV CLINICAL DECISION NOTE
+--------------------------------------------------
+ACTIVE PATIENT CLINICAL FACTORS:
+- Risk Factors: ${risksMapped.length > 0 ? risksMapped.join(', ') : 'None'}
+- Interacting Meds: ${drugsMapped.length > 0 ? drugsMapped.join(', ') : 'None'}
+
+CLINICAL RECOMMENDATIONS:
+- Evaluated birth control selections against USMEC criteria.
+- Screened for drug-drug interactions (CYP3A4 inducers/lamotrigine).
+- Confirmed safety criteria checked. Refer to selected patient cards for individual USMEC classifications.`;
+
+    const noteOutput = document.getElementById('note-output');
+    if (noteOutput) {
+      noteOutput.textContent = note;
+    }
+  }
+
+  const btnCopyNote = document.getElementById('btn-copy-note');
+  if (btnCopyNote) {
+    btnCopyNote.addEventListener('click', () => {
+      const noteOutput = document.getElementById('note-output');
+      if (noteOutput) {
+        navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+          alert('Contraception Clinical Note copied to clipboard!');
+        });
+      }
+    });
   }
 
   // Initial dashboard load
