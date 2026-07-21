@@ -9,7 +9,8 @@ const RISK_FACTORS = [
   { id: 'ischemic_heart_disease', label: 'Ischemic Heart Disease / CAD', category: 'Cardiovascular' },
   { id: 'migraine_aura', label: 'Migraine with Aura (any age)', category: 'Neurological' },
   { id: 'migraine_no_aura_gt35', label: 'Migraine without Aura (Age \u226535)', category: 'Neurological' },
-  { id: 'sbp_gt160_dbp_gt100', label: 'Severe Hypertension (SBP \u2265160 or DBP \u2265100)', category: 'Cardiovascular' },
+  { id: 'htn_controlled', label: 'Hypertension (Controlled or Mild/Moderate: SBP 140\u2013159 or DBP 90\u201399)', category: 'Cardiovascular' },
+  { id: 'sbp_gt160_dbp_gt100', label: 'Severe Hypertension (SBP \u2265160 or DBP \u2265100, or with vascular disease)', category: 'Cardiovascular' },
   { id: 'cardio_valvular', label: 'Complicated Valvular Heart Disease', category: 'Cardiovascular' },
   { id: 'cardio_risk_factors', label: 'Multiple Cardiovascular Risk Factors', category: 'Cardiovascular' },
   { id: 'sickle_cell', label: 'Sickle Cell Disease', category: 'Hematological' },
@@ -760,6 +761,9 @@ function screenMethod(method, activeRisks, activeDrugs) {
     if (activeRisks.includes('sbp_gt160_dbp_gt100')) {
       alerts.push({ category: 4, condition: 'Severe Hypertension (\u2265160/100)', reason: 'Risk of stroke and cardiovascular collapse.' });
     }
+    if (activeRisks.includes('htn_controlled')) {
+      alerts.push({ category: 3, condition: 'Hypertension (Controlled or Mild/Moderate)', reason: 'USMEC Category 3. Estrogen increases cardiovascular and stroke risks; progestin-only methods (except DMPA) or IUDs are preferred.' });
+    }
     if (activeRisks.includes('cardio_valvular')) {
       alerts.push({ category: 4, condition: 'Complicated Valvular Heart Disease', reason: 'Increased thromboembolic risk.' });
     }
@@ -848,6 +852,9 @@ function screenMethod(method, activeRisks, activeDrugs) {
     }
     if (activeRisks.includes('sbp_gt160_dbp_gt100')) {
       alerts.push({ category: 3, condition: 'Severe Hypertension', reason: 'USMEC Category 3.' });
+    }
+    if (activeRisks.includes('htn_controlled')) {
+      alerts.push({ category: 2, condition: 'Hypertension (Controlled or Mild/Moderate)', reason: 'USMEC Category 2. Advantages of DMPA generally outweigh clinical risks.' });
     }
     if (activeRisks.includes('diabetes_microvascular')) {
       alerts.push({ category: 3, condition: 'Diabetes with Microvascular Disease', reason: 'USMEC Category 3 for diabetes >20 years duration or microvascular pathology.' });
