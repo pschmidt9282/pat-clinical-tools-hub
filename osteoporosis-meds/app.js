@@ -556,6 +556,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 alertClass = 'alert-warning';
                 resultHtml = `<strong>Drug Holiday Eligible: NO (Not Applicable)</strong><br><br>
                               <strong>Clinical Plan:</strong> Raloxifene and calcitonin do not accumulate in bone and are not eligible for drug holidays. Stopping therapy leads to a gradual return of bone resorption to baseline. Re-evaluate treatment necessity periodically based on patient risk profile and breast cancer risk (for raloxifene).`;
+            } else if (agent === 'vit-d-calcium') {
+                alertClass = 'alert-info';
+                resultHtml = `<strong>Drug Holiday Eligible: N/A (Not on Advanced Therapy)</strong><br><br>
+                              <strong>Clinical Plan:</strong> Patient is currently managed with Calcium and Vitamin D supplementation only. Ensure daily intakes meet RDA guidelines:<br>
+                              - <strong>Elemental Calcium:</strong> 1000–1200 mg/day (preferably via diet; supplement if needed).<br>
+                              - <strong>Vitamin D3:</strong> 800–2000 IU/day to maintain serum 25(OH)D levels &gt;30 ng/mL.<br><br>
+                              <strong>Re-evaluation Strategy:</strong> Perform annual clinical assessment (loss of height, back pain, or new fractures). Repeat DXA every 2 years. Initiate advanced pharmacotherapy (e.g., bisphosphonates) if:<br>
+                              1. T-score falls &le; -2.5 at the femoral neck, total hip, or lumbar spine.<br>
+                              2. A fragility fracture occurs (regardless of T-score).<br>
+                              3. 10-year FRAX risk reaches thresholds (Major Osteoporotic Fracture &ge;20% or Hip Fracture &ge;3%).`;
             }
 
             holidayResult.className = `alert ${alertClass}`;
