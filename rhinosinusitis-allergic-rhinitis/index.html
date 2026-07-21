@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chronic Rhinosinusitis & Allergic Rhinitis Step-Up Algorithm</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .technique-box {
+      border: 2px dashed var(--primary);
+      background: var(--primary-light);
+      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      margin-top: 1rem;
+    }
+    .technique-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+    .tech-step-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+    }
+    .tech-num {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.75rem;
+      line-height: 22px;
+      margin-right: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../resistant-hypertension/" class="nav-link">Resistant HTN</a>
+      <a href="../masld-fib4/" class="nav-link">FIB-4 Flow</a>
+      <a href="../aub-triage/" class="nav-link">AUB Triage</a>
+      <a href="../rhinosinusitis-allergic-rhinitis/" class="nav-link active">Rhinitis</a>
+      <a href="../dizziness-triage/" class="nav-link">Dizziness</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">Chronic Rhinosinusitis & Allergic Rhinitis Step-Up Algorithm</h1>
+          <p class="page-subtitle">Symptom classification, intranasal spray technique, tiered pharmacotherapy step-up, and ENT referral indicators.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">AAO-HNS / ARIA Guidelines</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Input Column -->
+      <div class="card">
+        <h2 class="card-title">1. Clinical Symptom Classifier</h2>
+        <p class="card-desc">Select predominant symptoms and clinical history:</p>
+
+        <div class="form-group">
+          <label class="form-label">Predominant Symptom Profile</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="rad-profile" value="allergic" checked>
+              <span><strong>Allergic Rhinitis:</strong> Sneezing, watery rhinorrhea, nasal itching, ocular itching/redness. Triggered by allergens.</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="rad-profile" value="crs">
+              <span><strong>Chronic Rhinosinusitis (CRS):</strong> ≥12 weeks of nasal obstruction/congestion or purulent discharge + facial pressure/pain or loss of smell (anosmia).</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="rad-profile" value="nonallergic">
+              <span><strong>Non-Allergic Rhinitis (Vasomotor):</strong> Congestion/rhinorrhea triggered by cold air, perfumes, spicy foods. No itching or sneezing.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Prior Therapy Response</label>
+          <select id="sel-response" class="form-select">
+            <option value="naive">Naive to treatment / OTC sprays</option>
+            <option value="partial">Inadequate response to OTC Oral Antihistamines alone</option>
+            <option value="refractory">Refractory to Intranasal Steroid Monotherapy</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Comorbid Conditions (Samter's Triad Check)</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-asthma">
+              <span><strong>Comorbid Asthma</strong></span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-polyps">
+              <span><strong>Nasal Polyps</strong> (confirmed on exam or endoscopy)</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-aspirin">
+              <span><strong>Aspirin / NSAID Sensitivity</strong> (bronchospasm or severe rhinorrhea post-NSAID)</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="samter-alert" class="alert alert-high" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <strong>AERD / Samter's Triad Detected!</strong>
+            <div style="margin-top:0.25rem; font-size:0.875rem;">Asthma + Nasal Polyps + Aspirin Intolerance. Indicates severe eosinophilic airway disease. Highly responsive to Leukotriene Receptor Antagonists (Montelukast) and ENT evaluation for biologics (Dupilumab).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Column -->
+      <div class="card">
+        <h2 class="card-title">2. Tailored Step-Up Regimen</h2>
+        <div id="regimen-output">
+          <!-- Dynamic Regimen Output Injected Here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Proper Spray Technique Module -->
+    <div class="technique-box">
+      <h3 style="font-family:var(--font-heading); font-size:1.15rem; font-weight:700; color:var(--primary-text); display:flex; align-items:center; gap:0.5rem;">
+        <svg style="width:22px;height:22px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Proper Intranasal Corticosteroid Spray Technique ("Nose to Toes")
+      </h3>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-top:0.25rem;">Poor spray technique is the #1 cause of treatment failure and epistaxis (nosebleeds) in primary care.</p>
+      
+      <div class="technique-steps">
+        <div class="tech-step-card">
+          <strong><span class="tech-num">1</span> Clear Passages</strong>
+          <div style="margin-top:0.25rem; color:var(--text-muted);">Blow nose gently. Use saline sinus rinse 10-15 mins prior to clear crusts/mucus.</div>
+        </div>
+
+        <div class="tech-step-card">
+          <strong><span class="tech-num">2</span> Nose to Toes Position</strong>
+          <div style="margin-top:0.25rem; color:var(--text-muted);">Tilt head slightly <i>forward</i> looking at toes (do NOT tilt head back!).</div>
+        </div>
+
+        <div class="tech-step-card">
+          <strong><span class="tech-num">3</span> Aim Away From Septum</strong>
+          <div style="margin-top:0.25rem; color:var(--text-muted);">Use <strong>right hand for left nostril</strong>, left hand for right nostril. Aim nozzle laterally toward outer corner of eye/ear.</div>
+        </div>
+
+        <div class="tech-step-card">
+          <strong><span class="tech-num">4</span> Gentle Sniff</strong>
+          <div style="margin-top:0.25rem; color:var(--text-muted);">Depress pump while gently sniffing in. Do NOT snort hard (prevents medicine swallowing).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EHR Note Summary -->
+    <div class="card" style="margin-top:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+        <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+        <button class="btn btn-secondary btn-sm" id="btn-copy-ent">Copy Note to Clipboard</button>
+      </div>
+      <div class="copy-box" id="ent-note">Generating treatment plan note...</div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from AAO-HNS Guidelines on Rhinosinusitis</p>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    const radProfiles = document.querySelectorAll('input[name="rad-profile"]');
+    const selResponse = document.getElementById('sel-response');
+    const chkAsthma = document.getElementById('chk-asthma');
+    const chkPolyps = document.getElementById('chk-polyps');
+    const chkAspirin = document.getElementById('chk-aspirin');
+
+    const samterAlert = document.getElementById('samter-alert');
+    const regimenOutput = document.getElementById('regimen-output');
+    const entNote = document.getElementById('ent-note');
+
+    function updateENTMatrix() {
+      const profile = document.querySelector('input[name="rad-profile"]:checked').value;
+      const resp = selResponse.value;
+      const hasAsthma = chkAsthma.checked;
+      const hasPolyps = chkPolyps.checked;
+      const hasAspirin = chkAspirin.checked;
+
+      const isSamter = hasAsthma && hasPolyps && hasAspirin;
+      samterAlert.style.display = isSamter ? 'flex' : 'none';
+
+      let tierHTML = '';
+      let activeTier = '';
+
+      if (resp === 'naive') {
+        activeTier = 'Tier 1: Foundation Therapy';
+        tierHTML = `
+          <div class="alert alert-low" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <strong style="font-size:1.05rem; color:var(--risk-low-text);">Tier 1: First-Line Monotherapy & Saline</strong>
+              <span class="badge badge-low">Tier 1</span>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>Intranasal Corticosteroid (INCS):</strong> Fluticasone propionate 2 sprays (50 mcg/spray) each nostril once daily, OR Mometasone furoate 2 sprays each nostril once daily.<br>
+              • <strong>Intranasal Saline Rinse:</strong> High-volume saline irrigation (e.g. NeilMed sinus rinse with distilled water) 1-2 times daily prior to INCS spray.<br>
+              ${profile === 'allergic' ? '• <strong>Oral 2nd-Gen Antihistamine:</strong> Cetirizine 10 mg or Loratadine 10 mg daily prn ocular/sneezing symptoms.' : ''}
+              ${profile === 'nonallergic' ? '• <strong>Intranasal Antihistamine Option:</strong> Azelastine 0.1% spray 2 sprays BID (more effective than oral antihistamines for vasomotor rhinitis).' : ''}
+            </div>
+          </div>
+        `;
+      } else if (resp === 'partial') {
+        activeTier = 'Tier 2: Dual Intranasal Combination Therapy';
+        tierHTML = `
+          <div class="alert alert-int" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <strong style="font-size:1.05rem; color:var(--risk-int-text);">Tier 2: Dual Intranasal Combination Therapy</strong>
+              <span class="badge badge-int">Tier 2</span>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>Combination INCS + Intranasal Antihistamine Spray:</strong> Fluticasone propionate 137 mcg / Azelastine 50 mcg (e.g., <em>Dymista</em> or <em>Ryaltris</em>) 1 spray each nostril BID.<br>
+              • <em>Superior Efficacy:</em> Combination intranasal spray provides rapid onset (15 mins) and greater congestion relief than either agent alone.<br>
+              • Continue daily saline irrigations before sprays.
+            </div>
+          </div>
+        `;
+      } else {
+        activeTier = 'Tier 3: Advanced Pharmacotherapy & ENT Referral';
+        tierHTML = `
+          <div class="alert alert-high" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <strong style="font-size:1.05rem; color:var(--risk-high-text);">Tier 3: Advanced Therapy & Specialist Escalation</strong>
+              <span class="badge badge-high">Tier 3 / Referral</span>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>Leukotriene Receptor Antagonist (LTRA):</strong> Add Montelukast 10 mg PO once daily at bedtime (especially if asthma/polyps present). <em>Monitor for neuropsychiatric black box warning.</em><br>
+              • <strong>Short-Course Oral Steroid Burst:</strong> Prednisone 40-50 mg daily tapered over 5-10 days for severe mucosal edema or nasal polyposis. (Limit to ≤1-2 bursts/year).<br>
+              • <strong>ENT Referral Indications:</strong> Order Non-contrast Sinus CT and refer to Otolaryngology for sinus endoscopy, endoscopic sinus surgery (FESS), or biologic therapy evaluation (<strong>Dupilumab</strong> for CRSwNP).
+            </div>
+          </div>
+        `;
+      }
+
+      if (isSamter && resp !== 'refractory') {
+        tierHTML += `
+          <div class="check-list-item" style="border-left:4px solid var(--risk-high); margin-top:0.75rem;">
+            <strong style="color:var(--risk-high-text);">Samter's Triad / AERD Addendum:</strong>
+            <div class="form-hint" style="margin-top:0.25rem;">Add Montelukast 10mg daily immediately and arrange ENT consultation for aspirin desensitization protocol or Dupilumab.</div>
+          </div>
+        `;
+      }
+
+      regimenOutput.innerHTML = tierHTML;
+
+      const noteText = `CHRONIC RHINOSINUSITIS & RHINITIS MANAGEMENT NOTE
+--------------------------------------------------
+DIAGNOSTIC PROFILE: ${profile.toUpperCase()}
+PREVIOUS THERAPY RESPONSE: ${resp.toUpperCase()}
+COMORBIDITIES: Asthma (${hasAsthma ? 'YES' : 'NO'}), Polyps (${hasPolyps ? 'YES' : 'NO'}), Aspirin Intolerance (${hasAspirin ? 'YES' : 'NO'})
+${isSamter ? 'AERD / SAMTER\'S TRIAD CONFIRMED' : ''}
+
+RECOMMENDED TREATMENT PLAN (${activeTier.toUpperCase()}):
+${resp === 'naive' ? '- Intranasal Corticosteroid (Fluticasone 2 sprays each nostril daily) + Saline sinus irrigation. Educated on "Nose to toes" spray technique pointing away from septum.' : ''}
+${resp === 'partial' ? '- Step up to Dual Intranasal Therapy: Fluticasone / Azelastine combination spray (Dymista) 1 spray BID.' : ''}
+${resp === 'refractory' ? '- Add Montelukast 10mg PO daily. Consider short prednisone burst (40mg x 5-7 days). Order Sinus CT & Refer to ENT for endoscopic evaluation.' : ''}
+${isSamter ? '- High priority ENT referral for nasal polyposis & AERD management.' : ''}`;
+
+      entNote.textContent = noteText;
+    }
+
+    radProfiles.forEach(r => r.addEventListener('change', updateENTMatrix));
+    selResponse.addEventListener('change', updateENTMatrix);
+    [chkAsthma, chkPolyps, chkAspirin].forEach(c => c.addEventListener('change', updateENTMatrix));
+
+    document.getElementById('btn-copy-ent').addEventListener('click', () => {
+      navigator.clipboard.writeText(entNote.textContent).then(() => {
+        alert('Rhinitis Clinical Note copied to clipboard!');
+      });
+    });
+
+    updateENTMatrix();
+  </script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abnormal Uterine Bleeding (AUB) Outpatient Triage & Management</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .split-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 1.5rem;
+    }
+    .palm-coein-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .palm-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-primary);
+    }
+    .palm-letter {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--primary);
+      display: inline-block;
+      margin-right: 0.25rem;
+    }
+    @media (max-width: 900px) {
+      .split-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../resistant-hypertension/" class="nav-link">Resistant HTN</a>
+      <a href="../masld-fib4/" class="nav-link">FIB-4 Flow</a>
+      <a href="../aub-triage/" class="nav-link active">AUB Triage</a>
+      <a href="../rhinosinusitis-allergic-rhinitis/" class="nav-link">Rhinitis</a>
+      <a href="../dizziness-triage/" class="nav-link">Dizziness</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">AUB Outpatient Triage & Management</h1>
+          <p class="page-subtitle">Standardized triage, PALM-COEIN classification, workup logic, and acute bleeding suppressive therapy.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">ACOG Clinical Guidelines</span>
+      </div>
+    </div>
+
+    <div class="split-layout">
+      <!-- Input Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <!-- Triage Inputs Card -->
+        <div class="card">
+          <h2 class="card-title">Patient Triage Parameters</h2>
+          
+          <div class="form-group">
+            <label class="form-label">1. Hemodynamic Stability</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="rad-hemo" value="stable" checked>
+                <span><strong>Hemodynamically Stable</strong> (Normal BP, HR, no orthostatics)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="rad-hemo" value="unstable">
+                <span style="color:var(--risk-high-text);"><strong>Hemodynamically Unstable</strong> (SBP < 90, HR > 100, active severe hemorrhage, syncope)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">2. Pregnancy Status (Urine beta-hCG)</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="rad-preg" value="neg" checked>
+                <span><strong>Negative</strong></span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="rad-preg" value="pos">
+                <span style="color:var(--risk-high-text);"><strong>Positive</strong> (Triggers ectopic/miscarriage workup)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="rad-preg" value="pending">
+                <span><strong>Pending</strong> (MUST obtain urine beta-hCG first)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">3. Age & Endometrial Cancer Risk Factors</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-age45">
+                <span><strong>Age ≥ 45 years</strong></span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-pcos">
+                <span><strong>PCOS / Chronic Anovulation</strong> (Unopposed estrogen exposure)</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-obese">
+                <span><strong>Obesity (BMI ≥ 30)</strong></span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-lynch">
+                <span><strong>Lynch Syndrome (HNPCC) or Family History</strong></span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-failed-med">
+                <span><strong>Persistent bleeding despite prior medical therapy</strong></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">4. Patient Contraceptive Goal</label>
+            <select id="sel-contraception" class="form-select">
+              <option value="needs">Needs highly effective contraception</option>
+              <option value="desires-preg">Desires pregnancy in near term</option>
+              <option value="neutral">Indifferent / Neutral</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PALM-COEIN Sidebar Card -->
+        <div class="card">
+          <h2 class="card-title">PALM-COEIN Classification Reference</h2>
+          <p class="card-desc">Causes of AUB in non-pregnant reproductive-aged individuals:</p>
+          
+          <div class="palm-coein-grid">
+            <div class="palm-box">
+              <div><span class="palm-letter">P</span>olyp</div>
+              <div class="form-hint">Structural (TVUS / SIS)</div>
+            </div>
+            <div class="palm-box">
+              <div><span class="palm-letter">A</span>denomyosis</div>
+              <div class="form-hint">Structural (TVUS / MRI)</div>
+            </div>
+            <div class="palm-box">
+              <div><span class="palm-letter">L</span>eiomyoma</div>
+              <div class="form-hint">Fibroids (TVUS)</div>
+            </div>
+            <div class="palm-box font-high">
+              <div><span class="palm-letter">M</span>alignancy</div>
+              <div class="form-hint">Hyperplasia (EMB)</div>
+            </div>
+            <div class="palm-box">
+              <div><span class="palm-letter">C</span>oagulopathy</div>
+              <div class="form-hint">vWD, screening labs</div>
+            </div>
+            <div class="palm-box">
+              <div><span class="palm-letter">O</span>vulatory</div>
+              <div class="form-hint">PCOS, thyroid, prolactin</div>
+            </div>
+            <div class="palm-box">
+              <div><span class="palm-letter">E</span>ndometrial</div>
+              <div class="form-hint">Infection, local factors</div>
+            </div>
+            <div class="palm-box">
+              <div><span class="palm-letter">I</span>atrogenic</div>
+              <div class="form-hint">IUD, OCPs, anticoagulants</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <!-- Workup & Diagnostics Output -->
+        <div class="card">
+          <h2 class="card-title">Recommended Workup & Diagnostics</h2>
+          <div id="diagnostics-content">
+            <!-- Dynamic Workup Injected Here -->
+          </div>
+        </div>
+
+        <!-- Medical Management Output -->
+        <div class="card">
+          <h2 class="card-title">Pharmacotherapy & Bleeding Control Protocol</h2>
+          <div id="management-content">
+            <!-- Dynamic Medical Management Injected Here -->
+          </div>
+        </div>
+
+        <!-- Copy EHR note -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+            <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-aub">Copy Note to Clipboard</button>
+          </div>
+          <div class="copy-box" id="aub-note">Generating clinical summary...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from ACOG Practice Bulletins on Abnormal Uterine Bleeding</p>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    const radHemoStable = document.querySelector('input[name="rad-hemo"][value="stable"]');
+    const radHemoUnstable = document.querySelector('input[name="rad-hemo"][value="unstable"]');
+    const radPregNeg = document.querySelector('input[name="rad-preg"][value="neg"]');
+    const radPregPos = document.querySelector('input[name="rad-preg"][value="pos"]');
+    const radPregPending = document.querySelector('input[name="rad-preg"][value="pending"]');
+
+    const chkAge45 = document.getElementById('chk-age45');
+    const chkPcos = document.getElementById('chk-pcos');
+    const chkObese = document.getElementById('chk-obese');
+    const chkLynch = document.getElementById('chk-lynch');
+    const chkFailedMed = document.getElementById('chk-failed-med');
+    const selContraception = document.getElementById('sel-contraception');
+
+    const diagnosticsContent = document.getElementById('diagnostics-content');
+    const managementContent = document.getElementById('management-content');
+    const aubNote = document.getElementById('aub-note');
+
+    function updateAUBMatrix() {
+      const isStable = radHemoStable.checked;
+      const pregVal = document.querySelector('input[name="rad-preg"]:checked').value;
+      const isPreg = (pregVal === 'pos');
+      const isPendingPreg = (pregVal === 'pending');
+
+      const isAge45 = chkAge45.checked;
+      const hasPcos = chkPcos.checked;
+      const isObese = chkObese.checked;
+      const hasLynch = chkLynch.checked;
+      const hasFailedMed = chkFailedMed.checked;
+      const contraGoal = selContraception.value;
+
+      const hasEmbRisk = isAge45 || hasPcos || isObese || hasLynch || hasFailedMed;
+
+      let diagHTML = '';
+      if (isPreg) {
+        diagHTML = `
+          <div class="alert alert-high">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>
+              <strong>Pregnancy-Related Bleeding Protocol:</strong>
+              <div style="margin-top:0.35rem; font-size:0.9rem;">
+                • **Order Quantitative serum beta-hCG** immediately.<br>
+                • **Order Transvaginal Ultrasound** to rule out ectopic pregnancy, threatened abortion, or gestational trophoblastic disease.<br>
+                • If ectopic suspected or patient has severe abdominal pain, refer immediately to the emergency department.
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isPendingPreg) {
+        diagHTML = `
+          <div class="alert alert-int">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <strong>Hold Workup - Pregnancy Status Unknown:</strong>
+              <div style="margin-top:0.25rem;">Obtain a urine beta-hCG point-of-care test immediately to steer evaluation pathway.</div>
+            </div>
+          </div>
+        `;
+      } else {
+        let embAdvice = '';
+        if (hasEmbRisk) {
+          let risks = [];
+          if (isAge45) risks.push('Age ≥ 45');
+          if (hasPcos) risks.push('Anovulation/PCOS');
+          if (isObese) risks.push('Obesity');
+          if (hasLynch) risks.push('Lynch Syndrome / High Fam Hx');
+          if (hasFailedMed) risks.push('Failed medical therapy');
+          
+          embAdvice = `
+            <div class="check-list-item" style="border-left: 4px solid var(--risk-high); margin-top: 0.5rem;">
+              <strong style="color:var(--risk-high-text);">Endometrial Biopsy (EMB) INDICATED</strong>
+              <div class="form-hint" style="margin-top:0.25rem;">Indicated due to: <strong>${risks.join(', ')}</strong>. Excludes endometrial hyperplasia or malignancy (PALM-M).</div>
+            </div>
+          `;
+        } else {
+          embAdvice = `
+            <div class="check-list-item" style="border-left: 4px solid var(--risk-low); margin-top: 0.5rem;">
+              <span style="color:var(--risk-low-text); font-weight:600;">Endometrial Biopsy Deferred</span>
+              <div class="form-hint" style="margin-top:0.25rem;">Patient is <45 years old and lacks major risk factors for endometrial cancer.</div>
+            </div>
+          `;
+        }
+
+        diagHTML = `
+          <div class="checkbox-group">
+            <div class="check-list-item" style="border-left: 4px solid var(--primary);">
+              <strong>Transvaginal Ultrasound (TVUS) - First-line Imaging</strong>
+              <div class="form-hint" style="margin-top:0.25rem;">Best performed in the early follicular phase (day 4-6 of cycle if possible) to evaluate for structural abnormalities (Polyps, Adenomyosis, Leiomyomas/Fibroids).</div>
+            </div>
+            ${embAdvice}
+            <div class="check-list-item">
+              <strong>Routine Lab Evaluation Checklist:</strong>
+              <div class="form-hint" style="margin-top:0.25rem; font-size:0.85rem;">
+                • **CBC:** Assess for anemia/thrombocytopenia.<br>
+                • **TSH:** Rule out underlying thyroid disorder.<br>
+                • **Coagulopathy Screen:** Consider if history positive for easy bruising, epistaxis, or heavy bleeding since menarche.
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      diagnosticsContent.innerHTML = diagHTML;
+
+      let mgmtHTML = '';
+      if (!isStable) {
+        mgmtHTML = `
+          <div class="alert alert-high">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>
+              <strong>CRITICAL WARNING: Hemodynamic Instability Detected</strong>
+              <div style="margin-top:0.35rem; font-size:0.9rem;">
+                • **Transfer to Emergency Department/Inpatient Gynecology** immediately.<br>
+                • Outpatient oral tapers are inadequate for active shock.<br>
+                • Inpatient therapies include IV Conjugated Estrogen (25mg IV q4-6h) or emergency surgical curettage / balloon tamponade.
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isPreg || isPendingPreg) {
+        mgmtHTML = `
+          <div class="alert alert-info">
+            <div>
+              <strong>Hold Outpatient Hormonal Suppressive Protocols:</strong>
+              <div style="margin-top:0.25rem;">Medical AUB management tapers are not indicated until pregnancy has been definitively ruled out, or pregnancy-related hemorrhage has been specialty triaged.</div>
+            </div>
+          </div>
+        `;
+      } else {
+        let acuteTaperProtocol = `
+          <div style="margin-top: 0.5rem; display:flex; flex-direction:column; gap:0.5rem;">
+            <div class="check-list-item">
+              <strong>Option 1: Monophasic OCP Taper (Estrogen + Progestin)</strong>
+              <div class="form-hint" style="margin-top:0.25rem;">
+                • Standard OCP containing 30–35 mcg Ethinyl Estradiol (e.g. Sprintec/Portia).<br>
+                • <strong>Schedule:</strong> 1 pill PO <strong>TID (Three times daily)</strong> for 2-3 days until bleeding tapers; then 1 pill <strong>BID</strong> for 2-3 days; then <strong>daily</strong> for 21 days to complete cycle.
+              </div>
+            </div>
+            <div class="check-list-item">
+              <strong>Option 2: Tranexamic Acid (TXA) - Non-Hormonal</strong>
+              <div class="form-hint" style="margin-top:0.25rem; color:var(--text-secondary);">
+                • <strong>Dose:</strong> 1300 mg PO TID (or 650mg 2 tabs TID) for up to 5 days during menses.<br>
+                • <strong style="color:var(--risk-high-text);">Contraindication:</strong> Do not prescribe if history of DVT, PE, active thromboembolic disease, or if patient uses combined hormonal contraception (increases thrombotic risk).
+              </div>
+            </div>
+            <div class="check-list-item">
+              <strong>Option 3: High-Dose Oral Progestin-Only Taper (e.g. if estrogen contraindicated)</strong>
+              <div class="form-hint" style="margin-top:0.25rem;">
+                • Medroxyprogesterone Acetate (MPA) 20 mg PO TID for 3 days, then BID for 3 days, then daily for 14-21 days.<br>
+                • Or Norethindrone acetate 5 mg PO TID for 3 days, then BID, then daily.
+              </div>
+            </div>
+          </div>
+        `;
+
+        let chronicPlan = '';
+        if (contraGoal === 'desires-preg') {
+          chronicPlan = `
+            <div class="alert alert-low" style="margin-top:0.75rem;">
+              <div>
+                <strong>Chronic Management (Pregnancy Desired):</strong>
+                <div style="margin-top:0.25rem; font-size:0.9rem;">
+                  • Avoid hormonal contraceptives or IUDs.<br>
+                  • **First-line:** Cyclical **Tranexamic Acid (TXA)** 1300mg TID during bleeding episodes to reduce volume without blocking ovulation.<br>
+                  • Consider referral to reproductive endocrinology (REI) for ovulation induction (e.g., Letrozole) if ovulatory dysfunction (PCOS) is the primary cause.
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          chronicPlan = `
+            <div class="alert alert-low" style="margin-top:0.75rem;">
+              <div>
+                <strong>Chronic Suppression (Contraception or Neutral):</strong>
+                <div style="margin-top:0.25rem; font-size:0.9rem;">
+                  • <strong>Levonorgestrel 52 mg IUD (Mirena/Liletta):</strong> Gold standard. Reduces menstrual blood loss by 90% at 6 months; highly effective contraception.<br>
+                  • <strong>Combined Hormonal Contraceptives (OCPs/Vaginal Ring/Patch):</strong> Administered continuously or cyclically.<br>
+                  • <strong>Norethindrone Acetate (5 mg daily)</strong> or depot medroxyprogesterone acetate (DMPA) injection.
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        mgmtHTML = `
+          <div>
+            <h4 style="font-weight:600; font-size:0.95rem;">Acute Heavy Bleeding (Outpatient Triage)</h4>
+            ${acuteTaperProtocol}
+            <h4 style="font-weight:600; font-size:0.95rem; margin-top:1.25rem;">Long-Term Suppressive Plan</h4>
+            ${chronicPlan}
+          </div>
+        `;
+      }
+      managementContent.innerHTML = mgmtHTML;
+
+      let noteContent = `ABNORMAL UTERINE BLEEDING (AUB) TRIAGE NOTE
+--------------------------------------------------
+PATIENT CLINICAL STATUS:
+- Hemodynamics: ${isStable ? 'HEMODYNAMICALLY STABLE' : 'UNSTABLE (EMERGENCY)'}
+- Pregnancy Status: ${pregVal.toUpperCase()}`;
+
+      if (!isPreg && !isPendingPreg && isStable) {
+        let riskFactorsList = [];
+        if (isAge45) riskFactorsList.push('Age >= 45');
+        if (hasPcos) riskFactorsList.push('PCOS/Anovulation');
+        if (isObese) riskFactorsList.push('Obesity');
+        if (hasLynch) riskFactorsList.push('Lynch Syndrome');
+        if (hasFailedMed) riskFactorsList.push('Failed Medical Therapy');
+
+        noteContent += `\n- Endometrial Cancer Risk Factors: ${riskFactorsList.length > 0 ? riskFactorsList.join(', ') : 'None'}
+- Endometrial Biopsy (EMB) Indicated: ${hasEmbRisk ? 'YES' : 'NO'}
+- Contraceptive Goals: ${contraGoal}
+
+WORKUP & IMAGING PLAN:
+- Transvaginal Ultrasound (TVUS) ordered to evaluate structural PALM causes.
+- ${hasEmbRisk ? 'Schedule endometrial biopsy (EMB) to rule out malignancy/hyperplasia.' : 'Endometrial biopsy deferred.'}
+- Order baseline CBC, TSH, and consider coagulopathy panel.
+
+ACUTE MEDICAL PLAN:
+- Outpatient hormonal bleeding stabilization. (Select protocol from OCP Taper, Oral MPA, or TXA).
+- Long-term management plan: ${contraGoal === 'desires-preg' ? 'Cyclical TXA 1300mg TID prn menses (non-hormonal).' : 'Consider Levonorgestrel 52mg IUD or Combined Oral Contraceptives.'}`;
+      } else if (isPreg) {
+        noteContent += `\n\nPLAN:\n- Ectopic/Pregnancy-related bleed pathway active. Order urgent quantitative beta-hCG, TVUS, and Gyn evaluation.`;
+      } else if (!isStable) {
+        noteContent += `\n\nPLAN:\n- Patient unstable. Transfer to emergency department for immediate stabilization and acute surgical/medical inpatient triage.`;
+      }
+
+      aubNote.textContent = noteContent;
+    }
+
+    [radHemoStable, radHemoUnstable, radPregNeg, radPregPos, radPregPending, chkAge45, chkPcos, chkObese, chkLynch, chkFailedMed].forEach(el => {
+      el.addEventListener('change', updateAUBMatrix);
+    });
+    selContraception.addEventListener('change', updateAUBMatrix);
+
+    document.getElementById('btn-copy-aub').addEventListener('click', () => {
+      navigator.clipboard.writeText(aubNote.textContent).then(() => {
+        alert('AUB Clinical Note copied to clipboard!');
+      });
+    });
+
+    updateAUBMatrix();
+  </script>
+</body>
+</html>

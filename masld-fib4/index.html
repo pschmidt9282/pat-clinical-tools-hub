@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MASLD / NAFLD Risk Stratification Matrix (FIB-4 Flow)</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .gauge-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+    .score-display {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+      margin: 0.5rem 0;
+    }
+    .score-cutoff-bar {
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(to right, var(--risk-low) 0%, var(--risk-low) 40%, var(--risk-int) 40%, var(--risk-int) 80%, var(--risk-high) 80%, var(--risk-high) 100%);
+      border-radius: var(--radius-full);
+      position: relative;
+      margin-top: 1rem;
+    }
+    .score-marker {
+      width: 16px;
+      height: 16px;
+      background: var(--text-primary);
+      border: 2px solid var(--bg-secondary);
+      border-radius: 50%;
+      position: absolute;
+      top: -3px;
+      transform: translateX(-50%);
+      transition: left 0.3s ease;
+    }
+    .pathway-box {
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../resistant-hypertension/" class="nav-link">Resistant HTN</a>
+      <a href="../masld-fib4/" class="nav-link active">FIB-4 Flow</a>
+      <a href="../aub-triage/" class="nav-link">AUB Triage</a>
+      <a href="../rhinosinusitis-allergic-rhinitis/" class="nav-link">Rhinitis</a>
+      <a href="../dizziness-triage/" class="nav-link">Dizziness</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">MASLD / NAFLD FIB-4 Risk Stratification</h1>
+          <p class="page-subtitle">Identify non-invasively who needs lifestyle management vs. reflex elastography vs. urgent Hepatology referral.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">2023 AASLD / AGA Guidelines</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Calculator Column -->
+      <div>
+        <div class="card">
+          <h2 class="card-title">
+            <svg style="width:20px;height:20px;color:var(--primary);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+              <line x1="8" y1="6" x2="16" y2="6"></line>
+              <line x1="16" y1="14" x2="16" y2="18"></line>
+              <path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"></path>
+            </svg>
+            FIB-4 Score Calculator
+          </h2>
+          <p class="card-desc">Enter patient parameters to calculate the Fibrosis-4 (FIB-4) index instantly.</p>
+
+          <form id="fib4-form">
+            <div class="form-group">
+              <label class="form-label" for="inp-age">Age (years)</label>
+              <input type="number" id="inp-age" class="form-input" min="18" max="100" value="52" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inp-ast">AST - Aspartate Aminotransferase (U/L)</label>
+              <input type="number" id="inp-ast" class="form-input" min="5" max="1000" value="45" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inp-alt">ALT - Alanine Aminotransferase (U/L)</label>
+              <input type="number" id="inp-alt" class="form-input" min="5" max="1000" value="55" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="inp-plt">Platelet Count (10⁹/L or k/µL)</label>
+              <input type="number" id="inp-plt" class="form-input" min="10" max="1000" value="210" required>
+              <div class="form-hint">Example: 210 for 210,000/µL</div>
+            </div>
+          </form>
+
+          <div class="alert alert-info" style="font-size:0.85rem;">
+            <div>
+              <strong>Equation Reference:</strong><br>
+              $$\text{FIB-4} = \frac{\text{Age} \times \text{AST}}{\text{Platelets} \times \sqrt{\text{ALT}}}$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Column -->
+      <div>
+        <div class="card">
+          <h2 class="card-title">Risk Stratification & Triage Output</h2>
+          
+          <div class="gauge-container">
+            <div style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-muted);">Calculated FIB-4 Index</div>
+            <div class="score-display" id="score-val">1.42</div>
+            <div id="risk-badge-box">
+              <span class="badge badge-int" id="risk-badge">Intermediate Risk</span>
+            </div>
+
+            <div class="score-cutoff-bar">
+              <div class="score-marker" id="score-marker" style="left: 45%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; width:100%; font-size:0.75rem; color:var(--text-muted); margin-top:0.35rem;">
+              <span>0</span>
+              <span>1.3 (Low)</span>
+              <span>2.67 (High)</span>
+              <span>4.0+</span>
+            </div>
+          </div>
+
+          <div id="pathway-content">
+            <!-- Dynamic Content Injected Here -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary Elastography Guidance Section -->
+    <div class="card" style="margin-top:1.5rem;">
+      <h2 class="card-title">Reflex Test Interpretation: Transient Elastography (FibroScan / VCTE)</h2>
+      <p class="card-desc">For patients with intermediate FIB-4 (1.3 - 2.67), order FibroScan to measure Liver Stiffness Measurement (LSM in kPa):</p>
+      
+      <div class="grid grid-3">
+        <div class="check-list-item" style="border-left:4px solid var(--risk-low);">
+          <strong style="color:var(--risk-low-text);">LSM &lt; 8.0 kPa</strong>
+          <div class="form-hint" style="margin-top:0.25rem;">Low risk for advanced fibrosis. Return patient to primary care management. Repeat FIB-4 in 3 years.</div>
+        </div>
+
+        <div class="check-list-item" style="border-left:4px solid var(--risk-int);">
+          <strong style="color:var(--risk-int-text);">LSM 8.0 – 12.0 kPa</strong>
+          <div class="form-hint" style="margin-top:0.25rem;">Indeterminate / Moderate Fibrosis (F2-F3). Hepatology consultation recommended or ELF score test.</div>
+        </div>
+
+        <div class="check-list-item" style="border-left:4px solid var(--risk-high);">
+          <strong style="color:var(--risk-high-text);">LSM &gt; 12.0 kPa</strong>
+          <div class="form-hint" style="margin-top:0.25rem;">High risk for advanced fibrosis / cirrhosis (F3-F4). Direct Hepatology referral required.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copy Clinical Note -->
+    <div class="card" style="margin-top:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+        <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+        <button class="btn btn-secondary btn-sm" id="btn-copy-fib4">Copy Note to Clipboard</button>
+      </div>
+      <div class="copy-box" id="fib4-note">Generating FIB-4 note...</div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from 2023 AASLD Practice Guidance on MASLD</p>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    const inpAge = document.getElementById('inp-age');
+    const inpAst = document.getElementById('inp-ast');
+    const inpAlt = document.getElementById('inp-alt');
+    const inpPlt = document.getElementById('inp-plt');
+
+    const scoreValDisplay = document.getElementById('score-val');
+    const riskBadgeBox = document.getElementById('risk-badge-box');
+    const scoreMarker = document.getElementById('score-marker');
+    const pathwayContent = document.getElementById('pathway-content');
+    const fib4Note = document.getElementById('fib4-note');
+
+    function calculateFib4() {
+      const age = parseFloat(inpAge.value) || 0;
+      const ast = parseFloat(inpAst.value) || 0;
+      const alt = parseFloat(inpAlt.value) || 0;
+      const plt = parseFloat(inpPlt.value) || 0;
+
+      if (age <= 0 || ast <= 0 || alt <= 0 || plt <= 0) {
+        scoreValDisplay.textContent = '---';
+        return;
+      }
+
+      const score = (age * ast) / (plt * Math.sqrt(alt));
+      const formattedScore = score.toFixed(2);
+      scoreValDisplay.textContent = formattedScore;
+
+      let markerPos = (score / 3.5) * 100;
+      if (markerPos > 98) markerPos = 98;
+      if (markerPos < 2) markerPos = 2;
+      scoreMarker.style.left = markerPos + '%';
+
+      let riskCategory = '';
+      let badgeClass = '';
+      let pathwayHTML = '';
+
+      if (score < 1.30) {
+        riskCategory = 'Low Risk (<1.30)';
+        badgeClass = 'badge-low';
+        pathwayHTML = `
+          <div class="pathway-box alert-low">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:var(--risk-low-text);">Low Risk Management Pathway</h3>
+            <ul style="padding-left:1.25rem; font-size:0.925rem; display:flex; flex-direction:column; gap:0.4rem;">
+              <li><strong>Primary Care Led Management:</strong> Advanced fibrosis (F3-F4) ruled out with high negative predictive value (>90%).</li>
+              <li><strong>Lifestyle Intervention:</strong> Target 7-10% body weight loss, Mediterranean dietary pattern, aerobic exercise ≥150 mins/week.</li>
+              <li><strong>Cardiovascular Risk Optimization:</strong> Manage dyslipidemia, hypertension, and glycemic control (statins are safe in MASLD!).</li>
+              <li><strong>Surveillance:</strong> Repeat FIB-4 calculation in <strong>2 to 3 years</strong> (or 1-2 years if T2DM/metabolic syndrome).</li>
+              ${age >= 65 ? '<li><em>Age ≥ 65 Note:</em> Standard cutoff <1.3 carries higher false-positive rate; cutoff of <2.0 is often applied in elderly.</li>' : ''}
+            </ul>
+          </div>
+        `;
+      } else if (score <= 2.67) {
+        riskCategory = 'Intermediate Risk (1.30 - 2.67)';
+        badgeClass = 'badge-int';
+        pathwayHTML = `
+          <div class="pathway-box alert-int">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:var(--risk-int-text);">Intermediate Risk - Reflex Test Recommended</h3>
+            <ul style="padding-left:1.25rem; font-size:0.925rem; display:flex; flex-direction:column; gap:0.4rem;">
+              <li><strong>Indeterminate Fibrosis Risk:</strong> Cannot rule out significant fibrosis (F2-F3).</li>
+              <li><strong>Action - Order Secondary Non-Invasive Test (NIT):</strong>
+                <br>• <strong>Transient Elastography (FibroScan / VCTE):</strong> Measures Liver Stiffness (kPa).
+                <br>• <strong>Enhanced Liver Fibrosis (ELF) Score:</strong> Blood biomarker panel (cut-off 9.8).
+              </li>
+              <li><strong>Triage based on VCTE:</strong>
+                <br>• LSM < 8.0 kPa -> Low risk, manage in Primary Care.
+                <br>• LSM ≥ 8.0 kPa -> Refer to Hepatology.
+              </li>
+            </ul>
+          </div>
+        `;
+      } else {
+        riskCategory = 'High Risk (>2.67)';
+        badgeClass = 'badge-high';
+        pathwayHTML = `
+          <div class="pathway-box alert-high">
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; color:var(--risk-high-text);">High Risk - Prompt Hepatology Referral</h3>
+            <ul style="padding-left:1.25rem; font-size:0.925rem; display:flex; flex-direction:column; gap:0.4rem;">
+              <li><strong>High Risk of Advanced Fibrosis / Cirrhosis (F3-F4):</strong> Positive predictive value high for advanced scarring.</li>
+              <li><strong>Immediate Actions:</strong>
+                <br>• Refer urgently to <strong>Hepatology / Gastroenterology</strong>.
+                <br>• Order Liver Ultrasound & Baseline Alpha-Fetoprotein (AFP).
+              </li>
+              <li><strong>Pharmacotherapy Considerations:</strong>
+                <br>• <strong>Resmetirom</strong> (THR-β agonist): FDA approved for non-cirrhotic MASH with moderate-to-advanced fibrosis.
+                <br>• <strong>GLP-1 Receptor Agonists</strong> (e.g., Semaglutide) or <strong>Pioglitazone</strong> if patient has comorbid Type 2 Diabetes.
+              </li>
+              <li><strong>Cirrhosis Surveillance (if confirmed):</strong> Screen for HCC every 6 months (Ultrasound ± AFP) and evaluate for esophageal varices.</li>
+            </ul>
+          </div>
+        `;
+      }
+
+      riskBadgeBox.innerHTML = `<span class="badge ${badgeClass}">${riskCategory}</span>`;
+      pathwayContent.innerHTML = pathwayHTML;
+
+      const note = `MASLD / NAFLD FIB-4 RISK STRATIFICATION NOTE
+--------------------------------------------------
+PATIENT CLINICAL PARAMETERS:
+- Age: ${age} years
+- AST: ${ast} U/L | ALT: ${alt} U/L
+- Platelet Count: ${plt} x10^9/L
+
+CALCULATED FIB-4 SCORE: ${formattedScore}
+RISK TRIAGE: ${riskCategory.toUpperCase()}
+
+RECOMMENDED CLINICAL ACTION PLAN:
+${score < 1.30 ? '- Primary care management. Emphasize 7-10% weight loss and Mediterranean diet. Recheck FIB-4 in 2-3 years.' : ''}
+${score >= 1.30 && score <= 2.67 ? '- Order reflex Transient Elastography (FibroScan/VCTE) or ELF test to clarify fibrosis stage.' : ''}
+${score > 2.67 ? '- Refer to Hepatology for evaluation of advanced fibrosis/cirrhosis. Consider Resmetirom / GLP-1RA and HCC surveillance if cirrhotic.' : ''}`;
+
+      fib4Note.textContent = note;
+    }
+
+    [inpAge, inpAst, inpAlt, inpPlt].forEach(input => input.addEventListener('input', calculateFib4));
+
+    document.getElementById('btn-copy-fib4').addEventListener('click', () => {
+      navigator.clipboard.writeText(fib4Note.textContent).then(() => {
+        alert('FIB-4 Clinical Note copied to clipboard!');
+      });
+    });
+
+    calculateFib4();
+  </script>
+</body>
+</html>

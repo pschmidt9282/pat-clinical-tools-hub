@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Outpatient Dizziness Triage & Treatment (BPPV vs. Peripheral vs. Central)</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .hints-panel {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+    .hints-btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+    .hints-btn {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .hints-btn.selected-periph {
+      background: var(--risk-low-bg);
+      border-color: var(--risk-low-border);
+      color: var(--risk-low-text);
+    }
+    .hints-btn.selected-central {
+      background: var(--risk-high-bg);
+      border-color: var(--risk-high-border);
+      color: var(--risk-high-text);
+    }
+    .epley-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      background: var(--bg-primary);
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+    .epley-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .epley-step-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.85rem;
+      background: var(--bg-secondary);
+      position: relative;
+    }
+    .epley-step-num {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-weight: 700;
+      font-size: 0.8rem;
+      background: var(--primary-light);
+      color: var(--primary-text);
+      padding: 0.15rem 0.45rem;
+      border-radius: var(--radius-full);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../resistant-hypertension/" class="nav-link">Resistant HTN</a>
+      <a href="../masld-fib4/" class="nav-link">FIB-4 Flow</a>
+      <a href="../aub-triage/" class="nav-link">AUB Triage</a>
+      <a href="../rhinosinusitis-allergic-rhinitis/" class="nav-link">Rhinitis</a>
+      <a href="../dizziness-triage/" class="nav-link active">Dizziness</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">Outpatient Dizziness Triage & Management</h1>
+          <p class="page-subtitle">Differentiate BPPV vs. Peripheral Neuritis vs. Central Stroke using HINTS and targeted maneuvers.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">AAN / HINTS Standard</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Input Column -->
+      <div class="card">
+        <h2 class="card-title">1. Clinical Presentation Triage</h2>
+        
+        <div class="form-group">
+          <label class="form-label">Symptom Timing & Duration</label>
+          <select id="sel-timing" class="form-select">
+            <option value="bppv">Episodic Seconds (< 1 min) - Triggered by head movement</option>
+            <option value="menieres">Episodic Hours (20 mins to 12 hrs) - Recurrent with hearing changes</option>
+            <option value="avs">Continuous Days (Acute Vestibular Syndrome) - Ongoing vertigo & nystagmus</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Red Flag Focal Neurological Symptoms</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-ataxia">
+              <span><strong>Severe Gait Ataxia:</strong> Inability to sit or stand unassisted</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-4ds">
+              <span><strong>The "4 Ds":</strong> Diplopia, Dysarthria, Dysphagia, Dysmetria</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-headache">
+              <span><strong>New Severe Headache / Neck Pain</strong> (Suspect vertebral dissection)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- HINTS Exam Interactive Panel -->
+        <div class="hints-panel">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-size:1rem; font-weight:700;">HINTS Exam Module</h3>
+            <span class="badge badge-int" style="font-size:0.7rem;">Only for Continuous Vertigo (AVS)</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;">
+            <em>Validity Warning:</em> HINTS is 99% sensitive for stroke ONLY when performed on patients with <strong>ongoing, continuous vertigo and nystagmus</strong> at rest.
+          </p>
+
+          <div style="margin-top:0.75rem;">
+            <label class="form-label" style="font-size:0.825rem;">1. Head Impulse Test (HIT)</label>
+            <div class="hints-btn-group">
+              <button class="hints-btn hints-hit selected-periph" data-val="abnormal">Abnormal Saccade (Peripheral)</button>
+              <button class="hints-btn hints-hit" data-val="normal">Normal / No Saccade (Central!)</button>
+            </div>
+          </div>
+
+          <div style="margin-top:0.75rem;">
+            <label class="form-label" style="font-size:0.825rem;">2. Nystagmus Pattern</label>
+            <div class="hints-btn-group">
+              <button class="hints-btn hints-nyst selected-periph" data-val="unidirectional">Unidirectional Horizontal (Peripheral)</button>
+              <button class="hints-btn hints-nyst" data-val="central">Direction-Changing / Vertical (Central!)</button>
+            </div>
+          </div>
+
+          <div style="margin-top:0.75rem;">
+            <label class="form-label" style="font-size:0.825rem;">3. Test of Skew (Alternate Cover)</label>
+            <div class="hints-btn-group">
+              <button class="hints-btn hints-skew selected-periph" data-val="noskew">No Skew Deviation (Peripheral)</button>
+              <button class="hints-btn hints-skew" data-val="skew">Skew Deviation Present (Central!)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Output Column -->
+      <div class="card">
+        <h2 class="card-title">2. Triage Output & Management Protocol</h2>
+        <div id="diz-output">
+          <!-- Dynamic Output Injected Here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Epley Maneuver Interactive Card -->
+    <div id="epley-section" class="epley-card" style="display:none;">
+      <h3 style="font-family:var(--font-heading); font-size:1.2rem; font-weight:700; color:var(--primary-text); display:flex; align-items:center; gap:0.5rem;">
+        <svg style="width:22px;height:22px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        Posterior Canal BPPV: Step-by-Step Epley Maneuver
+      </h3>
+      <p style="font-size:0.9rem; color:var(--text-secondary); margin-top:0.25rem;">Perform following positive Dix-Hallpike test (upbeating & torsional nystagmus towards affected down-ear):</p>
+
+      <div class="epley-steps-grid">
+        <div class="epley-step-box">
+          <span class="epley-step-num">Step 1</span>
+          <strong>Affected Ear Down</strong>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.35rem;">
+            Turn head 45° toward affected ear. Rapidly lay patient back with neck extended 20° off edge of table (Dix-Hallpike position). Hold for <strong>30–60 seconds</strong> post-nystagmus.
+          </div>
+        </div>
+
+        <div class="epley-step-box">
+          <span class="epley-step-num">Step 2</span>
+          <strong>Rotate Head 90° Opposite</strong>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.35rem;">
+            Without raising head, slowly rotate head 90° toward the healthy ear (facing 45° away). Hold for <strong>30–60 seconds</strong>.
+          </div>
+        </div>
+
+        <div class="epley-step-box">
+          <span class="epley-step-num">Step 3</span>
+          <strong>Roll onto Side Facing Floor</strong>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.35rem;">
+            Patient rolls onto shoulder of healthy side. Head rotates another 90° looking down at floor (nose at 45° downward). Hold for <strong>30–60 seconds</strong>.
+          </div>
+        </div>
+
+        <div class="epley-step-box">
+          <span class="epley-step-num">Step 4</span>
+          <strong>Sit Upright & Re-center</strong>
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:0.35rem;">
+            Slowly bring patient up to sitting position while maintaining head turn. Once seated, return head to midline with slight forward chin tilt.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EHR Note Builder -->
+    <div class="card" style="margin-top:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+        <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+        <button class="btn btn-secondary btn-sm" id="btn-copy-diz">Copy Note to Clipboard</button>
+      </div>
+      <div class="copy-box" id="diz-note">Generating dizziness note...</div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from HINTS Exam Validation Studies & AAN BPPV Practice Parameters</p>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    let hitState = 'abnormal';
+    let nystState = 'unidirectional';
+    let skewState = 'noskew';
+
+    document.querySelectorAll('.hints-hit').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.hints-hit').forEach(b => b.className = 'hints-btn hints-hit');
+        e.target.className = e.target.dataset.val === 'normal' ? 'hints-btn hints-hit selected-central' : 'hints-btn hints-hit selected-periph';
+        hitState = e.target.dataset.val;
+        updateDizMatrix();
+      });
+    });
+
+    document.querySelectorAll('.hints-nyst').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.hints-nyst').forEach(b => b.className = 'hints-btn hints-nyst');
+        e.target.className = e.target.dataset.val === 'central' ? 'hints-btn hints-nyst selected-central' : 'hints-btn hints-nyst selected-periph';
+        nystState = e.target.dataset.val;
+        updateDizMatrix();
+      });
+    });
+
+    document.querySelectorAll('.hints-skew').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.hints-skew').forEach(b => b.className = 'hints-btn hints-skew');
+        e.target.className = e.target.dataset.val === 'skew' ? 'hints-btn hints-skew selected-central' : 'hints-btn hints-skew selected-periph';
+        skewState = e.target.dataset.val;
+        updateDizMatrix();
+      });
+    });
+
+    const selTiming = document.getElementById('sel-timing');
+    const chkAtaxia = document.getElementById('chk-ataxia');
+    const chk4ds = document.getElementById('chk-4ds');
+    const chkHeadache = document.getElementById('chk-headache');
+
+    const dizOutput = document.getElementById('diz-output');
+    const epleySection = document.getElementById('epley-section');
+    const dizNote = document.getElementById('diz-note');
+
+    function updateDizMatrix() {
+      const timing = selTiming.value;
+      const hasAtaxia = chkAtaxia.checked;
+      const has4ds = chk4ds.checked;
+      const hasHeadache = chkHeadache.checked;
+
+      const hasRedFlagNeuro = hasAtaxia || has4ds || hasHeadache;
+      const isHintsCentral = (hitState === 'normal') || (nystState === 'central') || (skewState === 'skew');
+
+      let outHTML = '';
+      let isBppv = (timing === 'bppv' && !hasRedFlagNeuro);
+
+      epleySection.style.display = isBppv ? 'block' : 'none';
+
+      if (hasRedFlagNeuro || (timing === 'avs' && isHintsCentral)) {
+        let reasons = [];
+        if (hasAtaxia) reasons.push('Severe Gait Ataxia');
+        if (has4ds) reasons.push('Focal Neurological Deficits (4 Ds)');
+        if (hasHeadache) reasons.push('Severe Headache/Neck Pain');
+        if (timing === 'avs' && isHintsCentral) {
+          reasons.push('Central HINTS Exam (INFARCT mnemonic positive)');
+        }
+
+        outHTML = `
+          <div class="alert alert-high" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <strong style="font-size:1.05rem; color:var(--risk-high-text);">CENTRAL RED FLAG - URGENT ER / MRI REQUIRED</strong>
+              <span class="badge badge-high">Central Stroke Triage</span>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>Triggering Findings:</strong> ${reasons.join(', ')}.<br>
+              • <strong>Immediate Action:</strong> Transfer patient urgently to the <strong>Emergency Department</strong> for stroke evaluation.<br>
+              • <strong>Imaging Recommendation:</strong> Request <strong>Brain MRI with Diffusion-Weighted Imaging (DWI)</strong>. (Non-contrast Head CT misses up to 80% of acute posterior circulation cerebellar/brainstem strokes within 24 hours).
+            </div>
+          </div>
+        `;
+      } else if (timing === 'bppv') {
+        outHTML = `
+          <div class="alert alert-low" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <strong style="font-size:1.05rem; color:var(--risk-low-text);">BPPV (Benign Paroxysmal Positional Vertigo)</strong>
+              <span class="badge badge-low">Canalithiasis</span>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>Diagnostic Test:</strong> Perform <strong>Dix-Hallpike Test</strong> in clinic.<br>
+              • <strong>Positive Test Criteria:</strong> Upbeating & torsional nystagmus with latency (2–20s), lasting <60 seconds, and fatiguing upon repeat testing.<br>
+              • <strong>First-Line Treatment:</strong> Perform the <strong>Epley Maneuver</strong> in room (see step-by-step card below). Success rate is >80-90% after 1-2 maneuvers.<br>
+              • <em>Avoid Vestibular Suppressants:</em> Meclizine is NOT indicated for BPPV.
+            </div>
+          </div>
+        `;
+      } else if (timing === 'avs' && !isHintsCentral) {
+        outHTML = `
+          <div class="alert alert-int" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+              <strong style="font-size:1.05rem; color:var(--risk-int-text);">Acute Vestibular Neuritis / Labyrinthitis (Peripheral)</strong>
+              <span class="badge badge-int">Peripheral AVS</span>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>HINTS Profile:</strong> Reassuring peripheral pattern (Abnormal HIT, Unidirectional Nystagmus, No Skew).<br>
+              • <strong style="color:var(--risk-high-text);">CRITICAL MEDICATION RESTRICTION:</strong> Limit <strong>Meclizine (12.5-25mg q8h)</strong> or Diazepam to <strong>≤3 DAYS MAXIMUM</strong>.<br>
+              • <em>Rationale:</em> Prolonged use of vestibular suppressants suppresses brain neuroplasticity and delays central vestibular compensation.<br>
+              • <strong>Steroid Therapy:</strong> Consider Oral Prednisone burst (e.g. 60mg tapered over 10 days) within 3 days of onset.<br>
+              • <strong>Vestibular Rehab:</strong> Initiate early gaze-stabilization exercises (Cawthorne-Cooksey) as soon as acute vomiting stops.
+            </div>
+          </div>
+        `;
+      } else {
+        outHTML = `
+          <div class="alert alert-info" style="flex-direction:column; align-items:flex-start;">
+            <strong style="font-size:1.05rem; color:var(--primary-text);">Episodic Vestibular Syndrome (Meniere's / Vestibular Migraine)</strong>
+            <div style="margin-top:0.5rem; font-size:0.925rem;">
+              • <strong>Meniere's Disease:</strong> Vertigo episodes lasting 20 mins to 12 hrs + fluctuating low-frequency sensorineural hearing loss, tinnitus, and aural fullness. (Management: Salt restriction <2000mg/day, Hydrochlorothiazide/Triamterene).<br>
+              • <strong>Vestibular Migraine:</strong> History of migraine, headache, photophobia/phonophobia with vertigo. (Management: Triptans, Topiramate/Beta-blockers).
+            </div>
+          </div>
+        `;
+      }
+
+      dizOutput.innerHTML = outHTML;
+
+      const noteText = `OUTPATIENT DIZZINESS TRIAGE & EXAMINATION NOTE
+--------------------------------------------------
+PRESENTATION TIMING: ${timing.toUpperCase()}
+FOCAL NEUROLOGICAL SYMPTOMS: ${hasRedFlagNeuro ? 'YES (RED FLAG PRESENT)' : 'NONE'}
+
+HINTS EXAM (For Continuous Vertigo):
+- Head Impulse Test (HIT): ${hitState.toUpperCase()}
+- Nystagmus: ${nystState.toUpperCase()}
+- Test of Skew: ${skewState.toUpperCase()}
+- HINTS Interpretation: ${isHintsCentral ? 'CENTRAL PATTERN (INFARCT POSITIVE)' : 'PERIPHERAL PATTERN'}
+
+DIAGNOSIS & MANAGEMENT PLAN:
+${hasRedFlagNeuro || (timing === 'avs' && isHintsCentral) ? '- CENTRAL RED FLAGS DETECTED. Transfer patient to ED for urgent brain MRI to rule out posterior circulation stroke.' : ''}
+${isBppv ? '- Posterior Canal BPPV suspected. Performed Dix-Hallpike test and Epley Maneuver in room. Meclizine withheld.' : ''}
+${timing === 'avs' && !isHintsCentral ? '- Acute Peripheral Vestibular Neuritis. Prescribed Meclizine 25mg PO q8h PRN LIMITED STRICTLY TO <=3 DAYS. Advised early vestibular rehabilitation.' : ''}`;
+
+      dizNote.textContent = noteText;
+    }
+
+    selTiming.addEventListener('change', updateDizMatrix);
+    [chkAtaxia, chk4ds, chkHeadache].forEach(c => c.addEventListener('change', updateDizMatrix));
+
+    document.getElementById('btn-copy-diz').addEventListener('click', () => {
+      navigator.clipboard.writeText(dizNote.textContent).then(() => {
+        alert('Dizziness Clinical Note copied to clipboard!');
+      });
+    });
+
+    updateDizMatrix();
+  </script>
+</body>
+</html>

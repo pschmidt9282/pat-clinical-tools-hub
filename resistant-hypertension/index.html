@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resistant Hypertension Workup & Step-Up Matrix</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .step-badge {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+    .check-list-item {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-primary);
+      margin-bottom: 0.5rem;
+      transition: var(--transition);
+    }
+    .check-list-item:hover {
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../resistant-hypertension/" class="nav-link active">Resistant HTN</a>
+      <a href="../masld-fib4/" class="nav-link">FIB-4 Flow</a>
+      <a href="../aub-triage/" class="nav-link">AUB Triage</a>
+      <a href="../rhinosinusitis-allergic-rhinitis/" class="nav-link">Rhinitis</a>
+      <a href="../dizziness-triage/" class="nav-link">Dizziness</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">Resistant Hypertension Workup & Step-Up</h1>
+          <p class="page-subtitle">Differentiating pseudo-resistance from true resistant HTN and guiding 4th-line agent initiation.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">2018 AHA / ACC Guidelines</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Pseudo-Resistance Checklist -->
+    <div class="step-card">
+      <div class="step-header">
+        <div>
+          <span class="step-num">1</span>
+          <span class="step-title">Rule Out Pseudo-Resistance & Common Culprits</span>
+        </div>
+        <span class="step-badge badge-int" id="step1-status">Incomplete Checklist</span>
+      </div>
+      <div class="step-body">
+        <p class="card-desc">True resistant HTN requires blood pressure remaining above goal (>130/80 mmHg) despite concurrent use of 3 antihypertensive agents at maximal tolerated doses. Rule out the following first:</p>
+        
+        <div class="checkbox-group">
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-adherence" class="step1-chk">
+              <div>
+                <strong>Medication Non-Adherence Excluded</strong>
+                <div class="form-hint">Verified via pharmacy fill records, pill counts, or direct patient inquiry. (Accounts for ~50% of apparent resistance).</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-whitecoat" class="step1-chk">
+              <div>
+                <strong>White-Coat Effect Excluded (Out-of-Office BP Measurement)</strong>
+                <div class="form-hint">Confirmed via Ambulatory BP Monitoring (ABPM 24-hr avg <130/80 or daytime <135/85) OR Home BP Monitoring (7-day avg <135/85).</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-cuff" class="step1-chk">
+              <div>
+                <strong>Proper Cuff Technique & Size Confirmed</strong>
+                <div class="form-hint">Cuff bladder length covers 80% and width covers 40% of arm circumference. Patient rested 5 mins, arm supported at heart level, no talking.</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-substances" class="step1-chk">
+              <div>
+                <strong>Offending Substances / Interferences Assessed & Minimized</strong>
+                <div class="form-hint">NSAIDs/COX-2 inhibitors, Decongestants (pseudoephedrine), Excessive Alcohol (>2 drinks/day men, >1 women), Oral Contraceptives, Systemic Steroids, ADHD Stimulants, Licorice.</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div id="step1-alert" class="alert alert-int">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><strong>Checklist Status:</strong> Please complete all Step 1 checks above to verify true hypertension resistance before escalating pharmacotherapy.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: 3-Drug Regimen Optimization -->
+    <div class="step-card">
+      <div class="step-header">
+        <div>
+          <span class="step-num">2</span>
+          <span class="step-title">3-Drug Regimen Maximal Dosing Optimization</span>
+        </div>
+        <span class="step-badge badge-int" id="step2-status">Pending Verification</span>
+      </div>
+      <div class="step-body">
+        <p class="card-desc">Guidelines mandate a triple-combination regimen including a <strong>CCB</strong>, an <strong>ACEi or ARB</strong>, and a <strong>Thiazide/Thiazide-like Diuretic</strong> at maximum tolerated doses.</p>
+
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">1. Calcium Channel Blocker (CCB)</label>
+            <select id="sel-ccb" class="form-select drug-select">
+              <option value="none">None or Sub-maximal Dose</option>
+              <option value="amlodipine10">Amlodipine 10 mg daily (Max)</option>
+              <option value="nifedipine90">Nifedipine ER 90 mg daily (Max)</option>
+              <option value="diltiazem">Diltiazem ER 360 mg daily</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">2. ACE Inhibitor or ARB</label>
+            <select id="sel-ras" class="form-select drug-select">
+              <option value="none">None or Sub-maximal Dose</option>
+              <option value="olmesartan40">Olmesartan 40 mg daily (Max)</option>
+              <option value="lisinopril40">Lisinopril 40 mg daily (Max)</option>
+              <option value="losartan100">Losartan 100 mg daily (Max)</option>
+              <option value="valsartan320">Valsartan 320 mg daily (Max)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">3. Thiazide-like Diuretic (Preferred)</label>
+            <select id="sel-diuretic" class="form-select drug-select">
+              <option value="none">None or HCTZ 12.5-25mg (Sub-optimal)</option>
+              <option value="chlorthalidone25">Chlorthalidone 25 mg daily (Preferred Max)</option>
+              <option value="indapamide2.5">Indapamide 2.5 mg daily (Preferred Max)</option>
+              <option value="hctz50">Hydrochlorothiazide 50 mg daily</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <div><strong>Clinical Tip:</strong> Switch Hydrochlorothiazide (HCTZ) to <strong>Chlorthalidone 25mg</strong> or <strong>Indapamide 2.5mg</strong>. Chlorthalidone has a 1.5–2x longer half-life (45-60 hrs) and significantly greater 24-hr nocturnal BP reduction compared to HCTZ.</div>
+        </div>
+
+        <div id="step2-alert" class="alert alert-int">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <div id="step2-msg">Select the current 3-drug regimen above. All 3 classes must be at maximal tolerated doses to confirm true resistant hypertension.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Secondary HTN Screen & 4th-Line MRA Guidance -->
+    <div class="step-card">
+      <div class="step-header">
+        <div>
+          <span class="step-num">3</span>
+          <span class="step-title">Secondary HTN Screening & 4th-Line Agent Protocol</span>
+        </div>
+        <span class="step-badge badge-high">Action Protocol</span>
+      </div>
+      <div class="step-body">
+        
+        <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:0.75rem;">Secondary Hypertension Screener Triggers</h3>
+        <div class="grid grid-2" style="margin-bottom:1.5rem;">
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="sec-aldosterone" class="sec-chk">
+              <div>
+                <strong>Primary Aldosteronism (Most Common ~20%)</strong>
+                <div class="form-hint">Trigger: Unprovoked hypokalemia or severe HTN. Test: Plasma Aldosterone-to-Renin Ratio (ARR). ARR > 20 with Aldosterone > 15 ng/dL is positive screen.</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="sec-osa" class="sec-chk">
+              <div>
+                <strong>Obstructive Sleep Apnea (OSA) (~80% in RHTN)</strong>
+                <div class="form-hint">Trigger: Habitual snoring, daytime somnolence, nocturnal gasping. Test: Order Home Sleep Apnea Test (HSAT).</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="sec-ras" class="sec-chk">
+              <div>
+                <strong>Renal Artery Stenosis (RAS)</strong>
+                <div class="form-hint">Trigger: Unexplained rise in Cr >30% post-ACEi/ARB, flash pulmonary edema, abdominal bruit. Test: Renal Artery Duplex Ultrasound.</div>
+              </div>
+            </label>
+          </div>
+
+          <div class="check-list-item">
+            <label class="checkbox-label">
+              <input type="checkbox" id="sec-ckd" class="sec-chk">
+              <div>
+                <strong>Renal Parenchymal Disease / CKD</strong>
+                <div class="form-hint">Trigger: Elevated serum Cr or proteinuria. Test: eGFR & Urine Albumin-to-Creatinine Ratio (UACR).</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:0.75rem;">4th-Line Pharmacotherapy Decision Wizard</h3>
+        <div class="card" style="background:var(--bg-primary); margin-bottom:1.5rem;">
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">Patient eGFR (mL/min/1.73m²)</label>
+              <input type="number" id="inp-egfr" class="form-input" placeholder="e.g. 65" value="65">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Serum Potassium (K+) (mEq/L)</label>
+              <input type="number" step="0.1" id="inp-k" class="form-input" placeholder="e.g. 4.2" value="4.2">
+            </div>
+          </div>
+
+          <div id="mra-recommendation" class="alert alert-low">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div>
+              <strong>4th-Line Recommendation: Spironolactone (Mineralocorticoid Receptor Antagonist)</strong>
+              <div style="margin-top:0.35rem; font-size:0.9rem;">
+                • <strong>Initial Dose:</strong> Spironolactone 12.5 mg to 25 mg PO daily.<br>
+                • <strong>Titration:</strong> May titrate up to 50 mg daily if needed.<br>
+                • <strong>Monitoring:</strong> Re-check Serum Potassium and Creatinine at 1 week and 4 weeks after initiation.<br>
+                • <strong>Gynecomastia Note:</strong> If painful mastodynia/gynecomastia develops, switch to <strong>Eplerenone 50 mg daily</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EHR Note Generator -->
+        <h3 style="font-size:1.05rem; font-weight:600; margin-bottom:0.5rem;">Clinical Progress Note Summary</h3>
+        <button class="btn btn-secondary btn-sm" id="btn-copy-note">
+          <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          Copy Note to Clipboard
+        </button>
+        <div class="copy-box" id="note-output">Generating note summary...</div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from AHA 2018 Scientific Statement on Resistant Hypertension</p>
+  </footer>
+
+  <script>
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    const step1Chks = document.querySelectorAll('.step1-chk');
+    const step1Status = document.getElementById('step1-status');
+    const step1Alert = document.getElementById('step1-alert');
+
+    function updateStep1() {
+      const allChecked = Array.from(step1Chks).every(c => c.checked);
+      if (allChecked) {
+        step1Status.className = 'step-badge badge-low';
+        step1Status.textContent = 'Pseudo-Resistance Excluded';
+        step1Alert.className = 'alert alert-low';
+        step1Alert.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div><strong>Step 1 Complete:</strong> Pseudo-resistance and common non-adherence/culprits have been systematically ruled out.</div>`;
+      } else {
+        step1Status.className = 'step-badge badge-int';
+        step1Status.textContent = 'Incomplete Checklist';
+        step1Alert.className = 'alert alert-int';
+        step1Alert.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg><div><strong>Checklist Status:</strong> Unchecked items remain. Rule out non-adherence, white-coat effect, and offending agents before diagnosing true resistant HTN.</div>`;
+      }
+      updateNote();
+    }
+    step1Chks.forEach(c => c.addEventListener('change', updateStep1));
+
+    const selCcb = document.getElementById('sel-ccb');
+    const selRas = document.getElementById('sel-ras');
+    const selDiuretic = document.getElementById('sel-diuretic');
+    const step2Status = document.getElementById('step2-status');
+    const step2Alert = document.getElementById('step2-alert');
+    const step2Msg = document.getElementById('step2-msg');
+
+    function updateStep2() {
+      const ccbVal = selCcb.value;
+      const rasVal = selRas.value;
+      const diuVal = selDiuretic.value;
+
+      const isCcbMax = ccbVal !== 'none';
+      const isRasMax = rasVal !== 'none';
+      const isDiuMax = diuVal !== 'none';
+
+      if (isCcbMax && isRasMax && isDiuMax) {
+        step2Status.className = 'step-badge badge-low';
+        step2Status.textContent = '3-Drug Regimen Maximized';
+        step2Alert.className = 'alert alert-low';
+        step2Msg.innerHTML = `<strong>Step 2 Complete:</strong> Patient is confirmed to be on a triple combination regimen (CCB + ACEi/ARB + Diuretic) at maximum tolerated doses.`;
+      } else {
+        step2Status.className = 'step-badge badge-int';
+        step2Status.textContent = 'Sub-maximal Regimen';
+        step2Alert.className = 'alert alert-int';
+        step2Msg.innerHTML = `<strong>Optimization Required:</strong> Patient is not yet taking max tolerated doses of all 3 core classes. Maximize CCB, ACEi/ARB, and Chlorthalidone/Indapamide prior to adding 4th-line agents.`;
+      }
+      updateNote();
+    }
+    document.querySelectorAll('.drug-select').forEach(s => s.addEventListener('change', updateStep2));
+
+    const inpEgfr = document.getElementById('inp-egfr');
+    const inpK = document.getElementById('inp-k');
+    const mraRec = document.getElementById('mra-recommendation');
+    const secChks = document.querySelectorAll('.sec-chk');
+
+    function updateStep3() {
+      const egfr = parseFloat(inpEgfr.value) || 0;
+      const k = parseFloat(inpK.value) || 0;
+
+      if (egfr < 30) {
+        mraRec.className = 'alert alert-high';
+        mraRec.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          <strong>MRA Contraindicated (eGFR < 30 mL/min)</strong>
+          <div style="margin-top:0.35rem; font-size:0.9rem;">
+            • Spironolactone/Eplerenone carries high hyperkalemia risk in severe CKD.<br>
+            • <strong>Alternative 4th-Line Options:</strong> Loop Diuretic (Torsemide / Furosemide), Beta-Blocker with vasodilator properties (Carvedilol 12.5-25mg BID or Nebivolol), or Alpha-1 blocker (Doxazosin 1-8mg daily).
+          </div>
+        </div>`;
+      } else if (k >= 5.0) {
+        mraRec.className = 'alert alert-int';
+        mraRec.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          <strong>Hyperkalemia Alert (K+ ≥ 5.0 mEq/L)</strong>
+          <div style="margin-top:0.35rem; font-size:0.9rem;">
+            • Hold Mineralocorticoid Receptor Antagonists until K+ < 5.0 mEq/L.<br>
+            • Evaluate dietary K+ intake, hold K+ supplements, or consider alternative agents (e.g. Beta-blocker or Vasodilator).
+          </div>
+        </div>`;
+      } else {
+        mraRec.className = 'alert alert-low';
+        mraRec.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <div>
+          <strong>4th-Line Recommendation: Spironolactone (Preferred MRA)</strong>
+          <div style="margin-top:0.35rem; font-size:0.9rem;">
+            • <strong>Initial Dosing:</strong> Spironolactone 12.5 mg to 25 mg PO once daily.<br>
+            • <strong>Titration Goal:</strong> May titrate to 50 mg PO daily if BP remains uncontrolled and K+ < 5.0 mEq/L.<br>
+            • <strong>Required Safety Lab Check:</strong> Repeat Serum Potassium and Creatinine at 1 week and 4 weeks post-initiation.<br>
+            • <strong>Eplerenone Alternative:</strong> Switch to Eplerenone 50 mg daily if gynecomastia or breast tenderness occurs.
+          </div>
+        </div>`;
+      }
+      updateNote();
+    }
+
+    inpEgfr.addEventListener('input', updateStep3);
+    inpK.addEventListener('input', updateStep3);
+    secChks.forEach(c => c.addEventListener('change', updateStep3));
+
+    function updateNote() {
+      const allStep1 = Array.from(step1Chks).every(c => c.checked);
+      const ccbText = selCcb.options[selCcb.selectedIndex].text;
+      const rasText = selRas.options[selRas.selectedIndex].text;
+      const diuText = selDiuretic.options[selDiuretic.selectedIndex].text;
+
+      const secTriggers = [];
+      if (document.getElementById('sec-aldosterone').checked) secTriggers.push('Primary Aldosteronism (ARR ordered)');
+      if (document.getElementById('sec-osa').checked) secTriggers.push('OSA (HSAT ordered)');
+      if (document.getElementById('sec-ras').checked) secTriggers.push('Renal Artery Stenosis (Duplex US ordered)');
+      if (document.getElementById('sec-ckd').checked) secTriggers.push('CKD (eGFR/UACR monitored)');
+
+      const egfr = inpEgfr.value;
+      const k = inpK.value;
+
+      let mraPlan = "Initiate Spironolactone 25 mg PO daily. Re-check BMP in 1 & 4 weeks.";
+      if (parseFloat(egfr) < 30) mraPlan = "MRA contraindicated due to eGFR < 30. Switch to alternative (Vasodilator/Beta-blocker).";
+      else if (parseFloat(k) >= 5.0) mraPlan = "MRA deferred due to K+ >= 5.0. Recheck K+ after dietary review.";
+
+      const note = `RESISTANT HYPERTENSION EVALUATION & MANAGEMENT NOTE
+--------------------------------------------------
+STEP 1: PSEUDO-RESISTANCE RULE-OUT
+- Adherence / White-Coat / Cuff / Culprit Substances: ${allStep1 ? 'RULING OUT COMPLETE' : 'IN PROGRESS / UNVERIFIED'}
+
+STEP 2: CORE TRIPLE-DRUG REGIMEN AT MAX TOLERATED DOSES
+- CCB: ${ccbText}
+- ACEi/ARB: ${rasText}
+- Diuretic: ${diuText}
+
+STEP 3: SECONDARY HTN SCREENING & LABS
+- Active Secondary HTN Workup: ${secTriggers.length > 0 ? secTriggers.join(', ') : 'None indicated'}
+- Baseline eGFR: ${egfr} mL/min/1.73m² | Serum K+: ${k} mEq/L
+
+PLAN & 4TH-LINE REGIMEN:
+- ${mraPlan}`;
+
+      document.getElementById('note-output').textContent = note;
+    }
+
+    document.getElementById('btn-copy-note').addEventListener('click', () => {
+      const noteText = document.getElementById('note-output').textContent;
+      navigator.clipboard.writeText(noteText).then(() => {
+        alert('Resistant HTN Clinical Note copied to clipboard!');
+      });
+    });
+
+    updateStep1();
+    updateStep2();
+    updateStep3();
+  </script>
+</body>
+</html>

@@ -113,6 +113,41 @@ const INITIAL_TOOLS = [
         url: "./acne-matrix/",
         category: "Primary Care",
         description: "Primary care decision support matrix detailing first-line prescribing tier rules, starter vs partner roles, add-on vs swap protocols, and Isotretinoin cumulative dose calculator."
+    },
+    {
+        id: "resistant-hypertension",
+        title: "Resistant Hypertension Workup & Step-Up",
+        url: "./resistant-hypertension/",
+        category: "Cardiology",
+        description: "Differentiating pseudo-resistance from true resistant HTN, 3-drug optimization, secondary HTN screener, and 4th-line MRA dosing protocol."
+    },
+    {
+        id: "masld-fib4",
+        title: "MASLD / NAFLD Risk Stratification (FIB-4 Flow)",
+        url: "./masld-fib4/",
+        category: "Gastroenterology",
+        description: "Real-time FIB-4 calculator, risk stratification triage (<1.3, 1.3-2.67, >2.67), reflex elastography (VCTE/FibroScan) guidance, and Resmetirom considerations."
+    },
+    {
+        id: "aub-triage",
+        title: "Abnormal Uterine Bleeding (AUB) Outpatient Triage",
+        url: "./aub-triage/",
+        category: "Women's Health",
+        description: "PALM-COEIN classification framework, TVUS vs. Endometrial Biopsy indications, acute OCP tapers, Tranexamic Acid, and Levonorgestrel-IUD protocols."
+    },
+    {
+        id: "rhinosinusitis-allergic-rhinitis",
+        title: "Rhinosinusitis & Allergic Rhinitis Step-Up",
+        url: "./rhinosinusitis-allergic-rhinitis/",
+        category: "Primary Care",
+        description: "Distinguish allergic vs non-allergic vs chronic rhinosinusitis, Samter's triad check, proper nasal spray technique guide, and Tier 1-3 step-up management."
+    },
+    {
+        id: "dizziness-triage",
+        title: "Outpatient Dizziness Triage (HINTS & Epley)",
+        url: "./dizziness-triage/",
+        category: "Primary Care",
+        description: "Interactive HINTS exam module (INFARCT stroke rules), BPPV Dix-Hallpike interpretation, step-by-step Epley Maneuver guide, and Meclizine safety warnings."
     }
 ];
 
