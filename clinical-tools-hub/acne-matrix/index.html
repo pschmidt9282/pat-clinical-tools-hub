@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acne Vulgaris Primary Care Prescribing & Escalation Matrix | OpenEvidence Sourced</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1e293b;
+      --border-color: #24334a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-teal: #10b981;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-pink: #ec4899;
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Back Button Banner */
+    .back-nav {
+      margin-bottom: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #090d16;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #164e63 50%, #0369a1 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #38bdf8, #34d399, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title-group p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    .oe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Step-by-Step PCP Algorithm Header Card */
+    .algorithm-card {
+      background: linear-gradient(135deg, #131b2e 0%, #090d16 100%);
+      border: 1px solid #06b6d4;
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .algorithm-card h3 {
+      color: #38bdf8;
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .step-box {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .step-box.active-step {
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    .step-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #34d399;
+      letter-spacing: 0.05em;
+    }
+
+    .step-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 4px 0;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Toolbar / Filters */
+    .toolbar-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .search-input-wrapper i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-input {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px 10px 40px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-right: 4px;
+    }
+
+    .btn-pill {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-pill:hover, .btn-pill.active {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #090d16;
+      font-weight: 700;
+    }
+
+    .btn-pill.btn-calc { background: rgba(236, 72, 153, 0.15); border-color: rgba(236, 72, 153, 0.4); color: #f472b6; }
+    .btn-pill.btn-calc:hover { background: #ec4899; color: #fff; }
+
+    /* Main Table Container */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    thead {
+      background: #090d16;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    th {
+      padding: 14px 16px;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.15s;
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    td {
+      padding: 14px 16px;
+      vertical-align: top;
+    }
+
+    /* Badges & Tags */
+    .drug-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #38bdf8;
+    }
+
+    .brand-names {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* Starter vs Partner Badges */
+    .role-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .role-starter { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .role-partner { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .role-addon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .role-swap { background: rgba(244, 63, 94, 0.2); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.4); }
+
+    .protocol-box {
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 3px solid #10b981;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.82rem;
+    }
+
+    .swap-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 3px solid #f59e0b;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.82rem;
+    }
+
+    .btn-details {
+      background: rgba(6, 182, 212, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-details:hover {
+      background: var(--accent-cyan);
+      color: #090d16;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .modal-close:hover { color: #fff; border-color: #fff; }
+
+    /* Interactive Isotretinoin Calculator Card */
+    .calculator-card {
+      background: linear-gradient(135deg, #1e1b4b 0%, #131b2e 100%);
+      border: 1px solid #ec4899;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .calculator-card h3 {
+      color: #f472b6;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .calc-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .calc-input {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+    }
+
+    .calc-result-box {
+      background: rgba(9, 13, 22, 0.9);
+      border: 1px solid rgba(236, 72, 153, 0.4);
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+    }
+
+    /* References Drawer */
+    .ref-drawer {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      font-size: 0.85rem;
+    }
+
+    .ref-drawer h4 {
+      color: #38bdf8;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ref-list {
+      list-style-type: decimal;
+      padding-left: 20px;
+      color: var(--text-muted);
+    }
+
+    .ref-list li {
+      margin-bottom: 8px;
+    }
+
+    .ref-list a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+
+    .ref-list a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation back to Clinical Hub -->
+  <div class="back-nav">
+    <a href="../" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Back to Clinical Reference Hub</a>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="header-banner">
+    <div class="header-title-group">
+      <h1><i class="fa-solid fa-user-doctor"></i> Primary Care Acne Prescribing & Escalation Protocol</h1>
+      <p>Clinical Decision Support: How Many Agents First-Line, Starter vs. Add-On Rules, & Swapping Protocols</p>
+    </div>
+    <div class="oe-badge">
+      <i class="fa-solid fa-shield-halved"></i> AAD 2024 & OpenEvidence Guidelines
+    </div>
+  </header>
+
+  <!-- Primary Care Step-by-Step Prescribing Algorithm Header Card -->
+  <div class="algorithm-card">
+    <h3><i class="fa-solid fa-layer-group"></i> PCP First-Line Prescribing Rules: How Many Agents to Start?</h3>
+    <div class="step-grid">
+      <div class="step-box">
+        <div class="step-num">Tier 1: Mild Comedonal</div>
+        <div class="step-title">1 Agent (Monotherapy)</div>
+        <div class="step-desc">Start <strong>Topical Retinoid</strong> alone QHS (Adapalene 0.1% or Tretinoin 0.025%). Do NOT prescribe oral antibiotics or multi-topical cocktails.</div>
+      </div>
+      <div class="step-box active-step">
+        <div class="step-num">Tier 2: Mild-Mod Inflammatory</div>
+        <div class="step-title">2 Agents (Dual Therapy)</div>
+        <div class="step-desc">Start <strong>Topical Retinoid (QHS) + Benzoyl Peroxide (AM)</strong> OR fixed combination (Epiduo / Benzaclin). Maximum 2 active topicals!</div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Tier 3: Mod-Severe / Truncal</div>
+        <div class="step-title">1 Oral + 2 Topicals</div>
+        <div class="step-desc">Start <strong>Oral Doxycycline 100 mg BID</strong> (max 3-4 mos) + <strong>Topical Retinoid + BPO</strong>. BPO is MANDATORY to prevent resistance.</div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Tier 4: Adult Female / Hormonal</div>
+        <div class="step-title">Oral Hormonal + Topicals</div>
+        <div class="step-desc">Start <strong>Spironolactone 50-100 mg PO daily</strong> (or COC) + <strong>Topical Retinoid + BPO</strong>. Replaces need for chronic oral antibiotics!</div>
+      </div>
+      <div class="step-box">
+        <div class="step-num">Tier 5: Severe Nodular / Scarring</div>
+        <div class="step-title">Oral Isotretinoin</div>
+        <div class="step-desc">Refer for <strong>Oral Isotretinoin Monotherapy</strong> (0.5-1.0 mg/kg/day to 120-150 mg/kg cumulative target via iPLEDGE). Discontinue all other acne drugs!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar & Filters -->
+  <div class="toolbar-container">
+    <div class="search-row">
+      <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search agent, starter vs add-on status, swap scenario, or lab monitoring...">
+      </div>
+      <button class="btn-pill btn-calc" onclick="toggleIsotretinoinCalc()">
+        <i class="fa-solid fa-calculator"></i> Isotretinoin Cumulative Dose Calculator
+      </button>
+    </div>
+
+    <div class="search-row">
+      <div class="filter-group">
+        <span class="filter-label">Prescribing Role:</span>
+        <button class="btn-pill active" data-role="all" onclick="filterRole('all', this)">All Roles</button>
+        <button class="btn-pill" data-role="starter" onclick="filterRole('starter', this)">🟢 Stand-Alone Starter</button>
+        <button class="btn-pill" data-role="partner" onclick="filterRole('partner', this)">🔵 Essential Co-Prescribed Partner</button>
+        <button class="btn-pill" data-role="addon" onclick="filterRole('addon', this)">🟡 Add-On / Step-Up Agent</button>
+        <button class="btn-pill" data-role="swap" onclick="filterRole('swap', this)">🔴 Second-Line / Replacement</button>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Acne Type / Severity:</span>
+        <button class="btn-pill active" data-filter="all" onclick="filterSeverity('all', this)">All Severities</button>
+        <button class="btn-pill" data-filter="comedonal" onclick="filterSeverity('comedonal', this)">Comedonal</button>
+        <button class="btn-pill" data-filter="papulopustular" onclick="filterSeverity('papulopustular', this)">Mild-Mod Papulopustular</button>
+        <button class="btn-pill" data-filter="nodulocystic" onclick="filterSeverity('nodulocystic', this)">Severe Nodulocystic</button>
+        <button class="btn-pill" data-filter="hormonal" onclick="filterSeverity('hormonal', this)">Adult Female / Hormonal</button>
+        <button class="btn-pill" data-filter="trunk" onclick="filterSeverity('trunk', this)">Trunk (Back/Chest)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Isotretinoin Cumulative Dose Calculator (Hidden by default) -->
+  <div id="isotretinoinCalc" class="calculator-card" style="display: none;">
+    <h3><i class="fa-solid fa-capsules"></i> Oral Isotretinoin Cumulative Dose & Lab Schedule Calculator</h3>
+    <p style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 16px;">
+      Target Cumulative Dose Range: <strong>120 – 150 mg/kg</strong> (reduces long-term acne relapse rate to <15%).
+    </p>
+    <div class="calc-grid">
+      <div class="calc-group">
+        <label for="ptWeight">Patient Weight (kg):</label>
+        <input type="number" id="ptWeight" class="calc-input" placeholder="e.g. 60" step="1">
+      </div>
+      <div class="calc-group">
+        <label for="dailyDose">Planned Daily Dose (mg/day):</label>
+        <input type="number" id="dailyDose" class="calc-input" placeholder="e.g. 40" step="10">
+      </div>
+    </div>
+    <button class="btn-pill active" style="background:#ec4899; color:#fff;" onclick="calculateIsotretinoin()"><i class="fa-solid fa-calculator"></i> Calculate Treatment Course & Labs</button>
+    <div id="isoResult" class="calc-result-box" style="display: none;"></div>
+  </div>
+
+  <!-- Main Table -->
+  <div class="table-wrapper">
+    <table id="matrixTable">
+      <thead>
+        <tr>
+          <th>Agent & Subtype</th>
+          <th>Prescribing Status</th>
+          <th>Acne Indication</th>
+          <th>Dosing & Application Titration</th>
+          <th>Add-On vs. Swap / Replacement Decision Rules</th>
+          <th>Side Effects & Management</th>
+          <th>Lab Monitoring & iPLEDGE</th>
+          <th>Cost & Clinical Pearls</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="matrixTbody">
+        <!-- Rows populated dynamically by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- References Drawer -->
+  <div class="ref-drawer">
+    <h4><i class="fa-solid fa-book-bookmark"></i> OpenEvidence & AAD Sourced Literature Citations</h4>
+    <ol class="ref-list">
+      <li><strong>AAD Guidelines of Care for the Management of Acne Vulgaris (2024 Update):</strong> <em>J Am Acad Dermatol</em>. 2024;90(5):1006-1030. <a href="https://doi.org/10.1016/j.jaad.2023.12.012" target="_blank">doi:10.1016/j.jaad.2023.12.012</a></li>
+      <li><strong>Spironolactone Potassium Monitoring in Young Females:</strong> Routine serum potassium monitoring is NOT necessary for healthy young women taking spironolactone for acne. <em>JAMA Dermatol</em>. 2015;151(9):941-944.</li>
+      <li><strong>Antibiotic Stewardship in Acne Management:</strong> Limit oral antibiotic courses to 3–4 months and always co-prescribe Benzoyl Peroxide. <em>J Am Acad Dermatol</em>. 2016;74(5):945-973.</li>
+      <li><strong>Clascoterone (Winlevi) 1% Cream:</strong> First-in-class topical androgen receptor inhibitor for facial acne. <em>JAMA Dermatol</em>. 2020;156(6):621-630.</li>
+    </ol>
+  </div>
+
+  <!-- Detail Monograph Modal -->
+  <div id="detailModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const acneData = [
+      {
+        id: "tretinoin",
+        name: "Tretinoin",
+        brand: "Retin-A, Retin-A Micro, Altreno 0.05%",
+        role: "starter",
+        roleName: "🟢 Stand-Alone Starter",
+        severity: "comedonal,papulopustular",
+        indication: "First-Line Foundation for Comedonal & Inflammatory Acne",
+        moa: "Normalizes follicular desquamation, clears microcomedones, anti-inflammatory.",
+        dosing: "Pea-sized amount to entire face QHS.<br><em>Titration:</em> Start q2-3 nights × 2 wks, then QHS. Apply to dry skin.",
+        swapRules: "<strong>WHEN TO START:</strong> First-line monotherapy for mild comedonal acne OR paired with BPO for mild-moderate inflammatory acne.<br><strong>WHEN TO SWAP OUT:</strong> If severe retinoid dermatitis occurs despite sandwiching, SWAP to Adapalene 0.1% or Altreno lotion.<br><strong>WHEN TO ADD ON:</strong> If inflammatory papules remain after 8-12 wks, ADD BPO 2.5% AM (do not stack 3rd topical).",
+        sideEffects: "Retinoid dermatitis (erythema, dryness, peeling), photosensitivity.",
+        monitoring: "No labs required. Avoid in pregnancy (Category C).",
+        cost: "Generic OTC/Rx ($25–$60). Altreno ($120).",
+        pearls: "Cornerstone of all acne regimens. Non-microsphere tretinoin is degraded by BPO — apply BPO in AM and Tretinoin in PM!"
+      },
+      {
+        id: "adapalene",
+        name: "Adapalene",
+        brand: "Differin 0.1% OTC, Differin 0.3% Rx",
+        role: "starter",
+        roleName: "🟢 Stand-Alone Starter",
+        severity: "comedonal,papulopustular",
+        indication: "First-Line Starter for Sensitive Skin & Comedonal Acne",
+        moa: "3rd-generation selective RAR-β/γ agonist. Highly lipophilic.",
+        dosing: "Apply thin layer to entire face QHS.",
+        swapRules: "<strong>WHEN TO START:</strong> Preferred starter retinoid for sensitive skin or patients wanting OTC access.<br><strong>SWAP SCENARIO:</strong> SWAP Tretinoin -> Adapalene if tretinoin causes excessive burning/peeling.<br><strong>ADD-ON SCENARIO:</strong> Can be combined in same step with BPO (chemically photostable with BPO, e.g. Epiduo).",
+        sideEffects: "Lowest irritation profile among topical retinoids.",
+        monitoring: "No labs required.",
+        cost: "0.1% Gel OTC ($15–$25).",
+        pearls: "Chemically stable when co-applied with BPO (unlike tretinoin)."
+      },
+      {
+        id: "benzoyl_peroxide",
+        name: "Benzoyl Peroxide (BPO)",
+        brand: "PanOxyl 4%, Neutrogena BPO 2.5%, Benzaclin",
+        role: "partner",
+        roleName: "🔵 Essential Co-Prescribed Partner",
+        severity: "comedonal,papulopustular,trunk",
+        indication: "Mandatory Co-Prescription for Inflammatory Acne & Antibiotic Resistance Prevention",
+        moa: "Bactericidal ROS release against C. acnes. Mild comedolytic. ZERO bacterial resistance!",
+        dosing: "Wash: 2.5%-4% daily in shower. Leave-on gel: 2.5%-5% daily AM.",
+        swapRules: "<strong>DO NOT USE AS LONE MONOTHERAPY FOR MODERATE ACNE:</strong> Always pair BPO with a Topical Retinoid!<br><strong>MANDATORY PARTNER RULE:</strong> MUST be co-prescribed whenever topical clindamycin or oral doxycycline is used to prevent C. acnes resistance.<br><strong>NEVER SWAP OUT DURING ANTIBIOTIC THERAPY:</strong> Keep BPO onboard throughout antibiotic course.",
+        sideEffects: "Dryness, contact irritation, bleaches towels/clothing!",
+        monitoring: "No labs required.",
+        cost: "OTC ($8–$15). Low cost.",
+        pearls: "2.5% BPO is as clinically effective as 10% BPO with far less skin irritation!"
+      },
+      {
+        id: "trifarotene",
+        name: "Trifarotene",
+        brand: "Aklief 0.005% Cream",
+        role: "starter",
+        roleName: "🟢 Stand-Alone Starter (Truncal)",
+        severity: "comedonal,papulopustular,trunk",
+        indication: "First-Line Starter for Facial AND Truncal (Back/Chest) Acne",
+        moa: "Selective RAR-γ agonist targeting epidermal receptors.",
+        dosing: "1 pump for face QHS; 2 pumps for chest/back QHS.",
+        swapRules: "<strong>WHEN TO START:</strong> Preferred starter retinoid when patient has prominent chest/back acne.<br><strong>SWAP SCENARIO:</strong> SWAP Tretinoin -> Trifarotene if patient develops extensive truncal involvement.",
+        sideEffects: "Local application site irritation.",
+        monitoring: "No labs required.",
+        cost: "Rx Brand (~$150–$300).",
+        pearls: "First topical retinoid explicitly FDA approved for truncal acne!"
+      },
+      {
+        id: "clascoterone",
+        name: "Clascoterone",
+        brand: "Winlevi 1% Cream",
+        role: "addon",
+        roleName: "🟡 Add-On / Step-Up Agent",
+        severity: "papulopustular,hormonal",
+        indication: "Add-On Topical Anti-Androgen for Refractory Sebum in Males & Females (≥12yo)",
+        moa: "Competes with DHT at local cutaneous androgen receptors, stopping sebum production.",
+        dosing: "Apply thin layer BID to clean dry face.",
+        swapRules: "<strong>DO NOT START AS MILD ACNE MONOTHERAPY:</strong> Use as an ADD-ON agent.<br><strong>ADD-ON SCENARIO:</strong> ADD to existing Topical Retinoid + BPO regimen when patient has persistent heavy sebum/oiliness or hormonal flares.<br><strong>MALE PATIENT RULE:</strong> Ideal add-on anti-androgen for males (spironolactone cannot be given to males).",
+        sideEffects: "Local skin redness, scaling.",
+        monitoring: "No routine labs.",
+        cost: "Rx Brand (~$200–$500; prior auth often required).",
+        pearls: "Topical anti-androgen safe for both MALES and females! No systemic anti-androgen side effects."
+      },
+      {
+        id: "azelaic_acid",
+        name: "Azelaic Acid",
+        brand: "Azelex 20%, Finacea 15%, OTC 10%",
+        role: "swap",
+        roleName: "🔴 Starter / Swap for Pregnancy & PIH",
+        severity: "comedonal,papulopustular",
+        indication: "First-Line Swap for Pregnant Patients & Acne with Dark Marks (PIH)",
+        moa: "Antibacterial, anti-inflammatory, inhibits tyrosinase (fades hyperpigmentation).",
+        dosing: "Apply BID to clean face.",
+        swapRules: "<strong>PREGNANCY SWAP:</strong> Immediately SWAP OUT Topical Retinoids/Spironolactone -> Start Azelaic Acid (Category B - safest in pregnancy!).<br><strong>SKIN OF COLOR ADD-ON/SWAP:</strong> Add or swap in for patients with severe post-inflammatory hyperpigmentation (PIH).",
+        sideEffects: "Transient tingling/burning.",
+        monitoring: "No labs required.",
+        cost: "OTC ($15–$25); Rx ($50–$120).",
+        pearls: "Category B in pregnancy! Fades dark acne marks while treating active lesions."
+      },
+      {
+        id: "doxycycline",
+        name: "Doxycycline Hyclate / Monohydrate",
+        brand: "Monodox, Doryx, Acticlate 100mg",
+        role: "addon",
+        roleName: "🟡 Step-Up Oral Systemic",
+        severity: "papulopustular,nodulocystic,trunk",
+        indication: "Step-Up Oral Antibiotic for Moderate-Severe Inflammatory & Truncal Acne",
+        moa: "Tetracycline protein synthesis inhibitor & anti-inflammatory.",
+        dosing: "50–100 mg PO BID with meals & full glass of water.<br><em>Duration:</em> <strong>Max 3–4 months!</strong>",
+        swapRules: "<strong>WHEN TO STEP UP TO ORAL:</strong> Do NOT start oral antibiotics for mild acne! Step up to Doxycycline when patient fails 8-12 wks of dual topical therapy OR presents with moderate-severe inflammatory papules/cysts.<br><strong>NEVER PRESCRIBE ALONE:</strong> ALWAYS keep BPO + Topical Retinoid onboard.<br><strong>EXIT STRATEGY (3-4 MONTHS):</strong> Stop Doxycycline at 3-4 months and transition to topical maintenance (or swap to Spironolactone in adult females).",
+        sideEffects: "GI upset, Pill Esophagitis (do NOT lie down for 30 mins after dose!), Photosensitivity.",
+        monitoring: "No routine labs for short courses (<4 mos). Contraindicated in pregnancy & age <8.",
+        cost: "Generic ($15–$35/month).",
+        pearls: "Cap duration at 3-4 months! Never leave patients on oral antibiotics indefinitely."
+      },
+      {
+        id: "minocycline",
+        name: "Minocycline",
+        brand: "Minocin, Solodyn",
+        role: "swap",
+        roleName: "🔴 Second-Line Swap Agent",
+        severity: "papulopustular,nodulocystic",
+        indication: "Second-Line Oral Antibiotic Swap for Doxycycline Intolerance/Failure",
+        moa: "Lipophilic tetracycline antibiotic.",
+        dosing: "1 mg/kg/day PO daily (or 50-100 mg PO BID) × 3-4 months max.",
+        swapRules: "<strong>SWAP SCENARIO ONLY:</strong> Do NOT start Minocycline as initial 1st-line oral antibiotic.<br><strong>WHEN TO SWAP:</strong> SWAP Doxycycline -> Minocycline ONLY if patient experiences severe GI nausea/photosensitivity on doxycycline or fails doxycycline after 8 weeks.",
+        sideEffects: "Dizziness/vertigo, blue-grey skin/scar hyperpigmentation, rare Drug-Induced Lupus & DRESS.",
+        monitoring: "Baseline LFTs if prolonged.",
+        cost: "Generic ($25–$60).",
+        pearls: "Warn patients about dizziness and blue-grey staining of acne scars/gums!"
+      },
+      {
+        id: "spironolactone",
+        name: "Spironolactone",
+        brand: "Aldactone",
+        role: "addon",
+        roleName: "🟡 Step-Up / Swap for Adult Females",
+        severity: "hormonal,papulopustular",
+        indication: "First-Line Systemic Step-Up for Adult Female Hormonal Acne",
+        moa: "Aldosterone antagonist with potent anti-androgenic activity.",
+        dosing: "Start 50 mg PO daily × 2-4 wks, then titrate to 100 mg PO daily (max 200 mg/day). Onset: 8-12 wks.",
+        swapRules: "<strong>WHEN TO START/STEP-UP:</strong> First-line systemic choice for adult females (age >20) with jawline/deep cystic hormonal flares.<br><strong>SWAP SCENARIO:</strong> Ideal long-term SWAP to replace chronic oral antibiotics in adult females.<br><strong>COMBINATION:</strong> Maintain topical retinoid + BPO on top.",
+        sideEffects: "Menstrual spotting/irregularity, breast tenderness, polyuria.",
+        monitoring: "<strong>AAD 2024 Update:</strong> Routine serum potassium monitoring is NOT necessary in healthy young females without renal disease!",
+        cost: "Generic ($10–$20/month).",
+        pearls: "Eliminates need for chronic oral antibiotics in adult women!"
+      },
+      {
+        id: "cocs",
+        name: "Combined Oral Contraceptives",
+        brand: "Ortho Tri-Cyclen, Estrostep, YAZ, Beyaz",
+        role: "addon",
+        roleName: "🟡 Step-Up / Partner for Females",
+        severity: "hormonal,papulopustular",
+        indication: "Hormonal Step-Up for Females Needing Contraception + Acne Control",
+        moa: "Estrogen increases SHBG, binding free testosterone.",
+        dosing: "1 tablet PO daily per pack cycle.",
+        swapRules: "<strong>ADD-ON SCENARIO:</strong> Perfect add-on for female patients seeking contraception who have mild-moderate acne flares.<br><strong>PARTNER WITH SPIRONOLACTONE:</strong> Pairing COC + Spironolactone regulates menstrual bleeding and provides dual hormonal control.",
+        sideEffects: "Nausea, breakthrough bleeding, VTE risk.",
+        monitoring: "Baseline blood pressure.",
+        cost: "Covered by ACA ($0 copay).",
+        pearls: "FDA approved specifically for acne treatment in females."
+      },
+      {
+        id: "isotretinoin",
+        name: "Oral Isotretinoin",
+        brand: "Accutane, Absorica, Claravis",
+        role: "swap",
+        roleName: "🔴 Definitive Replacement Monotherapy",
+        severity: "nodulocystic",
+        indication: "Definitive Replacement Monotherapy for Severe Nodulocystic or Scarring Acne",
+        moa: "Shrinks sebaceous glands ~90%, stops C. acnes, normalizes desquamation.",
+        dosing: "0.5 mg/kg/day month 1 -> 1.0 mg/kg/day. Target Cumulative Dose: <strong>120 – 150 mg/kg</strong> (course ~5-6 months).",
+        swapRules: "<strong>DEFINITIVE MONOTHERAPY RULE:</strong> When starting Isotretinoin, STOP ALL OTHER ACNE DRUGS (discontinue all oral antibiotics, topical retinoids, BPO, and spironolactone!).<br><strong>WHEN TO REFER/START:</strong> Severe nodulocystic acne, physical scarring, or failure of 3-4 months of oral antibiotic + topical therapy.",
+        sideEffects: "Cheilitis (100%), xerosis, dry eyes, epistaxis, elevated triglycerides, LFT elevation.",
+        monitoring: "<strong>iPLEDGE:</strong> 2 negative pregnancy tests prior to start + monthly tests. Baseline & Month 2: LFTs, Fasting Lipids, CBC.",
+        cost: "Rx Generic ($150–$300/month).",
+        pearls: "Only curative acne treatment. Reaching >120 mg/kg cumulative dose reduces long-term relapse to <15%!"
+      }
+    ];
+
+    function renderTable(data) {
+      const tbody = document.getElementById('matrixTbody');
+      tbody.innerHTML = '';
+
+      if(data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 40px; color: var(--text-muted);">No matching acne therapies found.</td></tr>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+          <td>
+            <div class="drug-name">${item.name}</div>
+            <div class="brand-names">${item.brand}</div>
+          </td>
+          <td>
+            <div class="role-badge ${item.role === 'starter' ? 'role-starter' : item.role === 'partner' ? 'role-partner' : item.role === 'addon' ? 'role-addon' : 'role-swap'}">${item.roleName}</div>
+          </td>
+          <td style="font-size:0.83rem; font-weight:600; color:#38bdf8;">${item.indication}</td>
+          <td style="font-size:0.83rem;">${item.dosing}</td>
+          <td>
+            <div class="${item.role === 'swap' ? 'swap-box' : 'protocol-box'}">${item.swapRules}</div>
+          </td>
+          <td style="font-size:0.82rem; color:#fda4af;">${item.sideEffects}</td>
+          <td style="font-size:0.82rem;">${item.monitoring}</td>
+          <td style="font-size:0.82rem;">
+            <div><strong>Cost:</strong> ${item.cost}</div>
+            <div style="color:#38bdf8; margin-top:4px;">💡 ${item.pearls}</div>
+          </td>
+          <td>
+            <button class="btn-details" onclick="showMonograph('${item.id}')">Monograph</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Filter Logic
+    let currentRole = 'all';
+    let currentSeverity = 'all';
+
+    function applyFilters() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = acneData.filter(item => {
+        const matchesRole = (currentRole === 'all') || (item.role === currentRole);
+        const matchesSeverity = (currentSeverity === 'all') || item.severity.includes(currentSeverity);
+        const matchesSearch = query === '' || 
+          item.name.toLowerCase().includes(query) ||
+          item.brand.toLowerCase().includes(query) ||
+          item.roleName.toLowerCase().includes(query) ||
+          item.swapRules.toLowerCase().includes(query) ||
+          item.dosing.toLowerCase().includes(query) ||
+          item.pearls.toLowerCase().includes(query);
+
+        return matchesRole && matchesSeverity && matchesSearch;
+      });
+      renderTable(filtered);
+    }
+
+    function filterRole(role, btn) {
+      currentRole = role;
+      document.querySelectorAll('[data-role]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function filterSeverity(sev, btn) {
+      currentSeverity = sev;
+      document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+    // Isotretinoin Calculator Toggle & Logic
+    function toggleIsotretinoinCalc() {
+      const card = document.getElementById('isotretinoinCalc');
+      card.style.display = card.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function calculateIsotretinoin() {
+      const weight = parseFloat(document.getElementById('ptWeight').value);
+      const dose = parseFloat(document.getElementById('dailyDose').value);
+      const resultBox = document.getElementById('isoResult');
+
+      if (isNaN(weight) || isNaN(dose) || weight <= 0 || dose <= 0) {
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `<div style="color:#f43f5e;"><i class="fa-solid fa-circle-exclamation"></i> Please enter valid patient weight and daily dose.</div>`;
+        return;
+      }
+
+      const minTargetMg = weight * 120;
+      const maxTargetMg = weight * 150;
+
+      const daysNeededMin = minTargetMg / dose;
+      const daysNeededMax = maxTargetMg / dose;
+
+      const monthsMin = (daysNeededMin / 30.4).toFixed(1);
+      const monthsMax = (daysNeededMax / 30.4).toFixed(1);
+
+      resultBox.style.display = 'block';
+      resultBox.innerHTML = `
+        <div style="font-weight:700; color:#f472b6; font-size:1.05rem; margin-bottom:8px;">
+          <i class="fa-solid fa-circle-check"></i> Treatment Calculation Results for ${weight} kg Patient
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; font-size:0.88rem;">
+          <div style="background:#090d16; padding:10px; border-radius:6px; border:1px solid #24334a;">
+            <span style="color:var(--text-muted);">Target Cumulative Dose Range:</span><br>
+            <strong style="color:#38bdf8;">${minTargetMg} mg – ${maxTargetMg} mg</strong>
+          </div>
+          <div style="background:#090d16; padding:10px; border-radius:6px; border:1px solid #24334a;">
+            <span style="color:var(--text-muted);">Est. Duration at ${dose} mg/day:</span><br>
+            <strong style="color:#34d399;">${monthsMin} to ${monthsMax} Months</strong>
+          </div>
+        </div>
+        <div style="font-size:0.82rem; color:#cbd5e1; margin-top:12px; padding:8px; background:rgba(236,72,153,0.1); border-radius:4px;">
+          <strong>iPLEDGE Reminder:</strong> Discontinue all other acne topicals/orals when starting Isotretinoin! Monthly pregnancy test required for females of childbearing potential.
+        </div>
+      `;
+    }
+
+    // Modal Details Monograph
+    function showMonograph(id) {
+      const item = acneData.find(d => d.id === id);
+      if(!item) return;
+
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <h2 style="font-size: 1.6rem; color: #38bdf8; margin-bottom: 6px;">${item.name} (${item.brand})</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Role: <strong>${item.roleName}</strong> | Indication: ${item.indication}</p>
+        
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 16px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 20px;">
+          <h4 style="color: #34d399; margin-bottom: 8px;"><i class="fa-solid fa-code-branch"></i> Add-On vs. Swap / Replacement Prescribing Decision Rules</h4>
+          <p style="font-size: 0.88rem;">${item.swapRules}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          <div style="background: #090d16; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4 style="color: #34d399; margin-bottom: 8px;"><i class="fa-solid fa-microscope"></i> Mechanism of Action</h4>
+            <p style="font-size: 0.88rem;">${item.moa}</p>
+          </div>
+          <div style="background: #090d16; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4 style="color: #f472b6; margin-bottom: 8px;"><i class="fa-solid fa-prescription-bottle-medical"></i> Dosing & Application Titration</h4>
+            <p style="font-size: 0.88rem;">${item.dosing}</p>
+          </div>
+        </div>
+
+        <div style="background: rgba(244, 63, 94, 0.08); padding: 16px; border-radius: 8px; border-left: 4px solid #f43f5e; margin-bottom: 20px;">
+          <h4 style="color: #f43f5e; margin-bottom: 8px;"><i class="fa-solid fa-triangle-exclamation"></i> Side Effects & Lab Monitoring</h4>
+          <p style="font-size: 0.88rem; color: #fda4af;">${item.sideEffects}</p>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;"><strong>Lab & Clinical Monitoring:</strong> ${item.monitoring}</p>
+        </div>
+
+        <div style="background: rgba(56, 189, 248, 0.1); padding: 16px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.3);">
+          <h4 style="color: #38bdf8; margin-bottom: 8px;"><i class="fa-solid fa-lightbulb"></i> Primary Care Pearls</h4>
+          <p style="font-size: 0.88rem;">${item.pearls}</p>
+        </div>
+      `;
+
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').style.display = 'none';
+    }
+
+    // Initialize
+    renderTable(acneData);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osteoporosis Master Prescribing Reference & Decision Matrix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <span class="logo-icon">🦴</span>
+                <div>
+                    <h1>Osteoporosis Master Reference</h1>
+                    <p class="subtitle">Primary Care Clinical Decision Matrix & Prescribing Guide</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="print-btn" class="btn btn-secondary-outline">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    Print Patient Report
+                </button>
+                <button id="theme-toggle" class="btn btn-icon" title="Toggle Light/Dark Theme">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <nav class="side-nav">
+                <p class="nav-title">Interactive Tools</p>
+                <a href="#patient-profiler" class="nav-link active" data-section="profiler">
+                    <span class="nav-icon">👤</span> Patient Decision Profiler
+                </a>
+                
+                <p class="nav-title">Reference Sections</p>
+                <a href="#section1" class="nav-link" data-section="sec1">
+                    <span class="nav-icon">📋</span> 1. Screening & Diagnosis
+                </a>
+                <a href="#section1b" class="nav-link" data-section="sec1b">
+                    <span class="nav-icon">🥛</span> 1B. Calcium & Vitamin D
+                </a>
+                <a href="#section2" class="nav-link" data-section="sec2">
+                    <span class="nav-icon">💊</span> 2. Oral Bisphosphonates
+                </a>
+                <a href="#section3" class="nav-link" data-section="sec3">
+                    <span class="nav-icon">💧</span> 3. IV Bisphosphonates
+                </a>
+                <a href="#section4" class="nav-link" data-section="sec4">
+                    <span class="nav-icon">🧬</span> 4. Denosumab (RANKL)
+                </a>
+                <a href="#section5" class="nav-link" data-section="sec5">
+                    <span class="nav-icon">⚡</span> 5. Anabolic Agents
+                </a>
+                <a href="#section6" class="nav-link" data-section="sec6">
+                    <span class="nav-icon">⚖️</span> 6. Other Agents
+                </a>
+                <a href="#section7" class="nav-link" data-section="sec7">
+                    <span class="nav-icon">🧠</span> 7. Clinical Decision Support
+                </a>
+            </nav>
+            
+            <div class="quick-supplement-card">
+                <h4>Core Supplements</h4>
+                <p>All patients on pharmacotherapy should receive:</p>
+                <ul>
+                    <li><strong>Calcium:</strong> 1,000–1,200 mg/day (dietary preferred)</li>
+                    <li><strong>Vitamin D:</strong> 600–800 IU/day (target 25(OH)D &ge;20 ng/mL)</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Dynamic Decision Support Widget -->
+            <section id="patient-profiler" class="content-section card profiler-card">
+                <div class="card-header bg-teal">
+                    <span class="card-icon">⚡</span>
+                    <h2>Interactive Patient Decision Profiler</h2>
+                    <span class="badge badge-accent">Point of Care</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-intro">Input your patient's clinical markers below to generate an immediate, evidence-based risk assessment, diagnosis check, treatment strategy, and drug suitability report.</p>
+                    
+                    <form id="profiler-form">
+                        <div class="form-grid">
+                            <!-- Left Column: Inputs -->
+                            <div class="form-column">
+                                <h3 class="subsection-title">Patient Markers</h3>
+                                
+                                <div class="form-group">
+                                    <label for="patient-demographics">Patient Demographics</label>
+                                    <select id="patient-demographics" class="form-control">
+                                        <option value="none">Select age/status...</option>
+                                        <option value="postmenopausal-65">Postmenopausal Woman &ge;65 years</option>
+                                        <option value="postmenopausal-under65">Postmenopausal Woman &lt;65 years (with risk factors)</option>
+                                        <option value="man-70">Man &ge;70 years</option>
+                                        <option value="man-under70">Man &lt;70 years</option>
+                                        <option value="other">Other Adult</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="t-score">Lowest DXA T-score</label>
+                                    <input type="number" id="t-score" step="0.1" max="5" min="-6.0" placeholder="e.g. -2.7" class="form-control">
+                                    <small class="form-help">Lowest T-score of femoral neck, total hip, lumbar spine, or 33% radius.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="fracture-history">Low-Trauma Fracture History</label>
+                                    <select id="fracture-history" class="form-control">
+                                        <option value="none">No history of low-trauma fracture</option>
+                                        <option value="hip-spine">Hip or Vertebral Fracture</option>
+                                        <option value="multiple-vertebral">Multiple Vertebral Fractures</option>
+                                        <option value="other-fracture">Other low-trauma fracture (e.g. wrist/humerus)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>10-Year FRAX Risk (if T-score between -1.0 and -2.5)</label>
+                                    <div class="dual-input">
+                                        <div>
+                                            <label for="frax-mof" class="sub-label">Major Osteoporotic Fracture (MOF) %</label>
+                                            <input type="number" id="frax-mof" min="0" max="100" placeholder="e.g. 22" class="form-control">
+                                        </div>
+                                        <div>
+                                            <label for="frax-hip" class="sub-label">Hip Fracture %</label>
+                                            <input type="number" id="frax-hip" min="0" max="100" placeholder="e.g. 3.5" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Medical History & Comorbidities -->
+                            <div class="form-column">
+                                <h3 class="subsection-title">Comorbidities & Clinical Context</h3>
+                                
+                                <div class="form-group">
+                                    <label for="renal-cl">Renal Function (CrCl / eGFR)</label>
+                                    <input type="number" id="renal-cl" min="5" max="150" placeholder="e.g. 28" class="form-control">
+                                    <small class="form-help">mL/min. Critical for bisphosphonates and denosumab safety.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="glucocorticoids">Glucocorticoid Therapy</label>
+                                    <select id="glucocorticoids" class="form-control">
+                                        <option value="no">No glucocorticoid therapy</option>
+                                        <option value="low-dose">GC taking &ge;2.5 mg/day prednisone equivalent for &gt;3 months</option>
+                                        <option value="high-dose">GC taking &gt;7.5 mg/day prednisone equivalent for &gt;3 months</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Other Clinical Concerns (Select all that apply)</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="gi-disorder">
+                                            <span>Active GI disorders (GERD, Barrett's, stricture, bypass, malabsorption)</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="cv-event">
+                                            <span>MI or stroke within the preceding 1 year</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="cv-high-risk">
+                                            <span>High cardiovascular risk (other CV diseases, uncontrolled HTN)</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="breast-cancer-risk">
+                                            <span>High risk or history of invasive breast cancer</span>
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="poor-adherence">
+                                            <span>Known history of poor adherence to daily/weekly oral regimens</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" id="reset-profiler" class="btn btn-secondary">Clear Inputs</button>
+                            <button type="submit" class="btn btn-primary">Generate Recommendations</button>
+                        </div>
+                    </form>
+
+                    <!-- Results Section (hidden until generated) -->
+                    <div id="profiler-results" class="results-container hidden">
+                        <hr class="results-divider">
+                        <div class="results-header">
+                            <h3>Assessment & Recommendations</h3>
+                            <span class="patient-id-tag">Generated Report</span>
+                        </div>
+                        
+                        <div class="results-summary-grid">
+                            <!-- Diagnosis Box -->
+                            <div class="result-box text-center" id="diagnosis-result-box">
+                                <span class="result-label">Diagnosis</span>
+                                <div class="result-value" id="diagnosis-val">--</div>
+                                <span class="result-detail" id="diagnosis-criteria">Based on criteria</span>
+                            </div>
+                            
+                            <!-- Risk Category Box -->
+                            <div class="result-box text-center" id="risk-result-box">
+                                <span class="result-label">Fracture Risk Level</span>
+                                <div class="result-value" id="risk-val">--</div>
+                                <span class="result-detail" id="risk-criteria">Criteria matched</span>
+                            </div>
+
+                            <!-- Strategy Box -->
+                            <div class="result-box col-span-2" id="strategy-result-box">
+                                <span class="result-label">Recommended Treatment Strategy</span>
+                                <div class="result-value-large" id="strategy-val">--</div>
+                                <p class="result-description" id="strategy-desc">Enter patient values to view clinical guidelines pathway.</p>
+                            </div>
+                        </div>
+
+                        <!-- USPSTF Screening alert -->
+                        <div id="screening-alert" class="alert alert-info hidden">
+                            <strong>Screening recommendation:</strong> <span id="screening-alert-text"></span>
+                        </div>
+
+                        <!-- Drug Suitability Table -->
+                        <h4 class="table-title mt-4">Individual Drug Suitability Matrix</h4>
+                        <div class="table-container">
+                            <table class="suitability-table">
+                                <thead>
+                                    <tr>
+                                        <th>Drug Class</th>
+                                        <th>Medication</th>
+                                        <th>Suitability</th>
+                                        <th>Clinical Rationale / Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="suitability-tbody">
+                                    <!-- Populated dynamically by app.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 1: SCREENING & DIAGNOSIS -->
+            <section id="section1" class="content-section card">
+                <div class="card-header bg-slate">
+                    <span class="card-icon">📋</span>
+                    <h2>Section 1: Screening, Diagnosis & Treatment Thresholds</h2>
+                </div>
+                <div class="card-body">
+                    <div class="grid-2col">
+                        <div class="rich-text-column">
+                            <h3>USPSTF Screening Guidelines</h3>
+                            <ul>
+                                <li><strong>All postmenopausal women &ge;65 years</strong></li>
+                                <li><strong>Postmenopausal women &lt;65 years</strong> with increased risk of osteoporosis (determined by a formal clinical risk assessment tool like FRAX or Osteoporosis Self-Assessment Tool).</li>
+                            </ul>
+                            
+                            <h3 class="mt-3">Diagnostic Criteria</h3>
+                            <p>Osteoporosis is diagnosed by either:</p>
+                            <ol>
+                                <li><strong>T-score &le; &minus;2.5</strong> at the femoral neck, total hip, lumbar spine, or 33% radius on DXA.</li>
+                                <li><strong>Clinical Diagnosis:</strong> A low-trauma hip or vertebral fracture, regardless of T-score.</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <h3>US Treatment Thresholds (BHOF/Endocrine Society)</h3>
+                            <p>Pharmacotherapy is indicated for patients meeting any of the following:</p>
+                            <ul class="styled-list">
+                                <li><strong class="color-accent">T-score &le; &minus;2.5</strong> at femoral neck, total hip, lumbar spine, or 33% radius</li>
+                                <li><strong class="color-accent">Low-trauma hip or vertebral fracture</strong> (clinical osteoporosis)</li>
+                                <li><strong>Osteopenia</strong> (T-score between &minus;1.0 and &minus;2.5) <strong>PLUS</strong> a FRAX 10-year probability of:
+                                    <ul>
+                                        <li>Major osteoporotic fracture (MOF) <strong>&ge;20%</strong> OR</li>
+                                        <li>Hip fracture <strong>&ge;3%</strong></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-3">
+                        <h4>ASBMR/BHOF Goal-Directed Treatment Framework</h4>
+                        <p>Select initial therapy based on the probability of achieving a <strong>target T-score &gt; &minus;2.5 at the total hip</strong> within 3 years. This requires stratifying risk levels immediately at baseline.</p>
+                    </div>
+
+                    <h3 class="mt-4">Baseline Risk Stratification for Initial Therapy Selection</h3>
+                    <div class="risk-cards-grid">
+                        <div class="risk-card high-risk">
+                            <div class="risk-card-header">High Fracture Risk</div>
+                            <div class="risk-card-body">
+                                <ul>
+                                    <li>T-score &le; &minus;2.5 at qualifying site WITHOUT recent fracture</li>
+                                    <li>Osteopenia meeting FRAX thresholds (&ge;20% MOF / &ge;3% hip)</li>
+                                </ul>
+                                <div class="risk-card-footer">
+                                    <strong>Preferred Initial Agents:</strong> Oral/IV Bisphosphonates or Denosumab
+                                </div>
+                            </div>
+                        </div>
+                        <div class="risk-card very-high-risk">
+                            <div class="risk-card-header">Very High Fracture Risk</div>
+                            <div class="risk-card-body">
+                                <ul>
+                                    <li>T-score &le; &minus;2.5 PLUS recent fracture (within 12 mo)</li>
+                                    <li>Multiple vertebral fractures</li>
+                                    <li>Very low T-score (e.g., T-score &le; &minus;3.0)</li>
+                                    <li>High fall risk or FRAX MOF &gt;30% / Hip &gt;4.5%</li>
+                                </ul>
+                                <div class="risk-card-footer">
+                                    <strong>Preferred Initial Agents:</strong> Anabolic-First Strategy (Romosozumab, Teriparatide, Abaloparatide) followed by antiresorptive
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 1B: CALCIUM & VITAMIN D SUPPLEMENTATION -->
+            <section id="section1b" class="content-section card">
+                <div class="card-header" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+                    <span class="card-icon">🥛</span>
+                    <h2 style="color: white;">Section 1B: Calcium &amp; Vitamin D Supplementation Complete Reference</h2>
+                </div>
+                <div class="card-body">
+                    <p class="card-intro">All major guidelines recommend calcium and vitamin D as <strong>mandatory adjuncts</strong> to all osteoporosis pharmacotherapy, since virtually every pivotal drug trial included them in both treatment and placebo arms. Several agents carry specific risks of <strong>hypocalcemia</strong> that make adequate supplementation a safety requirement.</p>
+
+                    <div class="grid-2col">
+                        <!-- Calcium Section -->
+                        <div>
+                            <h3 class="subsection-title">Calcium Supplementation Guide</h3>
+                            <div class="table-container-vertical">
+                                <div class="kv-row"><span>Daily Target (Diet + Supp)</span><strong>Age 19–50: 1,000 mg/day<br>Age &gt;50 (women) or &gt;70 (men): 1,200 mg/day</strong></div>
+                                <div class="kv-row"><span>Preferred Source</span><span><strong>Dietary preferred</strong> (dairy, fortified foods, leafy greens). Supplement only if diet is insufficient.</span></div>
+                                <div class="kv-row"><span>Max Single Dose</span><span><strong>500 mg per dose</strong> (absorption plateaus above this; split doses if &gt;500 mg needed).</span></div>
+                                <div class="kv-row"><span>Max Supplement Dose</span><span>&le;1,000 mg/day from supplements (to avoid nephrolithiasis and CV risks).</span></div>
+                                <div class="kv-row"><span>Upper Safe Limit</span><span>2,000–2,500 mg/day (intakes &gt;1,500 mg associated with &uarr; mortality in some cohorts).</span></div>
+                            </div>
+
+                            <h4 class="table-title mt-3">Calcium Formulation Comparison</h4>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Formulation</th>
+                                            <th>Elemental Ca²⁺</th>
+                                            <th>Food / Acid Required?</th>
+                                            <th>Best Candidates</th>
+                                            <th>Avoid In</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Carbonate</strong><br>(Tums, Caltrate)</td>
+                                            <td>40% (500-600mg per 1.25g tab)</td>
+                                            <td><strong>Yes</strong> — must take with meals. <br>Requires gastric acid.</td>
+                                            <td>Most patients; fewest pills. Cost: $ (cheapest).</td>
+                                            <td>Patients on <strong>PPIs, H2 blockers</strong>, or with achlorhydria/gastric bypass.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Citrate</strong><br>(Citracal)</td>
+                                            <td>21% (200-315mg per tab)</td>
+                                            <td><strong>No</strong> — take with/without food. <br>Absorbed independent of acid.</td>
+                                            <td>On <strong>PPIs/H2RAs</strong>, achlorhydria, bariatric/gastric bypass, elderly. Cost: $$ (moderate).</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Lactate</strong></td>
+                                            <td>13% (~130mg per 650mg tab)</td>
+                                            <td>With or without food. <br>No acid required.</td>
+                                            <td>Not ideal (very low elemental Ca per tab).</td>
+                                            <td>Not recommended as primary supplement.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Gluconate</strong></td>
+                                            <td>9% (~90mg per 1g tab)</td>
+                                            <td>With or without food. <br>No acid required.</td>
+                                            <td>Not ideal (lowest elemental Ca per tab).</td>
+                                            <td>Not recommended as primary supplement.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Vitamin D Section -->
+                        <div>
+                            <h3 class="subsection-title">Vitamin D Supplementation Guide</h3>
+                            <div class="table-container-vertical">
+                                <div class="kv-row"><span>Preferred Form</span><strong>Vitamin D3 (cholecalciferol)</strong> preferred over D2 (ergocalciferol) — raises 25(OH)D levels more reliably.</div>
+                                <div class="kv-row"><span>Maintenance (RDA)</span><span>Age &le;70: 600 IU/day | Age &gt;70: 800 IU/day</span></div>
+                                <div class="kv-row"><span>Osteoporosis Dose</span><span><strong>1,000–2,000 IU/day</strong> (RDA targets &ge;1,000 IU/day for adults &ge;50)</span></div>
+                                <div class="kv-row"><span>Upper Safe Limit</span><span>4,000 IU/day (higher doses short-term only for repletion)</span></div>
+                                <div class="kv-row"><span>Target 25(OH)D Level</span><span>&ge;20 ng/mL (IOM/USPSTF) or &ge;30 ng/mL (AACE/Endocrine Society)</span></div>
+                                <div class="kv-row"><span>Administration</span><span>Take with food (fat-soluble; absorption improved with fat-containing meal). Cost: $ (very cheap).</span></div>
+                            </div>
+
+                            <div class="alert alert-warning mt-3" style="margin-bottom: 0;">
+                                <h4>Vitamin D Deficiency Repletion Protocol (AACE 2020)</h4>
+                                <p>If 25(OH)D &lt; 20 ng/mL:</p>
+                                <ul>
+                                    <li><strong>Repletion:</strong> Ergocalciferol (D2) 50,000 IU orally <strong>once weekly for 8 weeks</strong> (or daily D3 5,000–6,000 IU/day).</li>
+                                    <li><strong>Maintenance:</strong> D3 1,000–2,000 IU daily once levels are stable.</li>
+                                    <li><strong>Important:</strong> Avoid intermittent high-dose boluses (e.g. 50,000–100,000 IU monthly) as boluses paradoxically increase fall/fracture risks.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="mt-4">Agent-Specific Calcium &amp; Vitamin D Requirements</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Osteoporosis Drug</th>
+                                    <th>Calcium &amp; Vitamin D Requirement</th>
+                                    <th>Special Monitoring</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>All Oral Bisphosphonates</strong></td>
+                                    <td>Standard supplementation. Take calcium <strong>&ge;30 min apart</strong> from bisphosphonates (calcium impairs bisphosphonate absorption).</td>
+                                    <td>Baseline 25(OH)D check.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Zoledronic acid (IV)</strong></td>
+                                    <td>Ensure vitamin D sufficiency <strong>before</strong> infusion to prevent post-infusion hypocalcemia. Standard supplementation.</td>
+                                    <td>Baseline 25(OH)D; correct deficiency before infusion.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Denosumab</strong></td>
+                                    <td><strong class="color-alert">Mandatory</strong> — FDA label requires calcium &ge;1,000 mg/day + vitamin D &ge;400 IU/day. Correct hypocalcemia before each dose.</td>
+                                    <td><strong>Check serum calcium before each dose</strong>; check 10-14 days post-dose in high-risk patients (eGFR &lt; 30 / dialysis).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Teriparatide</strong></td>
+                                    <td>Standard supplementation. Monitor for hypercalcemia (not hypocalcemia).</td>
+                                    <td>Serum calcium periodically; if elevated, reduce calcium supplement dose.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Abaloparatide</strong></td>
+                                    <td>Standard supplementation. Monitor for hypercalcemia.</td>
+                                    <td>Same as Teriparatide.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Romosozumab</strong></td>
+                                    <td>Correct hypocalcemia before initiating. Standard supplementation.</td>
+                                    <td>Baseline serum calcium and 25(OH)D.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Raloxifene</strong></td>
+                                    <td>Standard supplementation.</td>
+                                    <td>Baseline 25(OH)D.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid-2col mt-3">
+                        <div class="instruction-box">
+                            <h4>🔑 Key Clinical Pearls for Calcium</h4>
+                            <ul>
+                                <li><strong>PPI / Gastric Acid Blockers:</strong> PPIs and H2 blockers reduce gastric acid, significantly impairing calcium carbonate absorption. <strong>Always switch to Calcium Citrate</strong> in these patients.</li>
+                                <li><strong>GI Side Effects:</strong> Calcium carbonate causes more constipation, bloating, and gas than calcium citrate.</li>
+                                <li><strong>Nephrolithiasis Risk:</strong> WHI trials showed a 17% increase in renal stones with 1,000 mg calcium supplements on top of ~1,100 mg diet. Keep total intake &le;1,200 mg/day.</li>
+                                <li><strong>Cardiovascular Risk:</strong> Meta-analyses suggest calcium supplements (not dietary calcium) may increase CV events, though controversial. Emphasize dietary sources first.</li>
+                            </ul>
+                        </div>
+
+                        <div class="list-card">
+                            <h4>🌲 Quick-Reference Formulation Decision Tree</h4>
+                            <ul class="styled-list">
+                                <li><strong>Most patients:</strong> Calcium carbonate 500–600 mg with meals, 1–2 times daily.</li>
+                                <li><strong>On PPI, H2RA, or achlorhydria:</strong> <strong>Calcium citrate</strong> 315 mg, 2–3 times daily (with/without food).</li>
+                                <li><strong>Post-bariatric surgery (bypass, sleeve):</strong> <strong>Calcium citrate</strong> (carbonate is poorly absorbed).</li>
+                                <li><strong>Constipation from carbonate:</strong> Switch to calcium citrate.</li>
+                                <li><strong>Dietary intake already &ge;1,000–1,200 mg/day:</strong> No supplement needed; avoid excess.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: ORAL BISPHOSPHONATES -->
+            <section id="section2" class="content-section card">
+                <div class="card-header bg-navy">
+                    <span class="card-icon">💊</span>
+                    <h2>Section 2: Oral Bisphosphonates (First-Line Antiresorptives)</h2>
+                </div>
+                <div class="card-body">
+                    <p>Oral bisphosphonates are the standard first-line therapies for the prevention and treatment of osteoporosis in patients at high risk. They bind to bone hydroxyapatite and inhibit osteoclast-mediated resorption.</p>
+                    
+                    <h3 class="table-title">2A. Oral Bisphosphonate Master Dosing Table</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drug Name</th>
+                                    <th>Formulations</th>
+                                    <th>Treatment Dose</th>
+                                    <th>Prevention Dose</th>
+                                    <th>Frequency</th>
+                                    <th>Renal Cutoff</th>
+                                    <th>FDA-Approved Indications</th>
+                                    <th>Cost / Month</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Alendronate</strong></td>
+                                    <td>Tabs: 5, 10, 35, 40, 70 mg; Oral solution: 70 mg/75 mL; Effervescent tab: 70 mg</td>
+                                    <td>10 mg daily or <br><strong class="highlight-text">70 mg weekly</strong></td>
+                                    <td>5 mg daily or <br>35 mg weekly</td>
+                                    <td>Daily or Weekly</td>
+                                    <td><strong class="color-alert">CrCl &lt;35 mL/min</strong></td>
+                                    <td>PMO treatment & prevention; male OP; GIOP; Paget's</td>
+                                    <td>$4–10 (generic)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Risedronate</strong></td>
+                                    <td>Tabs: 5, 30, 35, 150 mg; DR (delayed-release) tab: 35 mg</td>
+                                    <td>5 mg daily, <br><strong class="highlight-text">35 mg weekly</strong>, or <br><strong class="highlight-text">150 mg monthly</strong></td>
+                                    <td>5 mg daily or <br>35 mg weekly</td>
+                                    <td>Daily, Weekly, or Monthly</td>
+                                    <td><strong class="color-alert">CrCl &lt;35 mL/min</strong></td>
+                                    <td>PMO treatment & prevention; male OP; GIOP; Paget's</td>
+                                    <td>$15–30 (generic)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ibandronate</strong></td>
+                                    <td>Tabs: 150 mg</td>
+                                    <td><strong class="highlight-text">150 mg monthly</strong></td>
+                                    <td>—</td>
+                                    <td>Monthly</td>
+                                    <td><strong class="color-alert">CrCl &lt;30 mL/min</strong></td>
+                                    <td>PMO treatment & prevention only</td>
+                                    <td>$15–30 (generic)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="instruction-box mt-3">
+                        <h4>⚠️ Critical Administration Instructions (Mandatory for Efficacy & GI Protection)</h4>
+                        <ol>
+                            <li>Take <strong>first thing in the morning</strong> immediately after waking up and before any food or other drinks.</li>
+                            <li>Swallow the tablet whole with <strong>6–8 oz of plain water only</strong> (mineral water, sparkling water, coffee, tea, and juice are contraindicated).</li>
+                            <li>Wait <strong>at least 30 minutes</strong> (60 minutes for ibandronate) before consuming your first food, drink (other than plain water), or taking other medications.</li>
+                            <li><strong>Remain completely upright</strong> (sitting, standing, or walking) for at least 30 minutes. Do not lie down until after you have eaten food.</li>
+                            <li><strong>Risedronate DR (Delayed-Release) Exception:</strong> Take 35 mg immediately <em>after</em> breakfast with at least 4 oz of plain water. Patient must still remain upright for 30 minutes.</li>
+                        </ol>
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <strong>Clinical Note on Ibandronate:</strong> Ibandronate has only demonstrated efficacy in reducing <strong>vertebral</strong> fractures. It has no proven benefit for hip or nonvertebral fractures in large RCTs. Because of this, it is not recommended as a preferred first-line agent in major clinical guidelines.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: IV BISPHOSPHONATES -->
+            <section id="section3" class="content-section card">
+                <div class="card-header bg-blue">
+                    <span class="card-icon">💧</span>
+                    <h2>Section 3: IV Bisphosphonates</h2>
+                </div>
+                <div class="card-body">
+                    <p>IV bisphosphonates bypass the gastrointestinal tract completely, resolving issues of poor adherence, malabsorption, or esophageal irritation.</p>
+                    
+                    <h3 class="table-title">3A. IV Bisphosphonate Master Dosing Table</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drug Name</th>
+                                    <th>Dose</th>
+                                    <th>Frequency</th>
+                                    <th>Infusion Time</th>
+                                    <th>Pre-Treatment Requirements</th>
+                                    <th>Acute Phase Reaction (APR)</th>
+                                    <th>Renal Cutoff</th>
+                                    <th>FDA-Approved Indications</th>
+                                    <th>Est. Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Zoledronic acid</strong></td>
+                                    <td>5 mg IV</td>
+                                    <td><strong>Once yearly</strong> (treatment);<br>once every 2 years (prevention)</td>
+                                    <td>&ge;15 minutes</td>
+                                    <td>Ensure adequate hydration; check CrCl; ensure Vit D sufficiency; correct hypocalcemia</td>
+                                    <td><strong>~30%</strong> (fever, myalgia, headache within 1–3 days; mitigate with acetaminophen pre- & post-infusion)</td>
+                                    <td><strong class="color-alert">CrCl &lt;35 mL/min</strong> or acute kidney injury</td>
+                                    <td>PMO treatment & prevention; male OP; GIOP; Paget's</td>
+                                    <td>~$200–400 (generic, institution)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ibandronate IV</strong></td>
+                                    <td>3 mg IV</td>
+                                    <td>Every 3 months</td>
+                                    <td>15–30 seconds</td>
+                                    <td>Check CrCl; correct hypocalcemia</td>
+                                    <td>Less common than zoledronic acid</td>
+                                    <td><strong class="color-alert">CrCl &lt;30 mL/min</strong></td>
+                                    <td>PMO treatment only</td>
+                                    <td>Institution-based</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="mt-4">Clinical Criteria for IV over Oral Therapy</h3>
+                    <div class="grid-2col">
+                        <div class="list-card">
+                            <h4>GI Contraindications</h4>
+                            <ul>
+                                <li>Active esophageal disorders (achalasia, strictures, Barrett's esophagus)</li>
+                                <li>Inability to sit or stand upright for at least 30 minutes</li>
+                                <li>Malabsorption syndromes (gastric bypass, celiac disease, severe Crohn's)</li>
+                            </ul>
+                        </div>
+                        <div class="list-card">
+                            <h4>Compliance & Preferences</h4>
+                            <ul>
+                                <li>Documented history of non-adherence or intolerance to oral therapy</li>
+                                <li>Patient preference for infrequent dosing (yearly vs. weekly/monthly)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: RANKL INHIBITOR — DENOSUMAB -->
+            <section id="section4" class="content-section card">
+                <div class="card-header bg-teal">
+                    <span class="card-icon">🧬</span>
+                    <h2>Section 4: RANKL Inhibitor (Denosumab)</h2>
+                </div>
+                <div class="card-body">
+                    <p>Denosumab (Prolia) is a fully human monoclonal antibody that binds and neutralizes RANKL, preventing osteoclast formation and survival. It is highly effective but requires a strict administration schedule due to rebound fracture risks.</p>
+
+                    <div class="grid-2col">
+                        <div>
+                            <h3 class="table-title">4A. Denosumab Dosing and Administration</h3>
+                            <div class="table-container-vertical">
+                                <div class="kv-row"><span>Dose</span><strong>60 mg subcutaneously every 6 months</strong></div>
+                                <div class="kv-row"><span>Dosing Interval Window</span><strong>Strictly within 6 months</strong> (delaying >1 month triggers rebound risk)</div>
+                                <div class="kv-row"><span>Dosing Sites</span><span>Upper arm, upper thigh, or abdomen</span></div>
+                                <div class="kv-row"><span>Administration</span><span>By healthcare provider in clinical setting</span></div>
+                                <div class="kv-row"><span>Pre-Treatment</span><span>Correct hypocalcemia; ensure Vit D sufficiency; check eGFR</span></div>
+                                <div class="kv-row"><span>Renal Adjustment</span><span><strong class="highlight-text-green">No dose adjustment needed</strong> (not cleared renally)</span></div>
+                                <div class="kv-row"><span>FDA Indications</span><span>PMO (high risk); male OP; GIOP; ADT-related (prostate cancer); AI-related (breast cancer)</span></div>
+                                <div class="kv-row"><span>Cost</span><span>~$1,500 / 6-month dose (brand); biosimilars available</span></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="alert alert-danger" style="margin-top: 0;">
+                                <h4>🖤 FDA BLACK BOX WARNING: Severe Hypocalcemia in Advanced CKD</h4>
+                                <p>Patients with advanced chronic kidney disease (eGFR &lt;30 mL/min or on dialysis) are at a <strong>significantly increased risk</strong> of severe, life-threatening hypocalcemia. </p>
+                                <p><strong>Mandatory Strategy:</strong> If used in CKD stage 4-5, consult a nephrologist or CKD-MBD specialist, ensure aggressive calcium and vitamin D supplementation, and monitor serum calcium closely (e.g., 10-14 days post-injection).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-warning-border mt-3">
+                        <div class="card-header bg-coral text-white">
+                            <h4>🚨 Critical Warning: Rebound Vertebral Fractures & Discontinuation Plan</h4>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>The Rebound Phenomener:</strong> Unlike bisphosphonates, denosumab does not accumulate in the bone matrix. Once denosumab is stopped or delayed by &gt;1 month, bone resorption rebounds rapidly, causing bone mineral density (BMD) to drop back to baseline within 12 months and triggering an <strong>8–10% risk of multiple vertebral fractures</strong>.</p>
+                            
+                            <h4 class="mt-3">Mandatory Transition Protocol</h4>
+                            <p>Patients who stop denosumab <strong>must immediately</strong> transition to an alternative antiresorptive (bisphosphonate):</p>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-badge">1</div>
+                                    <div class="timeline-content">
+                                        <strong>Preferred Option: Zoledronic Acid (IV)</strong><br>
+                                        Administer 5 mg IV zoledronic acid <strong>6 to 7 months</strong> after the final denosumab dose.
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-badge">2</div>
+                                    <div class="timeline-content">
+                                        <strong>Monitoring Transition:</strong><br>
+                                        Measure serum CTX (bone turnover marker) at 3-month intervals. If bone resorption rebounds (CTX rises), a second zoledronic acid infusion may be needed 3–6 months later.
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-badge">3</div>
+                                    <div class="timeline-content">
+                                        <strong>Alternative Option: Alendronate (Oral)</strong><br>
+                                        Alendronate 70 mg weekly starting 6 months after the last denosumab dose (though weekly oral therapy may not prevent BMD loss as reliably as IV zoledronic acid).
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="alert alert-danger mt-2">
+                                <strong>❌ Contraindicated Transition:</strong> Do <strong>NOT</strong> switch directly from denosumab to teriparatide or abaloparatide. This sequence causes rapid and severe BMD loss, particularly at the hip and cortical bone.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: ANABOLIC AGENTS -->
+            <section id="section5" class="content-section card">
+                <div class="card-header bg-accent">
+                    <span class="card-icon">⚡</span>
+                    <h2>Section 5: Anabolic Agents (Bone Builders)</h2>
+                </div>
+                <div class="card-body">
+                    <p>Anabolic agents stimulate bone formation and are recommended as first-line therapy for patients at <strong>very high fracture risk</strong>. Beginning with an anabolic agent followed by an antiresorptive (anabolic-first sequence) yields much larger long-term BMD gains than the reverse.</p>
+
+                    <h3 class="table-title">5A. Anabolic Agent Master Dosing Table</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drug Name</th>
+                                    <th>Mechanism</th>
+                                    <th>Dose & Route</th>
+                                    <th>Frequency</th>
+                                    <th>Max Duration</th>
+                                    <th>Injection Site & Storage</th>
+                                    <th>Pre-Treatment Labs</th>
+                                    <th>FDA Indications</th>
+                                    <th>Cost / Month</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Teriparatide</strong> (Forteo/Generic)</td>
+                                    <td>PTH 1-34 analog; stimulates osteoblasts over osteoclasts</td>
+                                    <td>20 &mu;g SubQ (prefilled pen)</td>
+                                    <td>Daily</td>
+                                    <td><strong>2 years</strong> (may extend in special high-risk cases)</td>
+                                    <td>Thigh/abdomen. <br><strong class="color-alert">Refrigerate (2-8&deg;C) at all times</strong>. Discard 28 days after first use.</td>
+                                    <td>Ca&sup2;&t;, PTH, 25(OH)D, Alk Phos, creatinine</td>
+                                    <td>PMO; male OP; GIOP</td>
+                                    <td>~$2,500 (brand); generic ~$500–1,000</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Abaloparatide</strong> (Tymlos)</td>
+                                    <td>PTHrP 1-34 analog; selective PTH1R activator</td>
+                                    <td>80 &mu;g SubQ (prefilled pen)</td>
+                                    <td>Daily</td>
+                                    <td><strong>2 years</strong> (strict limit)</td>
+                                    <td>Periumbilical abdomen only. Refrigerate before opening; <strong class="highlight-text-green">room temp (20-25&deg;C) up to 30 days</strong> after opening.</td>
+                                    <td>Ca&sup2;&t;, PTH, 25(OH)D, Alk Phos, creatinine</td>
+                                    <td>PMO; male OP</td>
+                                    <td>~$2,500 (brand only)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Romosozumab</strong> (Evenity)</td>
+                                    <td>Sclerostin monoclonal antibody; dual action (formation &uarr;, resorption &darr;)</td>
+                                    <td>210 mg SubQ (two consecutive 105 mg injections)</td>
+                                    <td><strong>Monthly</strong> (in office)</td>
+                                    <td><strong>12 months</strong> (strict limit)</td>
+                                    <td>Abdomen, thigh, or upper arm. Refrigerate; room temp up to 30 days before injection.</td>
+                                    <td>Ca&sup2;&t;, 25(OH)D, and <strong class="color-alert">CV Risk Assessment</strong></td>
+                                    <td>PMO (high risk) only</td>
+                                    <td>~$2,000–2,500 (brand only)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="mt-4">5B. Anabolic Agent Key Differences</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Clinical Feature</th>
+                                    <th>Teriparatide</th>
+                                    <th>Abaloparatide</th>
+                                    <th>Romosozumab</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Vertebral Fracture Reduction</strong></td>
+                                    <td>74% vs placebo</td>
+                                    <td><strong>87% vs placebo</strong></td>
+                                    <td>73% vs placebo</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hip Fracture Reduction</strong></td>
+                                    <td>Not demonstrated in RCTs</td>
+                                    <td>Not demonstrated in RCTs</td>
+                                    <td><strong>38% vs alendronate</strong> (ARCH Trial)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Nonvertebral Fracture Red.</strong></td>
+                                    <td>39% vs placebo</td>
+                                    <td><strong>46% vs placebo</strong></td>
+                                    <td>19% vs alendronate (ARCH)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>BMD Gains (Hip / Spine)</strong></td>
+                                    <td>Moderate hip / Large spine</td>
+                                    <td>Greater hip than teriparatide</td>
+                                    <td><strong>Greatest of all agents</strong> at hip & spine</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cardiovascular Safety</strong></td>
+                                    <td>No CV safety signals</td>
+                                    <td>No CV safety signals</td>
+                                    <td><strong class="color-alert">BLACK BOX: &uarr; MACE risk</strong> (2.5% vs 1.9% vs alendronate); avoid if MI/Stroke in prior 1 yr</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Self-Administered?</strong></td>
+                                    <td>Yes (Daily SubQ pen)</td>
+                                    <td>Yes (Daily SubQ pen)</td>
+                                    <td>No (Monthly healthcare provider injections)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Storage Convenience</strong></td>
+                                    <td>Must refrigerate at all times</td>
+                                    <td>Room temp after opening (up to 30 days)</td>
+                                    <td>Refrigerate; room temp up to 30 days before injection</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GIOP / Male OP Approved?</strong></td>
+                                    <td>GIOP: <strong>Yes</strong> / Male OP: <strong>Yes</strong></td>
+                                    <td>GIOP: No / Male OP: <strong>Yes</strong></td>
+                                    <td>GIOP: No / Male OP: No</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid-2col mt-3">
+                        <div class="alert alert-danger">
+                            <h4>Contraindications: PTH Receptor Agonists (Teriparatide & Abaloparatide)</h4>
+                            <ul>
+                                <li>Bone metastases or history of skeletal malignancies</li>
+                                <li>Paget's disease of bone</li>
+                                <li>Prior external beam or implant skeletal radiation</li>
+                                <li>Unexplained elevated serum alkaline phosphatase</li>
+                                <li>Pre-existing hypercalcemia or primary hyperparathyroidism</li>
+                                <li>Open epiphyses (pediatric/young adult)</li>
+                            </ul>
+                        </div>
+                        <div class="alert alert-danger">
+                            <h4>Contraindications: Romosozumab (Evenity)</h4>
+                            <ul>
+                                <li><strong class="highlight-text">Myocardial infarction (MI) or stroke within the preceding year</strong> (FDA Black Box)</li>
+                                <li>Pre-existing untreated hypocalcemia</li>
+                                <li>Known hypersensitivity</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-2">
+                        <strong>First-Dose Orthostatic Precautions:</strong> Both teriparatide and abaloparatide can induce transient orthostatic hypotension, typically occurring within 4 hours of the first few injections. Administer the first dose in a setting where the patient can sit or lie down immediately.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: OTHER AGENTS -->
+            <section id="section6" class="content-section card">
+                <div class="card-header bg-slate">
+                    <span class="card-icon">⚖️</span>
+                    <h2>Section 6: Other Agents</h2>
+                </div>
+                <div class="card-body">
+                    <p>These agents are generally second- or third-line options, chosen for patients with specific clinical profiles or contraindications to first-line therapies.</p>
+
+                    <h3 class="table-title">6A. Selective Estrogen Receptor Modulator (SERM)</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drug Name</th>
+                                    <th>Dose & Route</th>
+                                    <th>Frequency</th>
+                                    <th>Fracture Reduction</th>
+                                    <th>Key Side Effects</th>
+                                    <th>Contraindications</th>
+                                    <th>Best Clinical Candidate</th>
+                                    <th>Cost / Month</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Raloxifene</strong></td>
+                                    <td>60 mg Oral</td>
+                                    <td>Daily</td>
+                                    <td>Vertebral: <strong>40%</strong> reduction;<br>Hip/Nonvert: <strong>No proven reduction</strong></td>
+                                    <td>Venous Thromboembolism (DVT 0.9%), hot flashes (10%), leg cramps (7%), peripheral edema, increased stroke mortality risk</td>
+                                    <td>History of VTE (DVT, PE, retinal vein thrombosis)</td>
+                                    <td>Postmenopausal women with osteopenia/osteoporosis at risk of <strong>vertebral fracture PLUS breast cancer risk</strong> (reduces breast cancer risk by 76%)</td>
+                                    <td>$20–30 (generic)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="table-title mt-4">6B. Calcitonin</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drug Formulation</th>
+                                    <th>Dose & Route</th>
+                                    <th>Frequency</th>
+                                    <th>Fracture Reduction</th>
+                                    <th>Key Side Effects</th>
+                                    <th>Clinical Role</th>
+                                    <th>Cost / Month</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Calcitonin Salmon Nasal Spray</strong></td>
+                                    <td>200 IU (1 spray) Intranasal</td>
+                                    <td>Daily (alternate nostrils)</td>
+                                    <td>Vertebral: ~33% reduction;<br>Hip/Nonvert: <strong>No reduction</strong></td>
+                                    <td>Rhinitis, nasal irritation, epistaxis, minor cancer risk signal (FDA)</td>
+                                    <td><strong class="color-alert">Last-line only</strong>. Useful short-term for <strong>analgesic effect in acute vertebral fractures</strong></td>
+                                    <td>~$30 (generic)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Calcitonin Salmon Injection</strong></td>
+                                    <td>100 IU SubQ or IM</td>
+                                    <td>Daily</td>
+                                    <td>No fracture reduction data</td>
+                                    <td>Nausea, flushing, injection site reactions</td>
+                                    <td>Rarely used in practice</td>
+                                    <td>Variable</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="table-title mt-4">6C. Estrogen / Hormone Therapy</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Drug Name</th>
+                                    <th>Dose & Route</th>
+                                    <th>Fracture Reduction</th>
+                                    <th>Key Side Effects (WHI Trial)</th>
+                                    <th>Contraindications</th>
+                                    <th>Clinical Role</th>
+                                    <th>Cost / Month</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Conjugated Equine Estrogen (CEE)</strong> &plusmn; CEE/MPA</td>
+                                    <td>0.625 mg Oral daily</td>
+                                    <td>Vertebral: 34%;<br>Hip: <strong>29%</strong>;<br>Nonvert: 21%</td>
+                                    <td>CEE alone: stroke; CEE+MPA: stroke, CHD, invasive breast cancer, VTE, dementia</td>
+                                    <td>History of breast cancer, CHD, stroke/TIA, active liver disease, unexplained vaginal bleeding</td>
+                                    <td>FDA-approved for <strong>prevention only</strong>. Consider in early postmenopausal women with severe vasomotor symptoms</td>
+                                    <td>$10–30</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 7: CROSS-CUTTING CLINICAL DECISION SUPPORT -->
+            <section id="section7" class="content-section card">
+                <div class="card-header bg-navy">
+                    <span class="card-icon">🧠</span>
+                    <h2>Section 7: Cross-Cutting Clinical Decision Support</h2>
+                </div>
+                <div class="card-body">
+
+                    <!-- 7A. Efficacy Summary -->
+                    <h3 class="subsection-title">7A. Fracture Risk Reduction — Comparative Efficacy</h3>
+                    <p>Summary of fracture prevention efficacy across drug classes (JAMA 2025 review of placebo-controlled and active-comparator trials):</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medication Class / Agent</th>
+                                    <th>Vertebral (% Red. vs Placebo)</th>
+                                    <th>Hip (% Reduction)</th>
+                                    <th>Nonvertebral (% Reduction)</th>
+                                    <th>Efficacy Proven at All 3 Sites?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-light-accent">
+                                    <td><strong>Abaloparatide</strong></td>
+                                    <td>87%</td>
+                                    <td>Not Demonstrated (ND)</td>
+                                    <td>46%</td>
+                                    <td>No (Hip ND)</td>
+                                </tr>
+                                <tr class="bg-light-accent">
+                                    <td><strong>Teriparatide</strong></td>
+                                    <td>74%</td>
+                                    <td>Not Demonstrated (ND)</td>
+                                    <td>39%</td>
+                                    <td>No (Hip ND)</td>
+                                </tr>
+                                <tr class="bg-light-accent">
+                                    <td><strong>Romosozumab</strong></td>
+                                    <td>73%</td>
+                                    <td>38% (vs alendronate)</td>
+                                    <td>19% (vs alendronate)</td>
+                                    <td><strong>Yes</strong> (vs active comparator)</td>
+                                </tr>
+                                <tr class="bg-light-teal">
+                                    <td><strong>Denosumab</strong></td>
+                                    <td>68%</td>
+                                    <td>40%</td>
+                                    <td>20%</td>
+                                    <td><strong>Yes</strong></td>
+                                </tr>
+                                <tr class="bg-light-teal">
+                                    <td><strong>Zoledronic acid (IV)</strong></td>
+                                    <td>56%</td>
+                                    <td>42%</td>
+                                    <td>18%</td>
+                                    <td><strong>Yes</strong></td>
+                                </tr>
+                                <tr class="bg-light-teal">
+                                    <td><strong>Alendronate (Oral)</strong></td>
+                                    <td>44%</td>
+                                    <td>40%</td>
+                                    <td>17%</td>
+                                    <td><strong>Yes</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Raloxifene</strong></td>
+                                    <td>40%</td>
+                                    <td>ND</td>
+                                    <td>ND</td>
+                                    <td>No</td>
+                                </tr>
+                                <tr class="bg-light-teal">
+                                    <td><strong>Risedronate (Oral)</strong></td>
+                                    <td>36%</td>
+                                    <td>26%</td>
+                                    <td>20%</td>
+                                    <td><strong>Yes</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Ibandronate</strong></td>
+                                    <td>31%</td>
+                                    <td>ND</td>
+                                    <td>ND</td>
+                                    <td>No</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Calcitonin</strong></td>
+                                    <td>~33%</td>
+                                    <td>ND</td>
+                                    <td>ND</td>
+                                    <td>No</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="table-note">Note: A 2023 BMJ network meta-analysis confirmed that anabolic agents are significantly more effective than bisphosphonates for preventing clinical fractures (OR 1.49).</p>
+
+                    <!-- 7B. Treatment Duration & Drug Holidays -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7B. Treatment Duration & Drug Holidays</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medication Class</th>
+                                    <th>Recommended Duration</th>
+                                    <th>Drug Holiday Eligible?</th>
+                                    <th>Holiday Duration</th>
+                                    <th>Triggers to Restart Therapy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Oral Bisphosphonates</strong></td>
+                                    <td>5 years (high risk); up to 10 years (very high risk)</td>
+                                    <td><strong>Yes</strong> — if fracture risk declines</td>
+                                    <td>2–4 years (skeletal retention)</td>
+                                    <td>New fracture, significant BMD decline, or FRAX risk increases</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Zoledronic Acid (IV)</strong></td>
+                                    <td>3 years (high risk); up to 6 years (very high risk)</td>
+                                    <td><strong>Yes</strong> — if fracture risk declines</td>
+                                    <td>2–3 years</td>
+                                    <td>New fracture, significant BMD decline, or FRAX risk increases</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Denosumab (SubQ)</strong></td>
+                                    <td>Reassess at 5–10 years</td>
+                                    <td><strong class="color-alert">No</strong> — do not stop without transition</td>
+                                    <td>N/A</td>
+                                    <td>N/A — stopping triggers severe rebound vertebral fractures</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Teriparatide / Abaloparatide</strong></td>
+                                    <td>Up to 2 years</td>
+                                    <td>N/A — finite course</td>
+                                    <td>N/A</td>
+                                    <td>Must follow with antiresorptive immediately</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Romosozumab</strong></td>
+                                    <td>12 months only</td>
+                                    <td>N/A — finite course</td>
+                                    <td>N/A</td>
+                                    <td>Must follow with antiresorptive immediately</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Raloxifene</strong></td>
+                                    <td>No defined limit; reassess periodically</td>
+                                    <td>No</td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-warning mt-2">
+                        <strong>The Consolidation Rule:</strong> After completing any finite anabolic course (teriparatide, abaloparatide, or romosozumab), patients <strong>must</strong> transition immediately to an antiresorptive (bisphosphonates or denosumab) to lock in and build upon the BMD gains. Otherwise, BMD declines rapidly back to baseline within 1 year.
+                    </div>
+
+                    <!-- Drug Holiday Discontinuation Helper Widget -->
+                    <div class="card card-warning-border mt-4">
+                        <div class="card-header bg-slate" style="background: linear-gradient(135deg, #475569 0%, #334155 100%);">
+                            <h4 style="color: white; display: flex; align-items: center; gap: 0.5rem;">⏱️ Drug Holiday & Discontinuation Helper</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-intro" style="margin-bottom: 1rem;">Determine if your patient is eligible for a drug holiday or what transition strategy is required when discontinuing their current agent.</p>
+                            <form id="holiday-form">
+                                <div class="form-grid" style="gap: 1.5rem; margin-bottom: 1rem;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="holiday-agent" style="font-weight: 600; font-size: 0.875rem;">Current Medication</label>
+                                        <select id="holiday-agent" class="form-control">
+                                            <option value="oral-bis">Oral Bisphosphonates (Alendronate, Risedronate)</option>
+                                            <option value="iv-bis">Zoledronic Acid (IV Bisphosphonate)</option>
+                                            <option value="denosumab">Denosumab (Prolia)</option>
+                                            <option value="anabolic">Anabolics (Teriparatide, Abaloparatide, Romosozumab)</option>
+                                            <option value="other">Other Agents (Raloxifene, Calcitonin)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="holiday-duration" style="font-weight: 600; font-size: 0.875rem;">Duration of Continuous Use (Years)</label>
+                                        <input type="number" id="holiday-duration" min="0.5" step="0.5" placeholder="e.g. 5" class="form-control">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="holiday-risk" style="font-weight: 600; font-size: 0.875rem;">Current Fracture Risk Status</label>
+                                        <select id="holiday-risk" class="form-control">
+                                            <option value="high">High Risk (T-score > -3.0, no recent fractures)</option>
+                                            <option value="very-high">Very High Risk (T-score &le; -3.0 or recent fracture)</option>
+                                            <option value="low">Low/Moderate Risk (T-score > -2.5, no fractures)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-actions" style="margin-top: 1rem; padding-top: 1rem;">
+                                    <button type="submit" class="btn btn-primary">Evaluate Discontinuation Plan</button>
+                                </div>
+                            </form>
+
+                            <div id="holiday-result" class="alert hidden" style="margin-top: 1.5rem; margin-bottom: 0; font-size: 0.9rem;">
+                                <!-- Filled by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7C. Sequencing Rules -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7C. Treatment Sequencing Rules</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sequencing Strategy</th>
+                                    <th>Clinical Outcome</th>
+                                    <th>Recommendation Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Anabolic &rarr; Antiresorptive</strong><br>(e.g. Romo/Teri/Abalo followed by Alendronate/Zoledronic Acid/Denosumab)</td>
+                                    <td>Maximum skeletal gains. Bone building occurs first, then antiresorptive locks in and further increases BMD.</td>
+                                    <td><strong class="highlight-text-green">✅ Strongly Recommended (Preferred Sequence)</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bisphosphonate &rarr; Anabolic</strong></td>
+                                    <td>Attenuated bone-building response (~1/3 lower BMD gains compared to drug-naive patients) due to osteoblast suppression by bisphosphonate.</td>
+                                    <td><strong class="color-warning">⚠️ Suboptimal but common in practice</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Denosumab &rarr; Teriparatide</strong></td>
+                                    <td><strong>Severe transient BMD loss</strong> at the hip and radius. Avoid this sequence.</td>
+                                    <td><strong class="color-alert">❌ Contraindicated Sequence</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Denosumab &rarr; Nothing</strong></td>
+                                    <td>Rapid rebound bone resorption, 8-10% risk of multiple vertebral fractures.</td>
+                                    <td><strong class="color-alert">❌ Critical Danger / Never Do</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 7D. ONJ and AFF -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7D. Rare but Serious Adverse Effects</h3>
+                    <div class="grid-2col">
+                        <div class="adverse-effect-box card-warning-border">
+                            <h4>Osteonecrosis of the Jaw (ONJ)</h4>
+                            <p class="incidence"><strong>Incidence:</strong> Oral Bisphosphonates: 0.2–10 per 10,000 pt-yrs | Denosumab: ~5.2 per 10,000 pt-yrs</p>
+                            <p><strong>Risk Factors:</strong> Active dental pathology, invasive dental procedures (extractions, implants), poor dental hygiene, concurrent chemotherapy or glucocorticoids.</p>
+                            <p><strong>Prevention/Monitoring:</strong> Perform dental exams prior to starting therapy; complete major invasive dental work before initiating treatment; maintain routine dental hygiene.</p>
+                        </div>
+                        <div class="adverse-effect-box card-warning-border">
+                            <h4>Atypical Femoral Fracture (AFF)</h4>
+                            <p class="incidence"><strong>Incidence:</strong> 1.78 per 100,000 patient-years (increases with bisphosphonate duration >5 years)</p>
+                            <p><strong>Risk Factors:</strong> Duration of therapy >5 years, Asian race/ethnicity, concurrent glucocorticoids, significant femoral bowing.</p>
+                            <p><strong>Prevention/Monitoring:</strong> Ask about new thigh or groin pain at every clinical visit. If present, obtain bilateral femur radiographs or MRI. Risk of AFF falls by 50% within 1 year of drug discontinuation.</p>
+                        </div>
+                    </div>
+
+                    <!-- 7E. GIOP -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7E. Glucocorticoid-Induced Osteoporosis (GIOP)</h3>
+                    <p>ACR 2022 guidelines recommend clinical fracture assessment for <strong>all adults taking &ge;2.5 mg prednisone daily for &gt;3 months</strong>.</p>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Patient Risk Level</th>
+                                    <th>Definition (Adults &ge;40)</th>
+                                    <th>Recommended Pharmacotherapy (ACR 2022)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Low</strong></td>
+                                    <td>GC-adjusted FRAX MOF &lt;10% or Hip &lt;1% AND T-score &gt; &minus;1.0</td>
+                                    <td>Calcium + Vitamin D optimization only</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Moderate</strong></td>
+                                    <td>GC-adjusted FRAX MOF 10–19% or Hip 1–3% OR T-score &minus;1.0 to &minus;2.5</td>
+                                    <td>Initiate Oral Bisphosphonate, Denosumab, or PTH analog (no preferred order)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>High</strong></td>
+                                    <td>GC-adjusted FRAX MOF &ge;20% or Hip &ge;3% OR T-score &le; &minus;2.5</td>
+                                    <td>Denosumab or PTH/PTHrP analog conditionally recommended <strong>over</strong> oral bisphosphonate</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Very High</strong></td>
+                                    <td>Prior osteoporotic fracture while on glucocorticoid therapy</td>
+                                    <td>PTH/PTHrP analog conditionally recommended <strong>over</strong> antiresorptive agents</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-2">
+                        <strong>FRAX Adjustments for Prednisone &gt;7.5 mg/day:</strong> Increase the calculated 10-year major osteoporotic fracture (MOF) risk by <strong>15%</strong> and the hip fracture risk by <strong>20%</strong> in the FRAX output.
+                    </div>
+                    <div class="alert alert-warning">
+                        <strong>FDA Approvals in GIOP:</strong> Only alendronate, risedronate, zoledronic acid, teriparatide, and denosumab are FDA-approved for GIOP. Abaloparatide and romosozumab are <strong>NOT</strong> approved for GIOP.
+                    </div>
+
+                    <!-- 7F. Monitoring -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7F. Monitoring During Treatment</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Monitoring Test</th>
+                                    <th>Frequency / Timing</th>
+                                    <th>Clinical Rationale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>DXA BMD (Hip & Spine)</strong></td>
+                                    <td>Baseline, then repeat every 1–2 years until stable, then as clinically warranted</td>
+                                    <td>Assess treatment response; monitor progression towards target T-score &gt; &minus;2.5 at total hip</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Serum Calcium</strong></td>
+                                    <td>Before starting any therapy; 10–14 days after denosumab in high-risk patients; periodically with PTH analogs</td>
+                                    <td>Detect and correct hypocalcemia (denosumab risk) or monitor for hypercalcemia (PTH analog risk)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>25(OH) Vitamin D</strong></td>
+                                    <td>Baseline; recheck after adjusting supplement dose</td>
+                                    <td>Ensure level &ge;20 ng/mL (target 30+ ng/mL preferred by many bone specialists)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Serum Creatinine / CrCl</strong></td>
+                                    <td>Before starting bisphosphonates and denosumab</td>
+                                    <td>Ensure CrCl is above contraindication thresholds (30–35 mL/min for bisphosphonates)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bone Turnover Markers (CTX, P1NP)</strong></td>
+                                    <td>Optional; most useful when monitoring denosumab discontinuation</td>
+                                    <td>Rise in CTX signals rebound resorption after denosumab cessation, indicating transition timing</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Alkaline Phosphatase (ALP)</strong></td>
+                                    <td>Before starting PTH analogs</td>
+                                    <td>Rule out unexplained elevated ALP (Paget's disease contraindication)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 7G. Comorbidity-Based Selection Quick Reference -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7G. Comorbidity-Based Agent Selection Quick Reference</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Clinical Scenario</th>
+                                    <th>Preferred Agent(s)</th>
+                                    <th>Avoid / Contraindicated</th>
+                                    <th>Clinical Rationale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>High Risk (No Comorbidities)</strong></td>
+                                    <td>Alendronate 70 mg weekly or Risedronate 35 mg weekly</td>
+                                    <td>—</td>
+                                    <td>Standard, highly effective, low-cost first-line therapy.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Very High Risk (T-score &le; -2.5 + Fracture)</strong></td>
+                                    <td>Romosozumab or Teriparatide/Abaloparatide followed by antiresorptive</td>
+                                    <td>Starting with antiresorptive first</td>
+                                    <td>Anabolic-first sequence produces significantly larger bone mass gains.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GI Disorders (GERD, Barrett's, bypass)</strong></td>
+                                    <td>Zoledronic acid IV or Denosumab SubQ</td>
+                                    <td>Oral Bisphosphonates</td>
+                                    <td>Prevents severe esophageal mucosal irritation and bypasses absorption issues.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CKD Stage 3 (eGFR 30–59)</strong></td>
+                                    <td>Denosumab or Raloxifene</td>
+                                    <td>Bisphosphonates if CrCl &lt; 30–35</td>
+                                    <td>Denosumab does not undergo renal clearance. Close calcium monitoring required.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>CKD Stage 4–5 (eGFR &lt; 30)</strong></td>
+                                    <td><strong class="color-alert">Consult Nephrology Specialist</strong></td>
+                                    <td>Bisphosphonates; Denosumab without expert supervision</td>
+                                    <td>Highly complex bone metabolism (renal osteodystrophy); extreme hypocalcemia risk with denosumab.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Recent MI or Stroke (&lt; 1 Year)</strong></td>
+                                    <td>Bisphosphonates or Denosumab</td>
+                                    <td><strong class="color-alert">Romosozumab</strong></td>
+                                    <td>Romosozumab Black Box Warning: elevated risk of major adverse cardiovascular events (MACE).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>High Cardiovascular Risk</strong></td>
+                                    <td>Bisphosphonates or Denosumab</td>
+                                    <td>Romosozumab (weigh benefits vs risk)</td>
+                                    <td>CV safety profile concern (MACE signal vs. placebo/alendronate).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>History of Poor Adherence</strong></td>
+                                    <td>Zoledronic acid IV (yearly) or Denosumab SubQ (q6mo)</td>
+                                    <td>Oral Bisphosphonates</td>
+                                    <td>Bypasses need for strict daily/weekly compliance and administration routines.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>High Breast Cancer Risk</strong></td>
+                                    <td>Raloxifene</td>
+                                    <td>—</td>
+                                    <td>Raloxifene acts as an estrogen antagonist in breast tissue, reducing invasive cancer risk by 76%.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Glucocorticoid-Induced OP</strong></td>
+                                    <td>Alendronate, Risedronate, Zoledronic Acid, Teriparatide, Denosumab</td>
+                                    <td>Abaloparatide, Romosozumab</td>
+                                    <td>Only the preferred agents have specific FDA approval for GIOP.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Male Osteoporosis</strong></td>
+                                    <td>Alendronate, Risedronate, Zoledronic Acid, Teriparatide, Abaloparatide, Denosumab</td>
+                                    <td>Raloxifene, Romosozumab</td>
+                                    <td>Raloxifene and Romosozumab are only FDA-approved for postmenopausal women.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Acute Painful Vertebral Fracture</strong></td>
+                                    <td>Short-term Calcitonin Salmon (analgesic effect) + definitive therapy</td>
+                                    <td>Calcitonin as long-term monotherapy</td>
+                                    <td>Calcitonin provides acute bone pain relief but has insufficient long-term fracture efficacy.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 7H. Side-Effect Comparison -->
+                    <hr class="section-divider">
+                    <h3 class="subsection-title">7H. Side-Effect Comparison Across All Classes</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Side Effect</th>
+                                    <th>Oral Bisphosphonates</th>
+                                    <th>IV Bisphosphonates</th>
+                                    <th>Denosumab</th>
+                                    <th>Teriparatide / Abaloparatide</th>
+                                    <th>Romosozumab</th>
+                                    <th>Raloxifene</th>
+                                    <th>Calcitonin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>GI Irritation</strong></td>
+                                    <td>20–30% (dyspepsia, esophagitis)</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>Nausea ~20%</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>Nasal irritation (intranasal)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Acute Phase Reaction</strong></td>
+                                    <td>None</td>
+                                    <td><strong>~30%</strong> (fever, myalgia, headache; 1–3 days)</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>Injection site reactions 5%</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Hypocalcemia</strong></td>
+                                    <td>Rare</td>
+                                    <td>Rare</td>
+                                    <td><strong>Yes</strong> (especially eGFR &lt; 30)</td>
+                                    <td>None (may cause hypercalcemia)</td>
+                                    <td>Possible</td>
+                                    <td>None</td>
+                                    <td>Transient</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ONJ Risk</strong></td>
+                                    <td>0.2–10 per 10,000 pt-yr</td>
+                                    <td>Same as oral</td>
+                                    <td>~5.2 per 10,000 pt-yr</td>
+                                    <td>Not reported</td>
+                                    <td>Not reported</td>
+                                    <td>Not reported</td>
+                                    <td>Not reported</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Atypical Femoral Fracture</strong></td>
+                                    <td><strong>Yes</strong> — risk &uarr; with duration &gt; 5 yrs</td>
+                                    <td>Same as oral</td>
+                                    <td>Rare (case reports)</td>
+                                    <td>Not reported</td>
+                                    <td>Not reported</td>
+                                    <td>Not reported</td>
+                                    <td>Not reported</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>VTE / DVT Risk</strong></td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td><strong>Yes</strong> (DVT 0.9%)</td>
+                                    <td>None</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cardiovascular (MACE)</strong></td>
+                                    <td>None</td>
+                                    <td>Atrial fibrillation signal (HORIZON trial, not confirmed)</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td><strong>BLACK BOX: &uarr; MACE risk</strong> (2.5% vs 1.9%)</td>
+                                    <td>&uarr; Fatal stroke risk</td>
+                                    <td>None</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Orthostatic Hypotension</strong></td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td><strong>Yes</strong> (within 4 hr of injection)</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Musculoskeletal Pain</strong></td>
+                                    <td>Bone/joint/muscle pain (rare, may be severe)</td>
+                                    <td>Same as oral</td>
+                                    <td>Limb pain, back pain</td>
+                                    <td>Leg cramps, dizziness</td>
+                                    <td>Arthralgia</td>
+                                    <td>Leg cramps 7%</td>
+                                    <td>None</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Rebound on Cessation</strong></td>
+                                    <td>Low (long skeletal half-life)</td>
+                                    <td>Low (long skeletal half-life)</td>
+                                    <td><strong class="color-alert">HIGH</strong> — rapid BMD loss, multiple vertebral fractures</td>
+                                    <td>BMD loss if no antiresorptive follow-up</td>
+                                    <td>BMD loss if no antiresorptive follow-up</td>
+                                    <td>BMD loss on stopping</td>
+                                    <td>Minimal</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Weight Gain</strong></td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REFERENCES SECTION -->
+            <section id="references" class="content-section card mt-5">
+                <div class="card-header bg-slate">
+                    <span class="card-icon">📚</span>
+                    <h2>References & Clinical Citations</h2>
+                </div>
+                <div class="card-body references-list">
+                    <ol>
+                        <li>Morin SN, Leslie WD, Schousboe JT. Osteoporosis. <em>JAMA</em>. 2025;334(10):894-907. doi:10.1001/jama.2025.6003.</li>
+                        <li>Walker MD, Shane E. Postmenopausal Osteoporosis. <em>The New England Journal of Medicine</em>. 2023;389(21):1979-1991. doi:10.1056/NEJMcp2307353.</li>
+                        <li>US Preventive Services Task Force, Nicholson WK, Silverstein M, et al. Screening for Osteoporosis to Prevent Fractures: US Preventive Services Task Force Recommendation Statement. <em>JAMA</em>. 2025;333(6):498-508. doi:10.1001/jama.2024.27154.</li>
+                        <li>Ye C, Ebeling P, Kline G. Osteoporosis. <em>Lancet</em>. 2025;406(10514):2003-2016. doi:10.1016/S0140-6736(25)01385-6.</li>
+                        <li>Evenity (Romosozumab-aqqg) [Prescribing Information]. FDA. Updated 2026-01.</li>
+                        <li>Tymlos (Abaloparatide) [Prescribing Information]. FDA. Updated 2025-04.</li>
+                        <li>Beth-Tasdogan NH, Mayer B, Hussein H, Zolk O, Peter JU. Interventions for Managing Medication-Related Osteonecrosis of the Jaw. <em>Cochrane Database of Systematic Reviews</em>. 2022;7:CD012432. doi:10.1002/14651858.CD012432.pub3.</li>
+                        <li>Cosman F, Lewiecki EM, Eastell R, et al. Goal-Directed Osteoporosis Treatment: ASBMR/BHOF Task Force Position Statement 2024. <em>Journal of Bone and Mineral Research</em>. 2024;39(10):1393-1405. doi:10.1093/jbmr/zjae119.</li>
+                        <li>Reid IR, Billington EO. Drug Therapy for Osteoporosis in Older Adults. <em>Lancet</em>. 2022;399(10329):1080-1092. doi:10.1016/S0140-6736(21)02646-5.</li>
+                        <li>Camacho PM, Petak SM, Binkley N, et al. American Association of Clinical Endocrinologists/American College of Endocrinology Clinical Practice Guidelines for the Diagnosis and Treatment of Postmenopausal Osteoporosis-2020 Update. <em>Endocrine Practice</em>. 2020;26(Suppl 1):1-46. doi:10.4158/GL-2020-0524SUPPL.</li>
+                        <li>Alendronate Sodium [Prescribing Information]. FDA. Updated 2021-02.</li>
+                        <li>Committee on Clinical Practice Guidelines–Gynecology. Osteoporosis Prevention, Screening, and Diagnosis: ACOG Clinical Practice Guideline No. 1. <em>Obstetrics and Gynecology</em>. 2021;138(3):494-506. doi:10.1097/AOG.0000000000004514.</li>
+                        <li>Prolia (Denosumab) [Prescribing Information]. FDA. Updated 2026-06.</li>
+                        <li>Degboé Y, Couture G. Strategies for Denosumab Discontinuation in Postmenopausal Osteoporosis. <em>Joint Bone Spine</em>. 2026;93(2):105954. doi:10.1016/j.jbspin.2025.105954.</li>
+                        <li>Yu EW, Tsourdi E, Clarke BL, Bauer DC, Drake MT. Osteoporosis Management in the Era of COVID-19. <em>Journal of Bone and Mineral Research</em>. 2020;35(6):1009-1013. doi:10.1002/jbmr.4049.</li>
+                        <li>Makras P, Anastasilakis AD, Palermo A, et al. Alendronate for 6 or 12 Months Following Denosumab Discontinuation in Women With Postmenopausal Osteoporosis: A Prospective Observational Study. <em>Journal of Bone and Mineral Research</em>. 2026;:zjag103. doi:10.1093/jbmr/zjag103.</li>
+                        <li>Teriparatide [Prescribing Information]. FDA. Updated 2025-05.</li>
+                        <li>Händel MN, Cardoso I, von Bülow C, et al. Fracture Risk Reduction and Safety by Osteoporosis Treatment Compared With Placebo or Active Comparator in Postmenopausal Women: Systematic Review, Network Meta-Analysis, and Meta-Regression Analysis of Randomised Clinical Trials. <em>BMJ</em>. 2023;381:e068033. doi:10.1136/bmj-2021-068033.</li>
+                        <li>Humphrey MB, Russell L, Danila MI, et al. 2022 American College of Rheumatology Guideline for the Prevention and Treatment of Glucocorticoid-Induced Osteoporosis. <em>Arthritis Care & Research</em>. 2023;75(12):2405-2419. doi:10.1002/acr.25240.</li>
+                        <li>Buckley L, Humphrey MB. Glucocorticoid-Induced Osteoporosis. <em>The New England Journal of Medicine</em>. 2018;379(26):2547-2556. doi:10.1056/NEJMcp1800214.</li>
+                        <li>Harris K, Zagar CA, Lawrence KV. Osteoporosis: Common Questions and Answers. <em>American Family Physician</em>. 2023;107(3):238-246.</li>
+                        <li>Xiao R, Faucon AL, He N, et al. Risks of Hypocalcemia and Other Bone Mineral Disorders for Denosumab Versus Zoledronate Across the Spectrum of Kidney Function: A Target Trial Emulation. <em>American Journal of Kidney Diseases</em>. 2026;88(1):88-98.e1. doi:10.1053/j.ajkd.2026.02.642.</li>
+                        <li>Eastell R, Rosen CJ, Black DM, et al. Pharmacological Management of Osteoporosis in Postmenopausal Women: An Endocrine Society* Clinical Practice Guideline. <em>The Journal of Clinical Endocrinology and Metabolism</em>. 2019;104(5):1595-1622. doi:10.1210/jc.2019-00221.</li>
+                        <li>Bauer DC, Ensrud KE. Denosumab and Fracture Prevention in Primary Care Practice. <em>JAMA Internal Medicine</em>. 2025;:2834322. doi:10.1001/jamainternmed.2025.1488.</li>
+                        <li>Vilaca T, Eastell R, Schini M. Osteoporosis in Men. <em>The Lancet: Diabetes & Endocrinology</em>. 2022;10(4):273-283. doi:10.1016/S2213-8587(22)00012-2.</li>
+                        <li>Prabahar K, Alharthi NM, AlKenani R. Hypocalcemia Following Denosumab in Osteoporosis: Incidence and Risk Factors in a Saudi Cohort. <em>Osteoporosis International</em>. 2026;37(4):927-934. doi:10.1007/s00198-026-07862-5.</li>
+                        <li>Morofuji R, Oyabu K, Imatoh T, et al. Association Between Denosumab Therapy and Hypocalcemia: Influence of Concomitant Gastric Acid-Suppressive Agents and Other Clinical Parameters. <em>Biological & Pharmaceutical Bulletin</em>. 2026;49(7):1087-1092. doi:10.1248/bpb.b25-00615.</li>
+                        <li>Chevalley T, Brandi ML, Cashman KD, et al. Role of Vitamin D Supplementation in the Management of Musculoskeletal Diseases: Update From an European Society of Clinical and Economical Aspects of Osteoporosis, Osteoarthritis and Musculoskeletal Diseases (ESCEO) Working Group. <em>Aging Clinical and Experimental Research</em>. 2022;34(11):2603-2623. doi:10.1007/s40520-022-02279-6.</li>
+                    </ol>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Sticky Floating Action Bar for Mobile -->
+    <div class="mobile-nav-bar">
+        <button id="mobile-nav-toggle" class="btn btn-secondary">Menu</button>
+        <a href="#patient-profiler" class="btn btn-primary">Profiler Widget</a>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

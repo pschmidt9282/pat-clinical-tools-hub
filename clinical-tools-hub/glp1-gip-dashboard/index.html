@@ -1,0 +1,2625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GLP-1 & GIP/GLP-1 Clinical Comparison Dashboard</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      /* Theme color tokens - Dark Mode by default */
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --border-color: #334155;
+      --accent-glp1: #0d9488;
+      --accent-glp1-light: #14b8a6;
+      --accent-gip: #6366f1;
+      --accent-gip-light: #818cf8;
+      --accent-liraglutide: #0284c7;
+      --accent-liraglutide-light: #38bdf8;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      
+      --transition-fast: 0.15s ease;
+      --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent-glp1: #0f766e;
+      --accent-glp1-light: #0d9488;
+      --accent-gip: #4f46e5;
+      --accent-gip-light: #6366f1;
+      --accent-liraglutide: #0369a1;
+      --accent-liraglutide-light: #0284c7;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+      padding: 2rem 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Layout & Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-icon {
+      font-size: 2.2rem;
+      color: var(--accent-glp1-light);
+      background: linear-gradient(135deg, var(--accent-glp1), var(--accent-gip));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-title h1 {
+      font-size: 1.8rem;
+      letter-spacing: -0.025em;
+    }
+
+    .header-title p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--text-muted);
+    }
+
+    /* Key Statistics Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-md);
+      transition: transform var(--transition-fast), border-color var(--transition-fast);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--text-muted);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .stat-icon.glp1 {
+      background-color: rgba(13, 148, 136, 0.15);
+      color: var(--accent-glp1-light);
+    }
+
+    .stat-icon.gip {
+      background-color: rgba(99, 102, 241, 0.15);
+      color: var(--accent-gip-light);
+    }
+
+    .stat-icon.eff {
+      background-color: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Interactive Filters */
+    .controls-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .controls-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .controls-title {
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .controls-title i {
+      color: var(--accent-glp1-light);
+    }
+
+    .reset-btn {
+      background: none;
+      border: none;
+      color: var(--accent-glp1-light);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .reset-btn:hover {
+      text-decoration: underline;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .filter-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-family: inherit;
+      transition: all var(--transition-fast);
+    }
+
+    .filter-btn:hover {
+      background-color: var(--bg-tertiary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-glp1);
+      color: white;
+      border-color: var(--accent-glp1);
+    }
+
+    .filter-btn.active.gip-btn {
+      background-color: var(--accent-gip);
+      border-color: var(--accent-gip);
+    }
+
+    /* Views Selector (Table vs. Cards vs. Compare vs. Side Effects vs. Devices) */
+    .view-selector-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      gap: 0.25rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .view-tab {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.75rem 1.1rem;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      position: relative;
+      transition: color var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .view-tab:hover {
+      color: var(--text-primary);
+    }
+
+    .view-tab.active {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .view-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-glp1), var(--accent-gip));
+    }
+
+    /* Main Content Sections */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* View 1: Advanced Table */
+    .table-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      overflow-x: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th.sortable:hover {
+      background-color: var(--border-color);
+    }
+
+    th.sortable i {
+      margin-left: 0.25rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+    
+    [data-theme="light"] tr:hover td {
+      background-color: rgba(0, 0, 0, 0.01);
+    }
+
+    /* Badges & Tags */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .badge-glp1 {
+      background-color: rgba(13, 148, 136, 0.15);
+      color: var(--accent-glp1-light);
+      border: 1px solid rgba(13, 148, 136, 0.2);
+    }
+
+    .badge-gip {
+      background-color: rgba(99, 102, 241, 0.15);
+      color: var(--accent-gip-light);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .badge-danger {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .badge-warning {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .badge-success {
+      background-color: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .dosage-mode {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .indication-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      max-width: 320px;
+    }
+
+    .indication-tag {
+      font-size: 0.75rem;
+      background-color: var(--bg-tertiary);
+      color: var(--text-secondary);
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .ref-link {
+      color: var(--accent-glp1-light);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background-color: rgba(13, 148, 136, 0.1);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
+
+    .ref-link:hover {
+      text-decoration: underline;
+      background-color: rgba(13, 148, 136, 0.2);
+    }
+
+    /* View 2: Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .agent-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .agent-card.class-glp1::before {
+      background-color: var(--accent-glp1);
+    }
+
+    .agent-card.class-gip::before {
+      background-color: var(--accent-gip);
+    }
+
+    .agent-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--text-muted);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .card-title-area h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .card-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .card-body {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card-metric-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      background-color: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-metric {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-metric-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .efficacy-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .efficacy-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .progress-bar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .progress-track {
+      height: 8px;
+      background-color: var(--bg-primary);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease-out;
+    }
+
+    .progress-fill.glp1 {
+      background: linear-gradient(90deg, var(--accent-glp1), var(--accent-glp1-light));
+    }
+
+    .progress-fill.gip {
+      background: linear-gradient(90deg, var(--accent-gip), var(--accent-gip-light));
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+      margin-top: auto;
+    }
+
+    .card-action-btn {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .card-action-btn:hover {
+      background-color: var(--border-color);
+      border-color: var(--text-muted);
+    }
+
+    .compare-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .compare-checkbox-label input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-glp1);
+      cursor: pointer;
+    }
+
+    /* View 3: Side-by-Side Compare */
+    .compare-controls {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .compare-selectors-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .compare-select {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-lg);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+      min-width: 220px;
+    }
+
+    .compare-select:focus {
+      border-color: var(--accent-glp1-light);
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .compare-column {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .compare-column.empty {
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      border-style: dashed;
+      border-width: 2px;
+      color: var(--text-muted);
+    }
+
+    .compare-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .compare-remove-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: color var(--transition-fast);
+    }
+
+    .compare-remove-btn:hover {
+      color: #ef4444;
+    }
+
+    .compare-data-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.75rem;
+    }
+
+    [data-theme="light"] .compare-data-group {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .compare-data-group:last-of-type {
+      border-bottom: none;
+    }
+
+    .compare-data-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .compare-data-value {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .compare-data-value.highlight-green {
+      color: var(--success);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    /* View 4: Side Effects Grid & Search */
+    .se-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .se-search-container {
+      position: relative;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .se-search-input {
+      width: 100%;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      border-radius: var(--radius-lg);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .se-search-input:focus {
+      border-color: var(--accent-glp1-light);
+    }
+
+    .se-search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .se-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .se-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .se-card:hover {
+      border-color: var(--text-muted);
+      transform: translateY(-2px);
+    }
+
+    .se-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .se-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .se-body {
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* View 5: Device & Administration Guides */
+    .guides-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .guide-card-section {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .guide-section-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .guide-section-title.injectables i {
+      color: var(--accent-gip-light);
+    }
+
+    .guide-section-title.orals i {
+      color: var(--accent-glp1-light);
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .device-box {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .device-box h4 {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .device-detail-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    .device-detail-value {
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+
+    /* Modal Styling for Details & Titration Simulator */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+
+    .modal-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      max-width: 650px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-secondary);
+      z-index: 10;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: color var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Titration Timeline Visuals */
+    .titration-timeline {
+      position: relative;
+      padding-left: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .titration-timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--border-color);
+    }
+
+    .timeline-item {
+      position: relative;
+    }
+
+    .timeline-badge {
+      position: absolute;
+      left: -2rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: var(--bg-secondary);
+      border: 3px solid var(--border-color);
+      transform: translateX(1px);
+    }
+
+    .timeline-item.active .timeline-badge {
+      border-color: var(--accent-glp1);
+      background-color: var(--bg-primary);
+    }
+
+    .timeline-item.gip-active .timeline-badge {
+      border-color: var(--accent-gip);
+      background-color: var(--bg-primary);
+    }
+
+    .timeline-item.completed .timeline-badge {
+      border-color: var(--success);
+      background-color: var(--success);
+    }
+
+    .timeline-content {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem 1rem;
+    }
+
+    .timeline-step-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .timeline-step-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Disclaimer & References Section */
+    .references-section {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      margin-top: 2.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .references-title {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .references-title i {
+      color: var(--accent-glp1-light);
+    }
+
+    .references-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .references-list li {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .references-list li::before {
+      content: attr(data-index);
+      position: absolute;
+      left: 0;
+      color: var(--accent-glp1-light);
+      font-weight: 600;
+    }
+
+    .disclaimer-banner {
+      background-color: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .disclaimer-banner i {
+      color: var(--warning);
+      font-size: 1.1rem;
+      margin-top: 0.1rem;
+    }
+
+    /* Helper utility classes */
+    .text-center { text-align: center; }
+    .bold { font-weight: 600; }
+    .text-primary-color { color: var(--text-primary); }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.75rem;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+      .view-selector-tabs {
+        width: 100%;
+        overflow-x: auto;
+      }
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-title-container">
+      <div class="header-icon"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
+      <div class="header-title">
+        <h1>GLP-1 & GIP/GLP-1 Clinical Dashboard</h1>
+        <p>Interactive Clinical Reference, Dosing, Devices, & Side Effects Comparison</p>
+      </div>
+    </div>
+    <button class="theme-toggle-btn" id="themeToggle">
+      <i class="fa-solid fa-moon"></i> <span>Dark Mode</span>
+    </button>
+  </header>
+
+  <!-- Metrics Overview Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon glp1"><i class="fa-solid fa-dna"></i></div>
+      <div class="stat-info">
+        <span class="stat-value" id="glp1Count">-</span>
+        <span class="stat-label">GLP-1 Agents</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon gip"><i class="fa-solid fa-share-nodes"></i></div>
+      <div class="stat-info">
+        <span class="stat-value" id="gipCount">-</span>
+        <span class="stat-label">Dual GIP/GLP-1 Agents</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon eff"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="stat-info">
+        <span class="stat-value" id="maxWeightLoss">-</span>
+        <span class="stat-label">Max Weight Loss (Avg)</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background-color: rgba(2, 132, 199, 0.15); color: var(--accent-liraglutide-light);"><i class="fa-solid fa-capsules"></i></div>
+      <div class="stat-info">
+        <span class="stat-value" id="oralCount">-</span>
+        <span class="stat-label">Oral Options</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Filters & Controls -->
+  <div class="controls-container">
+    <div class="controls-header">
+      <h3 class="controls-title"><i class="fa-solid fa-sliders"></i> Filter Clinical Data</h3>
+      <button class="reset-btn" id="resetFilters"><i class="fa-solid fa-rotate-left"></i> Reset Filters</button>
+    </div>
+    <div class="filter-grid">
+      <div class="filter-group">
+        <span class="filter-label">Drug Class</span>
+        <div class="btn-group" id="classFilters">
+          <button class="filter-btn active" data-class="all">All Classes</button>
+          <button class="filter-btn" data-class="GLP-1 RA">GLP-1 RA</button>
+          <button class="filter-btn" data-class="Dual GIP/GLP-1 RA">Dual GIP/GLP-1 RA</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Primary Indication Target</span>
+        <div class="btn-group" id="indicationFilters">
+          <button class="filter-btn active" data-ind="all">All Targets</button>
+          <button class="filter-btn" data-ind="Obesity">Obesity/Overweight</button>
+          <button class="filter-btn" data-ind="T2DM">Diabetes (T2DM)</button>
+          <button class="filter-btn" data-ind="CV">CV Risk Reduction</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Dosing / Administration Route</span>
+        <div class="btn-group" id="dosingFilters">
+          <button class="filter-btn active" data-dose="all">All Schedules</button>
+          <button class="filter-btn" data-dose="SC Weekly">SC Weekly</button>
+          <button class="filter-btn" data-dose="Daily">Daily (SC or PO)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs for different layouts -->
+  <div class="view-selector-tabs">
+    <button class="view-tab active" data-view="table"><i class="fa-solid fa-table-cells"></i> Comparative Table View</button>
+    <button class="view-tab" data-view="cards"><i class="fa-solid fa-grip"></i> Profile Cards View</button>
+    <button class="view-tab" data-view="compare"><i class="fa-solid fa-columns"></i> Side-by-Side Comparator</button>
+    <button class="view-tab" data-view="sideeffects"><i class="fa-solid fa-triangle-exclamation"></i> Side Effects & Counseling</button>
+    <button class="view-tab" data-view="devices"><i class="fa-solid fa-pen-fancy"></i> Device & Administration Guides</button>
+  </div>
+
+  <!-- SECTION 1: COMPARATIVE TABLE VIEW -->
+  <div class="view-section active" id="tableView">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-sort="genericName">Agent (Brand) <i class="fa-solid fa-sort"></i></th>
+            <th>Class</th>
+            <th>FDA-Approved Indications</th>
+            <th>Starting Dose</th>
+            <th>Titration Schedule</th>
+            <th>Maintenance Dose</th>
+            <th class="sortable" data-sort="weightLossNoT2DM">Weight Loss (No T2DM) <i class="fa-solid fa-sort"></i></th>
+            <th class="sortable" data-sort="weightLossWithT2DM">Weight Loss (With T2DM) <i class="fa-solid fa-sort"></i></th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 2: PROFILE CARDS VIEW -->
+  <div class="view-section" id="cardsView">
+    <div class="cards-grid" id="cardsContainer">
+      <!-- Dynamically populated -->
+    </div>
+  </div>
+
+  <!-- SECTION 3: SIDE-BY-SIDE COMPARATOR -->
+  <div class="view-section" id="compareView">
+    <div class="compare-controls">
+      <div>
+        <h3 style="font-size: 1.1rem; margin-bottom: 0.25rem;"><i class="fa-solid fa-scale-balanced"></i> Compare Clinical Profiles</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Select up to three therapies from the dropdowns below to compare side-by-side.</p>
+      </div>
+      <div class="compare-selectors-group">
+        <select class="compare-select" id="compareSelect1">
+          <option value="">Select Therapy 1...</option>
+        </select>
+        <select class="compare-select" id="compareSelect2">
+          <option value="">Select Therapy 2...</option>
+        </select>
+        <select class="compare-select" id="compareSelect3">
+          <option value="">Select Therapy 3...</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="compare-grid" id="compareGridContainer">
+      <!-- Dynamically populated columns based on selects -->
+    </div>
+  </div>
+
+  <!-- SECTION 4: SIDE EFFECTS & COUNSELING -->
+  <div class="view-section" id="sideeffectsView">
+    <div class="se-controls-row">
+      <div>
+        <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;"><i class="fa-solid fa-hand-holding-medical"></i> Side Effects & Counseling Database</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Search and view clinical information and patient counseling guides for common and serious side effects.</p>
+      </div>
+      <div class="se-search-container">
+        <i class="fa-solid fa-magnifying-glass se-search-icon"></i>
+        <input type="text" class="se-search-input" id="seSearchInput" placeholder="Search side effects (e.g. nausea, thyroid)...">
+      </div>
+    </div>
+    <div class="se-grid" id="seGridContainer">
+      <!-- Dynamically populated -->
+    </div>
+  </div>
+
+  <!-- SECTION 5: DEVICE & ADMINISTRATION GUIDES -->
+  <div class="view-section" id="devicesView">
+    <div class="guides-container">
+      
+      <!-- Injectable devices -->
+      <div class="guide-card-section">
+        <h3 class="guide-section-title injectables"><i class="fa-solid fa-syringe"></i> Subcutaneous Injectable Devices</h3>
+        <div class="guide-grid" id="injectableDevicesGrid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Oral formulations -->
+      <div class="guide-card-section">
+        <h3 class="guide-section-title orals"><i class="fa-solid fa-tablets"></i> Oral Formulations & Dosing Instructions</h3>
+        <div class="guide-grid" id="oralDevicesGrid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal for Titration & Detail View -->
+  <div class="modal-backdrop" id="detailModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="modalTitle">Drug Titration Schedule</h2>
+        <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- References & Sources Section -->
+  <footer class="references-section">
+    <h3 class="references-title"><i class="fa-solid fa-book-bookmark"></i> Scientific References & Clinical Programs</h3>
+    <ul class="references-list" id="referencesList">
+      <!-- Dynamically populated to keep lists in sync -->
+    </ul>
+    
+    <div class="disclaimer-banner">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <div>
+        <strong>Disclaimer:</strong> This dashboard is for informational and educational clinical reference purposes only. It does not constitute medical advice. Treatment paths, devices, and titration schedules must be prescribed and monitored by a qualified healthcare professional. Efficacy figures represent average clinical trials endpoints (such as STEP, SURMOUNT, SURPASS, and OASIS programs); individual patient response, tolerance, and adverse event profiles vary.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Comprehensive references list
+    const referencesData = [
+      "Wegovy Prescribing Information. Novo Nordisk Inc.",
+      "Wilding JP, et al. STEP 1 Study Group. \"Once-Weekly Semaglutide in Adults with Overweight or Obesity.\" N Engl J Med. 2021;384(11):989-1002.",
+      "Ozempic Prescribing Information. Novo Nordisk Inc.",
+      "Rybelsus Prescribing Information. Novo Nordisk Inc.",
+      "Zepbound & Mounjaro Prescribing Information. Eli Lilly and Company.",
+      "Saxenda Prescribing Information. Novo Nordisk Inc.",
+      "Lincoff AM, et al. SELECT Trial Investigators. \"Cardiovascular Outcomes of Semaglutide in Patients with Overweight or Obesity and Cardiovascular Disease.\" N Engl J Med. 2023;389(24):2221-2232.",
+      "STEP-HFpEF Trial: Kosiborod MN, et al. \"Semaglutide in Patients with Heart Failure with Preserved Ejection Fraction and Obesity.\" N Engl J Med. 2023;389(12):1069-1084.",
+      "Jastreboff AM, et al. SURMOUNT-1 Investigators. \"Tirzepatide Once Weekly for the Treatment of Obesity.\" N Engl J Med. 2022;387(3):205-217.",
+      "Dahl D, et al. SURPASS-Clinical Programs: Tirzepatide for Glycemic Control & Cardiovascular Outcomes. Lancet & JAMA trial datasets (2021-2023).",
+      "Pi-Sunyer X, et al. SCALE Clinical Trial Group. \"A Randomized, Controlled Trial of 3.0 mg of Liraglutide in Weight Management.\" N Engl J Med. 2015;373(1):11-22.",
+      "Wharton S, et al. \"Daily Oral Orforglipron in Adults with Obesity.\" N Engl J Med. 2023;389(10):877-888.",
+      "Knop FK, et al. OASIS 1 Trial Investigators. \"Oral Semaglutide 50 mg Once Daily for Obesity (OASIS 1).\" The Lancet. 2023;402(10403):705-719.",
+      "Meta-analyses on GLP-1 RA Safety Profiles: Suicidal ideation, gallbladder, and pancreatitis risks (FDA/EMA reports 2024-2026)."
+    ];
+
+    // Data Model
+    const drugData = [
+      {
+        id: "wegovy",
+        brandName: "Wegovy",
+        genericName: "Semaglutide SC",
+        class: "GLP-1 RA",
+        classLong: "Glucagon-Like Peptide-1 Receptor Agonist",
+        indications: ["Obesity/overweight + comorbidity", "Cardiovascular risk reduction (obesity + CVD)", "MASH (F2\u2013F3)"],
+        startingDose: "0.25 mg SC weekly",
+        titrationSchedule: "\u2191 q4wk: 0.25 \u2192 0.5 \u2192 1.0 \u2192 1.7 \u2192 2.4 mg (16 wk to full dose)",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "0.25 mg", route: "SC weekly", description: "Initiation phase to assess gastrointestinal tolerability." },
+          { weekRange: "Weeks 5\u20138", dose: "0.5 mg", route: "SC weekly", description: "First dose escalation step." },
+          { weekRange: "Weeks 9\u201312", dose: "1.0 mg", route: "SC weekly", description: "Intermediate maintenance / escalation phase." },
+          { weekRange: "Weeks 13\u201316", dose: "1.7 mg", route: "SC weekly", description: "Therapeutic transition dose." },
+          { weekRange: "Week 17+", dose: "2.4 mg", route: "SC weekly", description: "Target maintenance dose for weight management and CV risk reduction." }
+        ],
+        maintenanceDose: "2.4 mg weekly",
+        weightLossNoT2DM: "~15\u201316% total (~12% placebo-adjusted)",
+        weightLossNoT2DMValue: 15.5,
+        weightLossWithT2DM: "~9.6% total (~6.2% placebo-adjusted)",
+        weightLossWithT2DMValue: 9.6,
+        references: ["[1]", "[2]", "[7]", "[8]"],
+        frequency: "SC Weekly",
+        isDaily: false,
+        deviceType: "Single-dose prefilled pen (autoinjector)",
+        deviceDetails: "Shield-activated autoinjector \u2014 patient pushes pen against skin to inject (no button press). Needle is hidden and auto-retracts. No dose dialing needed. Also available as a single-dose prefilled syringe with integrated needle or FlexTouch multi-dose pen (4 weekly doses per pen).",
+        formulation: "Subcutaneous Solution (Prefilled Pen / Syringe / FlexTouch)",
+        specialInstructions: "Inject subcutaneously once weekly, on the same day each week, at any time of day, with or without food. Rotate injection sites weekly.",
+        uniqueSideEffects: "Diabetic retinopathy worsening (in T2DM with rapid glycemic improvement); headache (15%); dyspepsia (10%); fatigue.",
+        contraindications: "Personal or family history of Medullary Thyroid Carcinoma (MTC) or Multiple Endocrine Neoplasia syndrome type 2 (MEN2); hypersensitivity.",
+        specialMonitoring: "Ophthalmologic screening in T2DM patients before initiation; renal function in patients with severe GI symptoms.",
+        keyNotes: "Administered once weekly SC. Common side effects are gastrointestinal (nausea, vomiting, diarrhea). Cardioprotective benefits shown in SELECT trial."
+      },
+      {
+        id: "ozempic",
+        brandName: "Ozempic",
+        genericName: "Semaglutide SC",
+        class: "GLP-1 RA",
+        classLong: "Glucagon-Like Peptide-1 Receptor Agonist",
+        indications: ["T2DM glycemic control", "Cardiovascular risk reduction (T2DM + CVD)", "CKD progression reduction"],
+        startingDose: "0.25 mg SC weekly",
+        titrationSchedule: "\u2191 q4wk: 0.25 \u2192 0.5 \u2192 1.0 \u2192 2.0 mg",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "0.25 mg", route: "SC weekly", description: "Initiation phase (not for glycemic control)." },
+          { weekRange: "Weeks 5\u20138", dose: "0.5 mg", route: "SC weekly", description: "Standard therapeutic dose for glycemic control." },
+          { weekRange: "Weeks 9\u201312", dose: "1.0 mg", route: "SC weekly", description: "Increased dose if glycemic control is insufficient." },
+          { weekRange: "Week 13+", dose: "2.0 mg", route: "SC weekly", description: "Maximum therapeutic maintenance dose." }
+        ],
+        maintenanceDose: "1.0\u20132.0 mg weekly",
+        weightLossNoT2DM: "N/A (diabetes indication)",
+        weightLossNoT2DMValue: 0,
+        weightLossWithT2DM: "~5\u20137 kg at 1.0 mg; greater at 2.0 mg",
+        weightLossWithT2DMValue: 7.0,
+        references: ["[3]", "[4]"],
+        frequency: "SC Weekly",
+        isDaily: false,
+        deviceType: "Multi-dose prefilled pen (FlexTouch)",
+        deviceDetails: "Dial-a-dose pen with NovoFine Plus 32G \u00d7 4 mm needles (co-packed). Patient attaches a new needle each week, dials the dose, and presses the button. One pen contains multiple doses.",
+        formulation: "Subcutaneous Solution (FlexTouch Pen)",
+        specialInstructions: "Inject once weekly. Attach new sterile needle before each injection. Dispose needle after use. Do not share pen.",
+        uniqueSideEffects: "Diabetic retinopathy worsening (in T2DM with rapid glycemic improvement); headache (15%); dyspepsia (10%); fatigue.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Ophthalmologic screening in T2DM patients before initiation; renal function with severe GI symptoms.",
+        keyNotes: "Glycemic control and cardiovascular risk reduction in T2DM. CKD progression risk reduction."
+      },
+      {
+        id: "zepbound",
+        brandName: "Zepbound",
+        genericName: "Tirzepatide SC",
+        class: "Dual GIP/GLP-1 RA",
+        classLong: "Glucose-Dependent Insulinotropic Polypeptide & GLP-1 Dual Agonist",
+        indications: ["Obesity/overweight + comorbidity", "Moderate-severe OSA with obesity"],
+        startingDose: "2.5 mg SC weekly",
+        titrationSchedule: "\u2191 q4wk: 2.5 \u2192 5 \u2192 7.5 \u2192 10 \u2192 12.5 \u2192 15 mg (20 wk to max)",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "2.5 mg", route: "SC weekly", description: "Initiation phase for tolerability testing." },
+          { weekRange: "Weeks 5\u20138", dose: "5.0 mg", route: "SC weekly", description: "First therapeutic dose level." },
+          { weekRange: "Weeks 9\u201312", dose: "7.5 mg", route: "SC weekly", description: "Dose escalation based on tolerance and need." },
+          { weekRange: "Weeks 13\u201316", dose: "10.0 mg", route: "SC weekly", description: "Target therapeutic level." },
+          { weekRange: "Weeks 17\u201320", dose: "12.5 mg", route: "SC weekly", description: "Escalation option." },
+          { weekRange: "Week 21+", dose: "15.0 mg", route: "SC weekly", description: "Maximum target maintenance dose for weight loss." }
+        ],
+        maintenanceDose: "5.0\u201315.0 mg weekly",
+        weightLossNoT2DM: "~15% (5mg), ~19.5% (10mg), ~20.9% (15mg)",
+        weightLossNoT2DMValue: 20.9,
+        weightLossWithT2DM: "~12.8% (10 mg), ~14.7% (15 mg)",
+        weightLossWithT2DMValue: 14.7,
+        references: ["[5]"],
+        frequency: "SC Weekly",
+        isDaily: false,
+        deviceType: "Single-dose prefilled pen (autoinjector)",
+        deviceDetails: "Standard dispensing is the autoinjector pen \u2014 press against skin, no dose dialing. Needle is hidden. Also available as KwikPen (multi-dose, single-patient-use) or vial (requires syringe). Vial formulation is less commonly prescribed and requires the patient to draw up with a syringe.",
+        formulation: "Subcutaneous Solution (Prefilled Pen / KwikPen / Vial)",
+        specialInstructions: "Inject once weekly. Store in refrigerator. Rotate injection sites weekly (abdomen, thigh, or upper arm).",
+        uniqueSideEffects: "Similar GI profile; may have slightly lower nausea rates than semaglutide at comparable efficacy; oral contraceptive interaction \u2014 delayed gastric emptying may reduce absorption.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Use barrier contraception for 4 weeks after initiation and each dose escalation; pregnancy test if concern.",
+        keyNotes: "Dual agonist targeting GIP and GLP-1. Higher average weight loss outcomes in trials compared to single-receptor agonists."
+      },
+      {
+        id: "mounjaro",
+        brandName: "Mounjaro",
+        genericName: "Tirzepatide SC",
+        class: "Dual GIP/GLP-1 RA",
+        classLong: "Glucose-Dependent Insulinotropic Polypeptide & GLP-1 Dual Agonist",
+        indications: ["T2DM glycemic control"],
+        startingDose: "2.5 mg SC weekly",
+        titrationSchedule: "Same as Zepbound (\u2191 q4wk: 2.5 \u2192 5 \u2192 7.5 \u2192 10 \u2192 12.5 \u2192 15 mg)",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "2.5 mg", route: "SC weekly", description: "Initiation phase." },
+          { weekRange: "Weeks 5\u20138", dose: "5.0 mg", route: "SC weekly", description: "Standard starter therapeutic dose." },
+          { weekRange: "Weeks 9\u201312", dose: "7.5 mg", route: "SC weekly", description: "Escalation as needed." },
+          { weekRange: "Weeks 13\u201316", dose: "10.0 mg", route: "SC weekly", description: "Escalation as needed." },
+          { weekRange: "Weeks 17\u201320", dose: "12.5 mg", route: "SC weekly", description: "Escalation as needed." },
+          { weekRange: "Week 21+", dose: "15.0 mg", route: "SC weekly", description: "Maximum therapeutic dose." }
+        ],
+        maintenanceDose: "5.0\u201315.0 mg weekly",
+        weightLossNoT2DM: "N/A (diabetes indication)",
+        weightLossNoT2DMValue: 0,
+        weightLossWithT2DM: "HbA1c \u2193 1.6\u20132.0%; weight \u2193 5\u201310 kg",
+        weightLossWithT2DMValue: 9.0,
+        references: ["[3]", "[5]"],
+        frequency: "SC Weekly",
+        isDaily: false,
+        deviceType: "Single-dose prefilled pen (autoinjector)",
+        deviceDetails: "Same device options as Zepbound (single-dose autoinjector pen, KwikPen, or vial options).",
+        formulation: "Subcutaneous Solution (Prefilled Pen / KwikPen / Vial)",
+        specialInstructions: "Inject once weekly. Store in refrigerator. Rotate injection sites weekly.",
+        uniqueSideEffects: "Similar GI profile; oral contraceptive interaction \u2014 delayed gastric emptying may reduce absorption.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Use barrier contraception for 4 weeks after initiation and each dose escalation; pregnancy test if concern.",
+        keyNotes: "Superior glycemic and weight control outcomes in T2DM trials."
+      },
+      {
+        id: "saxenda",
+        brandName: "Saxenda",
+        genericName: "Liraglutide SC",
+        class: "GLP-1 RA",
+        classLong: "Glucagon-Like Peptide-1 Receptor Agonist",
+        indications: ["Obesity/overweight + comorbidity"],
+        startingDose: "0.6 mg SC daily",
+        titrationSchedule: "\u2191 q1wk: 0.6 \u2192 1.2 \u2192 1.8 \u2192 2.4 \u2192 3.0 mg (4 wk to full dose)",
+        titrationSteps: [
+          { weekRange: "Week 1", dose: "0.6 mg", route: "SC daily", description: "Initiation to ease gastric adjustment." },
+          { weekRange: "Week 2", dose: "1.2 mg", route: "SC daily", description: "Escalation step 1." },
+          { weekRange: "Week 3", dose: "1.8 mg", route: "SC daily", description: "Escalation step 2." },
+          { weekRange: "Week 4", dose: "2.4 mg", route: "SC daily", description: "Escalation step 3." },
+          { weekRange: "Week 5+", dose: "3.0 mg", route: "SC daily", description: "Full target therapeutic dose for obesity." }
+        ],
+        maintenanceDose: "3.0 mg daily",
+        weightLossNoT2DM: "~7\u20138% total (~5% placebo-adjusted)",
+        weightLossNoT2DMValue: 7.5,
+        weightLossWithT2DM: "~5\u20136% total",
+        weightLossWithT2DMValue: 5.5,
+        references: [" [6]"],
+        frequency: "Daily",
+        isDaily: true,
+        deviceType: "Multi-dose prefilled pen (single-patient-use)",
+        deviceDetails: "Dial-a-dose pen; patient attaches a new pen needle each day, dials to the prescribed dose (0.6\u20133.0 mg), and presses the injection button. One pen contains multiple daily doses.",
+        formulation: "Subcutaneous Solution (Multi-dose Pen)",
+        specialInstructions: "Inject once daily at any time of day, with or without food. Attach a new sterile needle for each injection. Rotate sites.",
+        uniqueSideEffects: "Higher injection frequency (daily) \u2192 more injection site reactions; hypoglycemia more common in pediatric patients (~15%); discontinuation rate ~10% due to GI AEs.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Heart rate; renal function; mental health monitoring.",
+        keyNotes: "Daily SC injection. Shorter half-life. Typically titrated weekly."
+      },
+      {
+        id: "wegovy_oral",
+        brandName: "Wegovy oral",
+        genericName: "Semaglutide oral",
+        class: "GLP-1 RA",
+        classLong: "Glucagon-Like Peptide-1 Receptor Agonist",
+        indications: ["Chronic weight management in adults with obesity or overweight + comorbidity"],
+        startingDose: "3 mg PO daily (titrated up)",
+        titrationSchedule: "Titration per label (similar to SC Wegovy schedule: 3 \u2192 7 \u2192 14 \u2192 25 mg)",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "3 mg", route: "PO daily", description: "Initiation phase to assess gastrointestinal tolerability." },
+          { weekRange: "Weeks 5\u20138", dose: "7 mg", route: "PO daily", description: "First dose escalation step." },
+          { weekRange: "Weeks 9\u201312", dose: "14 mg", route: "PO daily", description: "Intermediate escalation dose." },
+          { weekRange: "Week 13+", dose: "25 mg", route: "PO daily", description: "Target maintenance dose for chronic weight management." }
+        ],
+        maintenanceDose: "25 mg PO daily",
+        weightLossNoT2DM: "~10\u201311% (placebo-adjusted) at ~1 year",
+        weightLossNoT2DMValue: 10.5,
+        weightLossWithT2DM: "Modest (lower than 50 mg / standard Rybelsus profiles)",
+        weightLossWithT2DMValue: 5.0,
+        references: ["[1]", "[2]"],
+        frequency: "Daily",
+        isDaily: true,
+        deviceType: "Oral tablet",
+        deviceDetails: "Swallow whole. Do not crush, chew, or split.",
+        formulation: "Tablet (1.5, 4, 9, 25 mg)",
+        specialInstructions: "Must take on empty stomach with \u22644 oz water, 30 min before food/other meds. Swallow whole.",
+        uniqueSideEffects: "Same GI profile as SC; absorption affected by food \u2014 must take on empty stomach with \u22644 oz water, 30 min before food/meds.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Same as SC semaglutide; ensure patient understands fasting requirement to avoid reduced efficacy.",
+        keyNotes: "FDA approved Dec 2025; take on empty stomach with \u22644 oz water, 30 min before food/other meds."
+      },
+      {
+        id: "rybelsus",
+        brandName: "Rybelsus",
+        genericName: "Semaglutide oral",
+        class: "GLP-1 RA",
+        classLong: "Glucagon-Like Peptide-1 Receptor Agonist",
+        indications: ["T2DM glycemic control", "MACE risk reduction"],
+        startingDose: "3 mg PO daily",
+        titrationSchedule: "\u2191 q4wk: 3 \u2192 7 \u2192 14 mg",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "3 mg", route: "PO daily", description: "Initiation phase to adapt GI tract (not effective for control)." },
+          { weekRange: "Weeks 5\u20138", dose: "7 mg", route: "PO daily", description: "First effective therapeutic dosage." },
+          { weekRange: "Week 9+", dose: "14 mg", route: "PO daily", description: "Target maintenance dose for optimal glycemic benefit." }
+        ],
+        maintenanceDose: "14 mg daily",
+        weightLossNoT2DM: "N/A (diabetes indication)",
+        weightLossNoT2DMValue: 0,
+        weightLossWithT2DM: "Modest (~3\u20135 kg)",
+        weightLossWithT2DMValue: 4.0,
+        references: ["[3]"],
+        frequency: "Daily",
+        isDaily: true,
+        deviceType: "Oral tablet",
+        deviceDetails: "Swallow whole. Do not crush, chew, or split.",
+        formulation: "Tablet (3, 7, 14 mg)",
+        specialInstructions: "Same fasting requirement as Wegovy tablets (must take on empty stomach with \u22644 oz water, 30 min before food/other meds).",
+        uniqueSideEffects: "Same GI profile as SC; absorption affected by food \u2014 must take on empty stomach with \u22644 oz water, 30 min before food/meds.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Ensure patient understands fasting requirement to avoid reduced efficacy.",
+        keyNotes: "Take on empty stomach with \u22644 oz water, 30 min before food/other meds. Lower oral absorption rate requires strict fasting adherence."
+      },
+      {
+        id: "orforglipron",
+        brandName: "Foundayo",
+        genericName: "Orforglipron oral",
+        class: "GLP-1 RA",
+        classLong: "Oral Non-Peptide GLP-1 Receptor Agonist",
+        indications: ["Chronic weight management in adults with obesity or overweight + comorbidity"],
+        startingDose: "0.8 mg PO daily",
+        titrationSchedule: "\u2191 q30 days: 0.8 \u2192 2.5 \u2192 5.5 \u2192 9 \u2192 14.5 \u2192 17.2 mg based on response/tolerability",
+        titrationSteps: [
+          { weekRange: "Month 1", dose: "0.8 mg", route: "PO daily", description: "Initiation phase." },
+          { weekRange: "Month 2", dose: "2.5 mg", route: "PO daily", description: "First titration escalation." },
+          { weekRange: "Month 3", dose: "5.5 mg", route: "PO daily", description: "Starter therapeutic / maintenance dose." },
+          { weekRange: "Month 4", dose: "9.0 mg", route: "PO daily", description: "Optional escalation based on clinical response." },
+          { weekRange: "Month 5", dose: "14.5 mg", route: "PO daily", description: "Optional escalation." },
+          { weekRange: "Month 6+", dose: "17.2 mg", route: "PO daily", description: "Maximum target maintenance dose based on tolerability." }
+        ],
+        maintenanceDose: "5.5\u201317.2 mg daily",
+        weightLossNoT2DM: "~10\u201315% (dose-dependent); up to ~14.7% at 36 wk in phase 2",
+        weightLossNoT2DMValue: 14.7,
+        weightLossWithT2DM: "~9.6% at higher doses (clinical trials data)",
+        weightLossWithT2DMValue: 9.6,
+        references: ["[4]", "[12]"],
+        frequency: "Daily",
+        isDaily: true,
+        deviceType: "Oral tablet",
+        deviceDetails: "Swallow whole. Do not crush, chew, or split.",
+        formulation: "Tablet (0.8\u201317.2 mg)",
+        specialInstructions: "No fasting requirement \u2014 can take with or without food. Swallow whole.",
+        uniqueSideEffects: "Dyspepsia and eructation (belching) more prominent than other GLP-1 RAs; diarrhea ~19\u201326%; no fasting requirement (advantage); higher discontinuation rates in phase 2 trials with rapid titration.",
+        contraindications: "MTC/MEN2 history; severe gastroparesis.",
+        specialMonitoring: "Hepatic transaminases (rare elevations reported \u2014 alternative causes identified in trials); renal function.",
+        keyNotes: "FDA approved April 2026; small molecule (no absorption enhancer needed \u2014 no fasting requirement); similar GI side effect profile."
+      },
+      {
+        id: "semaglutide_oral_50",
+        brandName: "Semaglutide oral 50mg",
+        genericName: "Oral Semaglutide (investigational)",
+        class: "GLP-1 RA",
+        classLong: "Glucagon-Like Peptide-1 Receptor Agonist",
+        indications: ["Chronic weight management (investigational for obesity)"],
+        startingDose: "3 mg PO daily",
+        titrationSchedule: "\u2191 q4wk: 3 \u2192 7 \u2192 14 \u2192 25 \u2192 50 mg",
+        titrationSteps: [
+          { weekRange: "Weeks 1\u20134", dose: "3 mg", route: "PO daily", description: "Initiation phase." },
+          { weekRange: "Weeks 5\u20138", dose: "7 mg", route: "PO daily", description: "First titration escalation." },
+          { weekRange: "Weeks 9\u201312", dose: "14 mg", route: "PO daily", description: "Intermediate escalation." },
+          { weekRange: "Weeks 13\u201316", dose: "25 mg", route: "PO daily", description: "High-dose titration step." },
+          { weekRange: "Week 17+", dose: "50 mg", route: "PO daily", description: "Maximum target maintenance dose." }
+        ],
+        maintenanceDose: "50 mg daily",
+        weightLossNoT2DM: "~15.1% total (~12.7% placebo-adjusted) at 68 wk (OASIS 1)",
+        weightLossNoT2DMValue: 15.1,
+        weightLossWithT2DM: "~10\u201312% (based on glycemic dose response curves)",
+        weightLossWithT2DMValue: 11.0,
+        references: ["[13]"],
+        frequency: "Daily",
+        isDaily: true,
+        deviceType: "Oral tablet",
+        deviceDetails: "Swallow whole. Do not crush, chew, or split.",
+        formulation: "Tablet (3, 7, 14, 25, 50 mg)",
+        specialInstructions: "Must take on empty stomach with \u22644 oz water, 30 min before food/other meds. Swallow whole.",
+        uniqueSideEffects: "Same GI profile as SC; absorption affected by food \u2014 must take on empty stomach with \u22644 oz water, 30 min before food/meds.",
+        contraindications: "MTC/MEN2 history; hypersensitivity.",
+        specialMonitoring: "Same as SC semaglutide; ensure patient understands fasting requirement to avoid reduced efficacy.",
+        keyNotes: "Comparable to SC semaglutide 2.4 mg; same fasting requirement as Rybelsus (empty stomach, <=4 oz water, 30 min before food)."
+      }
+    ];
+
+    // Side Effects Database Model
+    const sideEffectsData = [
+      {
+        name: "Nausea/Vomiting",
+        severity: "Most Common",
+        incidence: "25\u201344% nausea",
+        counseling: "Most common; peaks during dose escalation; usually transient and mild-moderate. Eat slowly, choose smaller portions, and avoid high-fat/greasy foods. Antiemetics (ondansetron) can be used PRN.",
+        references: ["[1-3]"]
+      },
+      {
+        name: "Diarrhea/Constipation",
+        severity: "Most Common",
+        incidence: "17\u201330% diarrhea, 11\u201324% constipation",
+        counseling: "Increase fiber and fluids intake for constipation. Loperamide can be used PRN for diarrhea. Monitor closely for symptoms of dehydration.",
+        references: ["[1-2, 4]"]
+      },
+      {
+        name: "Gallbladder disease",
+        severity: "Serious Risk",
+        incidence: "Cholelithiasis ~1.6\u20134%, cholecystitis ~0.6%",
+        counseling: "Risk is dose- and duration-dependent (37% increased risk shown in meta-analysis). Counsel patients to report severe right upper quadrant (RUQ) abdominal pain immediately, especially with rapid weight loss.",
+        references: ["[1, 5-6]"]
+      },
+      {
+        name: "Acute pancreatitis",
+        severity: "Serious Risk",
+        incidence: "Rare (~0.2%)",
+        counseling: "Discontinue drug immediately if pancreatitis is suspected. Do not re-initiate therapy after a confirmed episode. Counsel patients on severe, persistent epigastric pain radiating to the back.",
+        references: ["[5, 7]"]
+      },
+      {
+        name: "Acute kidney injury",
+        severity: "Serious Risk",
+        incidence: "Secondary to volume depletion",
+        counseling: "AKI typically occurs secondary to volume depletion from severe GI adverse losses. Monitor renal function (creatinine/eGFR) during dose escalation, especially in patients reporting persistent vomiting or diarrhea.",
+        references: ["[4-5, 8]"]
+      },
+      {
+        name: "Increased heart rate",
+        severity: "General Effect",
+        incidence: "Mean increase ~2\u20134 bpm",
+        counseling: "Counsel patients to report palpitations, racing heartbeat at rest, or chest discomfort.",
+        references: ["[4-5]"]
+      },
+      {
+        name: "Thyroid C-cell tumors",
+        severity: "Boxed Warning",
+        incidence: "Rodent data only",
+        counseling: "Boxed warning is based on rodent studies; no conclusive evidence exists in humans. Contraindicated in patients with a personal or family history of Medullary Thyroid Carcinoma (MTC) or MEN2. Routine calcitonin screening is not recommended.",
+        references: ["[4-5, 9]"]
+      },
+      {
+        name: "Delayed gastric emptying",
+        severity: "General Effect",
+        incidence: "Rare (~6.5/1000 person-years)",
+        counseling: "Can precipitate gastroparesis. Not recommended in patients with pre-existing severe gastroparesis. Patients must discuss withholding details with their anesthesia team prior to procedures requiring sedation.",
+        references: ["[5, 8]"]
+      },
+      {
+        name: "Injection site reactions",
+        severity: "Injectable-Only",
+        incidence: "~5% of patients",
+        counseling: "Typically presents as mild erythema or itching. Counsel patients to rotate injection sites weekly between the abdomen, thigh, and upper arm.",
+        references: ["[1, 10]"]
+      },
+      {
+        name: "Hypoglycemia",
+        severity: "Serious Risk",
+        incidence: "Low risk (except with insulin/SU)",
+        counseling: "Low risk as monotherapy. Significant risk when combined with insulin or sulfonylureas. Proactively reduce insulin/SU doses upon initiating therapy.",
+        references: ["[4-5, 11]"]
+      },
+      {
+        name: "Suicidal ideation",
+        severity: "Safety Monitoring",
+        incidence: "No increased risk in RCTs",
+        counseling: "Meta-analyses of RCTs (>107,000 patients) show no increased risk versus placebo. FDA/EMA have not confirmed a causal link. However, monitor mood and mental health as a general clinical best practice.",
+        references: ["[12-14]"]
+      }
+    ];
+
+    // State Variables
+    let filters = {
+      class: "all",
+      indication: "all",
+      dosing: "all"
+    };
+
+    let sortConfig = {
+      key: null,
+      direction: 'ascending'
+    };
+
+    let compareSelection = ["wegovy", "zepbound", "orforglipron"];
+
+    // Initialize UI Elements
+    document.addEventListener("DOMContentLoaded", () => {
+      initApp();
+      setupThemeToggle();
+      setupFilters();
+      setupTabs();
+      setupSorting();
+      setupComparator();
+      setupModal();
+      setupSideEffectsSearch();
+    });
+
+    function initApp() {
+      updateStats();
+      renderTable();
+      renderCards();
+      renderComparatorDropdowns();
+      renderComparator();
+      renderSideEffects();
+      renderDevicesAndOrals();
+      renderReferences();
+    }
+
+    function updateStats() {
+      const glp1Count = drugData.filter(d => d.class === "GLP-1 RA").length;
+      const gipCount = drugData.filter(d => d.class === "Dual GIP/GLP-1 RA").length;
+      const oralCount = drugData.filter(d => d.isDaily && d.deviceType.includes("Oral")).length;
+      
+      let maxLoss = 0;
+      drugData.forEach(d => {
+        if (d.weightLossNoT2DMValue > maxLoss) maxLoss = d.weightLossNoT2DMValue;
+        if (d.weightLossWithT2DMValue > maxLoss) maxLoss = d.weightLossWithT2DMValue;
+      });
+
+      document.getElementById("glp1Count").innerText = glp1Count;
+      document.getElementById("gipCount").innerText = gipCount;
+      document.getElementById("maxWeightLoss").innerText = `~${maxLoss}%`;
+      document.getElementById("oralCount").innerText = oralCount;
+    }
+
+    // Theme Toggle Settings
+    function setupThemeToggle() {
+      const themeToggle = document.getElementById("themeToggle");
+      const currentTheme = localStorage.getItem("theme") || "dark";
+      
+      document.documentElement.setAttribute("data-theme", currentTheme);
+      updateThemeButtonUI(currentTheme);
+
+      themeToggle.addEventListener("click", () => {
+        const theme = document.documentElement.getAttribute("data-theme");
+        const nextTheme = theme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
+        updateThemeButtonUI(nextTheme);
+      });
+    }
+
+    function updateThemeButtonUI(theme) {
+      const btn = document.getElementById("themeToggle");
+      if (theme === "light") {
+        btn.innerHTML = `<i class="fa-solid fa-sun"></i> <span>Light Mode</span>`;
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-moon"></i> <span>Dark Mode</span>`;
+      }
+    }
+
+    // Filter Functionality
+    function setupFilters() {
+      // Class Filters
+      const classFilters = document.getElementById("classFilters");
+      classFilters.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          classFilters.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+          e.target.classList.add("active");
+          filters.class = e.target.getAttribute("data-class");
+          applyFilters();
+        });
+      });
+
+      // Indication Filters
+      const indicationFilters = document.getElementById("indicationFilters");
+      indicationFilters.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          indicationFilters.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+          e.target.classList.add("active");
+          filters.indication = e.target.getAttribute("data-ind");
+          applyFilters();
+        });
+      });
+
+      // Dosing Filters
+      const dosingFilters = document.getElementById("dosingFilters");
+      dosingFilters.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          dosingFilters.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+          e.target.classList.add("active");
+          filters.dosing = e.target.getAttribute("data-dose");
+          applyFilters();
+        });
+      });
+
+      // Reset
+      document.getElementById("resetFilters").addEventListener("click", () => {
+        filters = { class: "all", indication: "all", dosing: "all" };
+        
+        // Reset classes
+        document.querySelectorAll(".btn-group").forEach(group => {
+          group.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+          group.querySelector("button[data-class='all'], button[data-ind='all'], button[data-dose='all']").classList.add("active");
+        });
+        applyFilters();
+      });
+    }
+
+    function getFilteredData() {
+      return drugData.filter(item => {
+        // Class check
+        if (filters.class !== "all" && item.class !== filters.class) {
+          return false;
+        }
+
+        // Indication check
+        if (filters.indication !== "all") {
+          const match = item.indications.some(ind => {
+            if (filters.indication === "Obesity" && (ind.toLowerCase().includes("obesity") || ind.toLowerCase().includes("overweight"))) return true;
+            if (filters.indication === "T2DM" && ind.toLowerCase().includes("t2dm")) return true;
+            if (filters.indication === "CV" && ind.toLowerCase().includes("cv")) return true;
+            return false;
+          });
+          if (!match) return false;
+        }
+
+        // Dosing check
+        if (filters.dosing !== "all") {
+          if (filters.dosing === "SC Weekly" && item.frequency !== "SC Weekly") return false;
+          if (filters.dosing === "Daily" && !item.isDaily) return false;
+        }
+
+        return true;
+      });
+    }
+
+    function applyFilters() {
+      renderTable();
+      renderCards();
+    }
+
+    // View Tabs Switching
+    function setupTabs() {
+      const tabs = document.querySelectorAll(".view-tab");
+      tabs.forEach(tab => {
+        tab.addEventListener("click", (e) => {
+          tabs.forEach(t => t.classList.remove("active"));
+          e.target.closest("button").classList.add("active");
+          
+          const viewName = e.target.closest("button").getAttribute("data-view");
+          document.querySelectorAll(".view-section").forEach(sec => sec.classList.remove("active"));
+          document.getElementById(viewName + "View").classList.add("active");
+        });
+      });
+    }
+
+    // Sorting Functionality
+    function setupSorting() {
+      document.querySelectorAll("th.sortable").forEach(header => {
+        header.addEventListener("click", () => {
+          const key = header.getAttribute("data-sort");
+          let direction = 'ascending';
+          if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+          }
+          sortConfig = { key, direction };
+          
+          // Update sorting icons
+          document.querySelectorAll("th.sortable i").forEach(icon => {
+            icon.className = "fa-solid fa-sort";
+          });
+          const activeIcon = header.querySelector("i");
+          if (direction === 'ascending') {
+            activeIcon.className = "fa-solid fa-sort-up";
+          } else {
+            activeIcon.className = "fa-solid fa-sort-down";
+          }
+
+          renderTable();
+        });
+      });
+    }
+
+    // Render Table View
+    function renderTable() {
+      const tableBody = document.getElementById("tableBody");
+      let data = getFilteredData();
+
+      // Apply sorting if configured
+      if (sortConfig.key) {
+        data.sort((a, b) => {
+          let valA = a[sortConfig.key];
+          let valB = b[sortConfig.key];
+
+          // Use numeric metrics for weight loss columns
+          if (sortConfig.key === "weightLossNoT2DM") {
+            valA = a.weightLossNoT2DMValue;
+            valB = b.weightLossNoT2DMValue;
+          }
+          if (sortConfig.key === "weightLossWithT2DM") {
+            valA = a.weightLossWithT2DMValue;
+            valB = b.weightLossWithT2DMValue;
+          }
+
+          if (valA < valB) return sortConfig.direction === 'ascending' ? -1 : 1;
+          if (valA > valB) return sortConfig.direction === 'ascending' ? 1 : -1;
+          return 0;
+        });
+      }
+
+      tableBody.innerHTML = "";
+
+      if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="9" class="text-center" style="padding: 3rem; color: var(--text-muted);">No therapies matches the current filter settings.</td></tr>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const classBadge = item.class === "GLP-1 RA" 
+          ? `<span class="badge badge-glp1">GLP-1 RA</span>` 
+          : `<span class="badge badge-gip">Dual GIP/GLP-1 RA</span>`;
+
+        const freqIcon = item.isDaily ? `<i class="fa-solid fa-calendar-day"></i>` : `<i class="fa-solid fa-calendar-week"></i>`;
+
+        const indicationHTML = item.indications.map(ind => `<span class="indication-tag">${ind}</span>`).join("");
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>
+            <div style="font-weight:700; color: var(--text-primary); font-family: 'Outfit', sans-serif;">${item.brandName}</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">${item.genericName}</div>
+          </td>
+          <td>${classBadge}</td>
+          <td><div class="indication-list">${indicationHTML}</div></td>
+          <td>
+            <div class="bold text-primary-color">${item.startingDose.split(" ")[0]} ${item.startingDose.split(" ")[1]}</div>
+            <div class="dosage-mode">${freqIcon} ${item.isDaily ? "Daily" : "Weekly"}</div>
+          </td>
+          <td style="font-size: 0.8rem; max-width: 200px;">${item.titrationSchedule}</td>
+          <td>
+            <div class="bold text-primary-color" style="color: var(--accent-glp1-light); font-size: 0.95rem;">${item.maintenanceDose}</div>
+          </td>
+          <td><div class="bold text-primary-color" style="${item.weightLossNoT2DMValue > 12 ? 'color: var(--success); font-size: 1rem;' : ''}">${item.weightLossNoT2DM}</div></td>
+          <td><div style="font-size: 0.85rem;">${item.weightLossWithT2DM}</div></td>
+          <td class="text-center">
+            <button class="card-action-btn" onclick="openTitrationModal('${item.id}')">
+              <i class="fa-solid fa-clock-rotate-left"></i> View Profile
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // Render Profiles Cards View
+    function renderCards() {
+      const container = document.getElementById("cardsContainer");
+      const data = getFilteredData();
+
+      container.innerHTML = "";
+
+      if (data.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">No therapies match the criteria.</div>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const classClass = item.class === "GLP-1 RA" ? "class-glp1" : "class-gip";
+        const progressFillClass = item.class === "GLP-1 RA" ? "glp1" : "gip";
+        const isCompareChecked = compareSelection.includes(item.id) ? "checked" : "";
+        
+        const indicationsHTML = item.indications.map(ind => `<span class="indication-tag">${ind}</span>`).join("");
+
+        // Efficacy meters
+        const obesityWidth = item.weightLossNoT2DMValue > 0 ? (item.weightLossNoT2DMValue / 25) * 100 : 0;
+        const t2dmWidth = item.weightLossWithT2DMValue > 0 ? (item.weightLossWithT2DMValue / 25) * 100 : 0;
+
+        const card = document.createElement("div");
+        card.className = `agent-card ${classClass}`;
+        card.innerHTML = `
+          <div>
+            <div class="card-header">
+              <div class="card-title-area">
+                <h3>${item.brandName}</h3>
+                <span class="card-subtitle">${item.genericName} (${item.class})</span>
+              </div>
+              <span class="badge ${item.class === 'GLP-1 RA' ? 'badge-glp1' : 'badge-gip'}">${item.frequency}</span>
+            </div>
+            
+            <div class="card-body">
+              <div style="display:flex; flex-wrap:wrap; gap:0.25rem;">
+                ${indicationsHTML}
+              </div>
+              
+              <div class="card-metric-row">
+                <div class="card-metric">
+                  <span class="card-metric-label">Starter Dose</span>
+                  <span class="card-metric-value" style="font-size:0.85rem;">${item.startingDose}</span>
+                </div>
+                <div class="card-metric">
+                  <span class="card-metric-label">Maintenance</span>
+                  <span class="card-metric-value" style="font-size:0.85rem;">${item.maintenanceDose}</span>
+                </div>
+              </div>
+
+              <div class="efficacy-section">
+                <span class="efficacy-title">Clinical Efficacy Metrics</span>
+                
+                ${item.weightLossNoT2DMValue > 0 ? `
+                  <div class="progress-bar-container">
+                    <div class="progress-label-row">
+                      <span>Weight Loss (No Diabetes)</span>
+                      <span class="bold">${item.weightLossNoT2DM.split(" ")[0]}</span>
+                    </div>
+                    <div class="progress-track">
+                      <div class="progress-fill ${progressFillClass}" style="width: ${obesityWidth}%"></div>
+                    </div>
+                  </div>
+                ` : `<div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;"><i class="fa-solid fa-info-circle"></i> Weight loss only studied extensively in T2DM profile.</div>`}
+                
+                <div class="progress-bar-container">
+                  <div class="progress-label-row">
+                    <span>Weight Loss (With Diabetes)</span>
+                    <span class="bold">${item.weightLossWithT2DM.includes("HbA1c") ? "Glycemic focus" : item.weightLossWithT2DM.split(" ")[0]}</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill ${progressFillClass}" style="width: ${t2dmWidth}%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <label class="compare-checkbox-label">
+              <input type="checkbox" data-id="${item.id}" ${isCompareChecked} onchange="toggleCardComparison(this)">
+              Add to Comparator
+            </label>
+            <button class="card-action-btn" onclick="openTitrationModal('${item.id}')">
+              <i class="fa-solid fa-clock-rotate-left"></i> Dosing & Device
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Side-by-Side Comparator Logics
+    function renderComparatorDropdowns() {
+      const selectIds = ["compareSelect1", "compareSelect2", "compareSelect3"];
+      
+      selectIds.forEach((selectId, index) => {
+        const select = document.getElementById(selectId);
+        select.innerHTML = `<option value="">Select Therapy ${index + 1}...</option>`;
+        
+        drugData.forEach(drug => {
+          select.innerHTML += `<option value="${drug.id}">${drug.brandName} (${drug.genericName})</option>`;
+        });
+
+        // Set initial values
+        if (compareSelection[index]) {
+          select.value = compareSelection[index];
+        }
+
+        select.addEventListener("change", (e) => {
+          compareSelection[index] = e.target.value;
+          renderComparator();
+          renderCards(); // Sync checkbox state
+        });
+      });
+    }
+
+    function toggleCardComparison(checkbox) {
+      const drugId = checkbox.getAttribute("data-id");
+      const isChecked = checkbox.checked;
+
+      if (isChecked) {
+        // Find first empty slot
+        const emptyIndex = compareSelection.findIndex(id => id === "");
+        if (emptyIndex !== -1) {
+          compareSelection[emptyIndex] = drugId;
+        } else {
+          // If all full, shift left and replace last
+          compareSelection.shift();
+          compareSelection.push(drugId);
+        }
+      } else {
+        // Remove from selection
+        const index = compareSelection.indexOf(drugId);
+        if (index !== -1) {
+          compareSelection[index] = "";
+        }
+      }
+      
+      // Update dropdown inputs & table
+      renderComparatorDropdowns();
+      renderComparator();
+    }
+
+    function renderComparator() {
+      const grid = document.getElementById("compareGridContainer");
+      grid.innerHTML = "";
+
+      compareSelection.forEach((drugId, colIndex) => {
+        if (!drugId) {
+          grid.innerHTML += `
+            <div class="compare-column empty">
+              <i class="fa-solid fa-plus-circle" style="font-size: 2.5rem; margin-bottom: 1rem;"></i>
+              <p>Add therapy to compare</p>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Use the dropdown or profile cards to select.</span>
+            </div>
+          `;
+          return;
+        }
+
+        const drug = drugData.find(d => d.id === drugId);
+        const indicationsHTML = drug.indications.map(ind => `<span class="indication-tag">${ind}</span>`).join("");
+        const isGLP = drug.class === "GLP-1 RA";
+
+        const col = document.createElement("div");
+        col.className = "compare-column";
+        col.innerHTML = `
+          <div class="compare-header-row">
+            <div>
+              <h3 style="font-size: 1.3rem; color: var(--text-primary); font-family: Outfit, sans-serif;">${drug.brandName}</h3>
+              <p style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">${drug.genericName}</p>
+            </div>
+            <button class="compare-remove-btn" onclick="removeFromComparison(${colIndex})">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Mechanism Class</span>
+            <span class="compare-data-value">
+              <span class="badge ${isGLP ? 'badge-glp1' : 'badge-gip'}">${drug.class}</span>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">${drug.classLong}</div>
+            </span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Approved Indications</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem;">
+              ${indicationsHTML}
+            </div>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Dosing / Frequency</span>
+            <span class="compare-data-value bold">
+              ${drug.isDaily ? '<i class="fa-solid fa-calendar-day"></i> PO or SC Daily' : '<i class="fa-solid fa-calendar-week"></i> SC Weekly'}
+            </span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Device Type / Formulation</span>
+            <span class="compare-data-value bold" style="color:var(--text-primary); font-size:0.85rem;">
+              ${drug.deviceType}
+            </span>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top: 0.25rem;">${drug.formulation}</div>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Food & Fasting Instructions</span>
+            <span class="compare-data-value" style="font-size:0.82rem; color: var(--accent-glp1-light);">
+              ${drug.specialInstructions}
+            </span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Titration Pathway</span>
+            <span class="compare-data-value" style="font-size: 0.8rem; line-height: 1.4;">${drug.titrationSchedule}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Maintenance Target</span>
+            <span class="compare-data-value bold" style="color: var(--accent-glp1-light);">${drug.maintenanceDose}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Weight Reduction (Non-T2DM)</span>
+            <span class="compare-data-value ${drug.weightLossNoT2DMValue > 12 ? 'highlight-green' : ''}">${drug.weightLossNoT2DM}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Weight Reduction (With T2DM)</span>
+            <span class="compare-data-value" style="font-size:0.85rem;">${drug.weightLossWithT2DM}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Key Contraindications</span>
+            <span class="compare-data-value" style="font-size: 0.78rem; line-height: 1.35; color: var(--danger);">${drug.contraindications}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Special Monitoring</span>
+            <span class="compare-data-value" style="font-size: 0.78rem; line-height: 1.35;">${drug.specialMonitoring}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Device Handling Details</span>
+            <span class="compare-data-value" style="font-size: 0.78rem; line-height: 1.35; color: var(--text-secondary);">${drug.deviceDetails}</span>
+          </div>
+
+          <div class="compare-data-group">
+            <span class="compare-data-label">Unique Side Effects / Notes</span>
+            <span class="compare-data-value" style="font-size: 0.78rem; line-height: 1.35; color: var(--warning);">${drug.uniqueSideEffects}</span>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 1rem;">
+            <button class="card-action-btn" style="width: 100%; justify-content: center;" onclick="openTitrationModal('${drug.id}')">
+              <i class="fa-solid fa-route"></i> Dosing Pathway Details
+            </button>
+          </div>
+        `;
+        grid.appendChild(col);
+      });
+    }
+
+    function removeFromComparison(index) {
+      compareSelection[index] = "";
+      renderComparatorDropdowns();
+      renderComparator();
+      renderCards(); // Sync checkbox state
+    }
+
+    // Side Effects Database Rendering
+    function setupSideEffectsSearch() {
+      const input = document.getElementById("seSearchInput");
+      input.addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        renderSideEffects(query);
+      });
+    }
+
+    function renderSideEffects(query = "") {
+      const grid = document.getElementById("seGridContainer");
+      grid.innerHTML = "";
+
+      const filtered = sideEffectsData.filter(se => {
+        return se.name.toLowerCase().includes(query) || 
+               se.counseling.toLowerCase().includes(query) || 
+               se.severity.toLowerCase().includes(query);
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">No matching side effects found.</div>`;
+        return;
+      }
+
+      filtered.forEach(se => {
+        let badgeClass = "badge-success";
+        if (se.severity.includes("Boxed")) badgeClass = "badge-danger";
+        else if (se.severity.includes("Serious")) badgeClass = "badge-warning";
+        else if (se.severity.includes("Most Common")) badgeClass = "badge-glp1";
+
+        const card = document.createElement("div");
+        card.className = "se-card";
+        card.innerHTML = `
+          <div class="se-header">
+            <span class="se-title">${se.name}</span>
+            <span class="badge ${badgeClass}">${se.severity}</span>
+          </div>
+          <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">
+            <i class="fa-solid fa-chart-pie"></i> Incidence: ${se.incidence}
+          </div>
+          <div class="se-body">
+            <strong>Counseling & Instructions:</strong> ${se.counseling}
+          </div>
+          <div style="margin-top:auto; font-size: 0.75rem; color: var(--text-muted);">
+            References: ${se.references.join(" ")}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Device and Administration Guides Rendering
+    function renderDevicesAndOrals() {
+      const injectablesGrid = document.getElementById("injectableDevicesGrid");
+      const oralsGrid = document.getElementById("oralDevicesGrid");
+
+      injectablesGrid.innerHTML = "";
+      oralsGrid.innerHTML = "";
+
+      drugData.forEach(drug => {
+        const isOral = drug.deviceType.toLowerCase().includes("oral") || drug.deviceType.toLowerCase().includes("tablet");
+
+        const box = document.createElement("div");
+        box.className = "device-box";
+
+        if (!isOral) {
+          // Injectable
+          box.innerHTML = `
+            <h4>
+              <span>${drug.brandName}</span>
+              <span class="badge badge-glp1" style="font-size:0.65rem;">${drug.frequency}</span>
+            </h4>
+            <div>
+              <div class="device-detail-label">Device Type</div>
+              <div class="device-detail-value bold" style="color:var(--text-primary);">${drug.deviceType}</div>
+            </div>
+            <div>
+              <div class="device-detail-label">Device Function & Needle Details</div>
+              <div class="device-detail-value">${drug.deviceDetails}</div>
+            </div>
+            <div>
+              <div class="device-detail-label">Special Administration Instructions</div>
+              <div class="device-detail-value">${drug.specialInstructions}</div>
+            </div>
+            <div style="margin-top:auto; font-size: 0.75rem; color: var(--text-muted);">
+              Citations: ${drug.references.join(" ")}
+            </div>
+          `;
+          injectablesGrid.appendChild(box);
+        } else {
+          // Oral
+          box.innerHTML = `
+            <h4>
+              <span>${drug.brandName}</span>
+              <span class="badge badge-gip" style="font-size:0.65rem; background-color:rgba(99, 102, 241, 0.1); color:var(--accent-gip-light);">${drug.frequency}</span>
+            </h4>
+            <div>
+              <div class="device-detail-label">Formulation Type</div>
+              <div class="device-detail-value bold" style="color:var(--text-primary);">${drug.formulation}</div>
+            </div>
+            <div>
+              <div class="device-detail-label">Special Administration / Fasting Rules</div>
+              <div class="device-detail-value" style="color: var(--accent-glp1-light); font-weight:600;">${drug.specialInstructions}</div>
+            </div>
+            <div>
+              <div class="device-detail-label">Fasting / Details</div>
+              <div class="device-detail-value">${drug.deviceDetails}</div>
+            </div>
+            <div style="margin-top:auto; font-size: 0.75rem; color: var(--text-muted);">
+              Citations: ${drug.references.join(" ")}
+            </div>
+          `;
+          oralsGrid.appendChild(box);
+        }
+      });
+    }
+
+    // Modal & Titration Timeline builder
+    function setupModal() {
+      const modal = document.getElementById("detailModal");
+      const closeBtn = document.getElementById("modalClose");
+
+      closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+    }
+
+    function openTitrationModal(drugId) {
+      const drug = drugData.find(d => d.id === drugId);
+      const modal = document.getElementById("detailModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalBody = document.getElementById("modalBody");
+
+      modalTitle.innerHTML = `
+        <div style="display:flex; flex-direction:column;">
+          <span style="font-size: 1.4rem; font-family: Outfit, sans-serif;">${drug.brandName} (${drug.genericName})</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">Dosing Pathway, Device & Clinical Safety Guide</span>
+        </div>
+      `;
+
+      let timelineHTML = "";
+      const isActiveClass = drug.class === "GLP-1 RA" ? "active" : "gip-active";
+
+      drug.titrationSteps.forEach((step, idx) => {
+        const isMaintenance = idx === drug.titrationSteps.length - 1;
+        const stepClass = isMaintenance ? 'completed' : isActiveClass;
+
+        timelineHTML += `
+          <div class="timeline-item ${stepClass}">
+            <div class="timeline-badge"></div>
+            <div class="timeline-content">
+              <div class="timeline-step-title">
+                <span>${step.dose} <span style="font-weight: normal; font-size: 0.8rem; color: var(--text-muted);">(${step.route})</span></span>
+                <span class="badge ${isMaintenance ? 'badge-glp1' : ''}" style="font-size: 0.7rem; padding: 0.1rem 0.35rem; ${isMaintenance ? 'background-color: var(--success); color: white; border: none;' : ''}">
+                  ${step.weekRange}
+                </span>
+              </div>
+              <p class="timeline-step-desc">${step.description}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      modalBody.innerHTML = `
+        <div>
+          <h4 style="margin-bottom: 0.5rem; font-size: 0.95rem;">Therapeutic Profile Summary</h4>
+          <table style="width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+            <tbody>
+              <tr>
+                <td style="padding: 0.5rem; font-weight: 600; font-size: 0.8rem; width: 30%;">Class</td>
+                <td style="padding: 0.5rem; font-size: 0.8rem;">${drug.classLong} (${drug.class})</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; font-weight: 600; font-size: 0.8rem;">device Type</td>
+                <td style="padding: 0.5rem; font-size: 0.8rem; font-weight:600; color:var(--text-primary);">${drug.deviceType}</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; font-weight: 600; font-size: 0.8rem;">Instructions</td>
+                <td style="padding: 0.5rem; font-size: 0.8rem; color:var(--accent-glp1-light);">${drug.specialInstructions}</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; font-weight: 600; font-size: 0.8rem;">contraindications</td>
+                <td style="padding: 0.5rem; font-size: 0.8rem; color: var(--danger);">${drug.contraindications}</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; font-weight: 600; font-size: 0.8rem;">Special Monitoring</td>
+                <td style="padding: 0.5rem; font-size: 0.8rem;">${drug.specialMonitoring}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <h4 style="margin-bottom: 0.5rem; font-size: 0.95rem;">Device Details</h4>
+          <div style="font-size: 0.82rem; background-color: var(--bg-primary); padding: 0.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+            ${drug.deviceDetails}
+          </div>
+        </div>
+
+        <div>
+          <h4 style="margin-bottom: 0.75rem; font-size: 0.95rem;">Incremental Titration Schedule</h4>
+          <div class="titration-timeline">
+            ${timelineHTML}
+          </div>
+        </div>
+
+        <div style="font-size: 0.8rem; background-color: var(--bg-primary); padding: 0.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); color: var(--text-muted); margin-bottom: 0.5rem;">
+          <strong style="color: var(--text-primary);"><i class="fa-solid fa-clipboard-list"></i> Clinical Notes & Unique Effects:</strong>
+          ${drug.uniqueSideEffects}
+        </div>
+
+        <div style="font-size: 0.8rem; background-color: var(--bg-primary); padding: 0.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); color: var(--text-muted);">
+          <strong style="color: var(--text-primary);"><i class="fa-solid fa-circle-info"></i> Clinical Titration Note:</strong>
+          If a patient encounters unacceptable gastrointestinal adverse events during dose escalation, consider delaying escalation by 1-4 weeks or back-titrating to the previous tolerated dose level before re-attempting escalation.
+        </div>
+      `;
+
+      modal.style.display = "flex";
+    }
+
+    // Render References in Footer
+    function renderReferences() {
+      const list = document.getElementById("referencesList");
+      list.innerHTML = "";
+      referencesData.forEach((ref, idx) => {
+        const li = document.createElement("li");
+        li.setAttribute("data-index", `[${idx + 1}]`);
+        li.innerHTML = ref;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>

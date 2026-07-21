@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gout Management Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Evidence-based decision support matrix for gout flares and chronic urate-lowering therapy (ULT) based on ACR guidelines.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    
+
+    
+
+    
+
+    
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 2rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--text-primary);
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-section {
+      margin-bottom: 1rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-row .search-box {
+      flex-grow: 1;
+    }
+
+    .search-row .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-row .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-top: 0.2rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 2rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.25rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .citation-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .citation-item {
+      padding: 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.4rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+      .search-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      
+      
+
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+
+    <div class="title-area">
+      <h2>Gout — Flare Management & Chronic ULT</h2>
+      <p>Interactive decision-making matrix for gout. Differentiate acute flare agents (Colchicine, NSAIDs, Prednisone) and chronic urate-lowering therapy (Allopurinol, Febuxostat, Probenecid) by kidney disease (CKD), cardiovascular risks, and HLA-B*5801 testing.</p>
+    </div>
+
+    <div class="clinical-alert">
+      <strong>HLA-B*5801 Testing Guideline:</strong> The ACR strongly recommends testing for the HLA-B*5801 allele prior to starting Allopurinol in patients of <strong>Han Chinese, Thai, Korean (with CKD ≥3)</strong>, or <strong>African American descent</strong>. Positive results indicate a high risk of fatal Allopurinol Hypersensitivity Syndrome (AHS).
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-panel">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="drugSearch" class="search-input" placeholder="Search by gout agent (e.g., Colchicine, Allopurinol, Febuxostat)...">
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-label">Clinical Scenario & Phase</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="acute">Acute Flare Management</button>
+          <button class="filter-btn" data-filter="chronic">Chronic Urate-Lowering (ULT)</button>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 1rem;">
+        <div class="filter-label">Patient Characteristics & Safety Filters</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="ckd-safe">Safe in Moderate-to-Severe CKD</button>
+          <button class="filter-btn" data-filter="cvd-safe">Safe in Established CVD / Heart Failure</button>
+          <button class="filter-btn" data-filter="no-hla">No HLA-B*5801 Genetic Screen Required</button>
+          <button class="filter-btn" data-filter="low-cost">Low Cost (Generic Available)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container">
+      <table id="matrixTable">
+        <thead>
+          <tr>
+            <th>Agent Name & Phase</th>
+            <th>Kidney (CKD) Adjustments</th>
+            <th>Cardiovascular Safety</th>
+            <th>HLA-B*5801 Risk</th>
+            <th>GI / Systemic Side Effects</th>
+            <th>Key Titration / Dosing Protocols</th>
+            <th>Contraindications / Interactions</th>
+            <th>Place in Therapy</th>
+            <th>Relative Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Colchicine -->
+          <tr data-id="colchicine" data-keywords="colchicine colcrys acute flare prophylaxis ckd adjust renal failure cyp3a4 interaction fatal toxicity diarrheas low dose">
+            <td class="drug-name-col">
+              Colchicine
+              <span class="drug-class-label">Acute Flare & Prophylaxis</span>
+            </td>
+            <td><span class="badge badge-warning">Avoid if CrCl <10; Dose adjust in CKD</span></td>
+            <td><span class="badge badge-benefit">Safe (Anti-inflammatory benefit)</span></td>
+            <td><span class="badge badge-benefit">No Screen Required</span></td>
+            <td><span class="badge badge-risk">Severe Diarrhea, Nausea, Cramps</span></td>
+            <td>1.2 mg at flare onset, then 0.6 mg 1 hour later (Max 1.8 mg total). Prophylaxis: 0.6 mg daily/BID.</td>
+            <td>**Contraindicated with strong CYP3A4 / P-gp inhibitors in CKD** (can cause fatal neuromyopathy).</td>
+            <td>First-line for acute flares (within 36h of onset) and chronic ULT initiation prophylaxis.</td>
+            <td><span class="badge badge-warning">$$ (Moderate Generic)</span></td>
+          </tr>
+          <!-- NSAIDs -->
+          <tr data-id="nsaids" data-keywords="nsaids naproxen indomethacin celecoxib acute flare ckd avoid renal failure bp elevation cardiac risk fluid retention gastric ulcer">
+            <td class="drug-name-col">
+              NSAIDs
+              <span class="drug-class-label">Naproxen, Indomethacin, Celecoxib (Acute)</span>
+            </td>
+            <td><span class="badge badge-risk">Avoid in eGFR <30 (AKI & hyperkalemia risk)</span></td>
+            <td><span class="badge badge-risk">Avoid in severe HF / post-MI (fluid retention)</span></td>
+            <td><span class="badge badge-benefit">No Screen Required</span></td>
+            <td><span class="badge badge-risk">GI bleeding, dyspepsia, ulcer risk</span></td>
+            <td>Naproxen 500 mg BID, Indomethacin 50 mg TID, or Celecoxib 200 mg BID. Taper as flare resolves.</td>
+            <td>Active peptic ulcer, severe CKD, decompensated HF, anticoagulation.</td>
+            <td>First-line for acute flares in young patients without renal or cardiovascular comorbidities.</td>
+            <td><span class="badge badge-benefit">$ (Very Low Cost)</span></td>
+          </tr>
+          <!-- Steroids -->
+          <tr data-id="steroids" data-keywords="steroids prednisone methylprednisolone triamcinolone acute flare ckd safe heart failure caution hyperglycemia fluid retention">
+            <td class="drug-name-col">
+              Corticosteroids
+              <span class="drug-class-label">Prednisone (Oral), Triamcinolone (IA)</span>
+            </td>
+            <td><span class="badge badge-benefit">Preferred flare agent in CKD</span></td>
+            <td><span class="badge badge-warning">Caution (Fluid retention/BP elevation)</span></td>
+            <td><span class="badge badge-benefit">No Screen Required</span></td>
+            <td><span class="badge badge-warning">Hyperglycemia, mood changes, insomnia</span></td>
+            <td>Oral Prednisone 30–40 mg daily for 2–5 days, then taper over 7–10 days. Intra-articular if monoarticular.</td>
+            <td>Systemic fungal infections, uncontrolled diabetes (severe hyperglycemia).</td>
+            <td>First-line for flares, particularly when CKD or NSAID/colchicine contraindications exist.</td>
+            <td><span class="badge badge-benefit">$ (Very Low Cost)</span></td>
+          </tr>
+          <!-- Allopurinol -->
+          <tr data-id="allopurinol" data-keywords="allopurinol zyloprim chronic ult ckd titration ahs hypersensitivity hla-b*5801 screen target sua first line">
+            <td class="drug-name-col">
+              Allopurinol
+              <span class="drug-class-label">Chronic ULT (Xanthine Oxidase Inhibitor)</span>
+            </td>
+            <td><span class="badge badge-warning">Start low in CKD (≤50mg); titrate to sUA target</span></td>
+            <td><span class="badge badge-benefit">Safe (First-line choice)</span></td>
+            <td><span class="badge badge-risk">**High Risk** (Screen high-risk ancestry)</span></td>
+            <td>Pruritus, rash, cytopenias</td>
+            <td>Start at 100 mg daily (≤50 mg in CKD). Titrate up by 50–100 mg every 2–5 weeks until sUA < 6.0 mg/dL.</td>
+            <td>Concomitant Azathioprine or Mercaptopurine (causes fatal cytopenias; avoid combination).</td>
+            <td>**First-line choice for chronic ULT** in all patients (including CKD).</td>
+            <td><span class="badge badge-benefit">$ (Very Low Cost)</span></td>
+          </tr>
+          <!-- Febuxostat -->
+          <tr data-id="febuxostat" data-keywords="febuxostat uloric chronic ult xanthine oxidase inhibitor cardiovascular mortality boxed warning cares trial fast trial hla-b*5801 safe ckd no titration">
+            <td class="drug-name-col">
+              Febuxostat
+              <span class="drug-class-label">Chronic ULT (Xanthine Oxidase Inhibitor)</span>
+            </td>
+            <td><span class="badge badge-benefit">No dose adjustment in mild-mod CKD</span></td>
+            <td><span class="badge badge-risk">**Boxed Warning** (CVD mortality risk)</span></td>
+            <td><span class="badge badge-benefit">Safe (No HLA association)</span></td>
+            <td>Hepatic enzyme elevation, arthralgia, rash</td>
+            <td>Start at 40 mg daily. Increase to 80 mg daily if sUA target (<6.0) is not met in 2 weeks.</td>
+            <td>Concomitant Azathioprine/Mercaptopurine. Prior history of cardiovascular events (relative).</td>
+            <td>Second-line chronic ULT, restricted to patients intolerant or unresponsive to allopurinol.</td>
+            <td><span class="badge badge-warning">$$ (Moderate Generic)</span></td>
+          </tr>
+          <!-- Probenecid -->
+          <tr data-id="probenecid" data-keywords="probenecid chronic ult uricosuric renal stones ckd ineffective sua target generic">
+            <td class="drug-name-col">
+              Probenecid
+              <span class="drug-name-col">Chronic ULT (Uricosuric)</span>
+            </td>
+            <td><span class="badge badge-risk">**Ineffective if eGFR <30**; raises stone risk</span></td>
+            <td><span class="badge badge-benefit">Safe</span></td>
+            <td><span class="badge badge-benefit">No Screen Required</span></td>
+            <td>GI distress, uric acid renal stones (nephrolithiasis)</td>
+            <td>Start 250 mg BID. Increase to 500 mg BID, up to 2 g/day. Maintain high fluid intake.</td>
+            <td>Concomitant Salicylates (aspirin blocks probenecid efficacy). History of renal stones.</td>
+            <td>Alternative chronic ULT if xanthine oxidase inhibitors are contraindicated or ineffective.</td>
+            <td><span class="badge badge-warning">$$ (Moderate Generic)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detail Drawer Overlay and Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Class Details</h3>
+        <p id="drawerDrugClass">Class Description</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Content populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    
+
+    // Theme toggler
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Dynamic Filter System
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      scenario: new Set(),
+      safety: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isScenario = ['acute', 'chronic'].includes(filterType);
+        const filterSet = isScenario ? activeFilters.scenario : activeFilters.safety;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchScenario = true;
+        let matchSafety = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.scenario.size > 0) {
+          activeFilters.scenario.forEach(filter => {
+            if (filter === 'acute') {
+              if (!['colchicine', 'nsaids', 'steroids'].includes(rowId)) matchScenario = false;
+            }
+            if (filter === 'chronic') {
+              if (!['allopurinol', 'febuxostat', 'probenecid', 'colchicine'].includes(rowId)) matchScenario = false; // Colchicine is used as prophylaxis
+            }
+          });
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'ckd-safe') {
+              if (rowId === 'nsaids' || rowId === 'probenecid') matchSafety = false;
+            }
+            if (filter === 'cvd-safe') {
+              if (rowId === 'febuxostat') matchSafety = false; // Febuxostat has CV safety warning
+            }
+            if (filter === 'no-hla') {
+              if (rowId === 'allopurinol') matchSafety = false; // Allopurinol requires screen in high-risk
+            }
+            if (filter === 'low-cost') {
+              if (['colchicine', 'febuxostat', 'probenecid'].includes(rowId) && rowId !== 'colchicine') matchSafety = false; // Colchicine is generic but moderately priced; febuxostat is generic but branded uloric legacy
+            }
+          });
+        }
+
+        if (matchSearch && matchScenario && matchSafety) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Detail Database (OpenEvidence synthesized content)
+    const drugDetails = {
+      colchicine: {
+        name: 'Colchicine (Colcrys, Mitigare)',
+        classDesc: 'Anti-inflammatory agent used for acute flares and chronic ULT prophylaxis.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>Acute Flares:</strong> Highly effective if initiated within **36 hours of flare onset**. Efficacy drops precipitously if started later.</li>
+              <li><strong>Prophylaxis:</strong> Administering colchicine 0.6 mg daily or BID when starting urate-lowering therapy (ULT) reduces the risk of mobilizing flares by ~50%. Continue for 3–6 months.</li>
+            </ul>`
+          },
+          {
+            title: 'Renal Dose Adjustments & Toxicity',
+            content: `<ul>
+              <li><strong>Acute Flare Dosing in CKD:</strong>
+                <ul>
+                  <li>CrCl 30–80: Standard dosing, but do not repeat course more than once every 2 weeks.</li>
+                  <li>CrCl 15–30: Standard dose (1.2mg then 0.6mg), but do not repeat course more than once every 4 weeks.</li>
+                  <li>CrCl <15 or Dialysis: **Avoid colchicine if possible**. If mandatory, a single dose of 0.6 mg can be given, do not repeat for at least 4 weeks.</li>
+                </ul>
+              </li>
+              <li><strong>Prophylaxis Dosing in CKD:</strong>
+                <ul>
+                  <li>CrCl <30: Start 0.3 mg daily (or 0.6 mg every other day). Monitor closely for toxicity.</li>
+                  <li>Dialysis: Avoid prophylaxis.</li>
+                </ul>
+              </li>
+            </ul>`
+          },
+          {
+            title: 'Critical Drug Interactions (Fatal Toxicity Warning)',
+            content: `<p>Colchicine is a major substrate of both CYP3A4 and P-glycoprotein (P-gp).</p>
+            <ul>
+              <li><strong>The Contraindication:</strong> Co-administering colchicine with strong CYP3A4 inhibitors (e.g., clarithromycin, ketoconazole) or P-gp inhibitors (e.g., cyclosporine, verapamil) <strong>in patients with renal impairment is contraindicated</strong> and has resulted in multiple fatalities due to severe bone marrow suppression and neuromyopathy.</li>
+            </ul>`
+          }
+        ]
+      },
+      nsaids: {
+        name: 'NSAIDs (Nonsteroidal Anti-inflammatory Drugs)',
+        classDesc: 'Naproxen, Indomethacin, Celecoxib (COX-2 selective)',
+        sections: [
+          {
+            title: 'Clinical Place',
+            content: `<ul>
+              <li><strong>Efficacy:</strong> Highly effective first-line option for acute flares. No clinical difference in efficacy between agents. Indomethacin was historically favored but carries higher rates of CNS side effects (headache, dizziness, confusion) and GI toxicity; **naproxen or celecoxib is preferred**.</li>
+              <li><strong>Administration:</strong> Initiate at full therapeutic doses immediately at flare onset and continue for 2–3 days after complete symptom resolution, then taper off.</li>
+            </ul>`
+          },
+          {
+            title: 'Renal, Cardiovascular, and GI Avoidance Criteria',
+            content: `<ul>
+              <li><strong>Kidney Risk:</strong> NSAIDs cause afferent arteriolar vasoconstriction, potentially inducing acute kidney injury (AKI), hyperkalemia, and fluid retention. **Avoid NSAIDs in patients with eGFR <60 if possible, and absolutely avoid if eGFR <30**.</li>
+              <li><strong>Cardiovascular Risk:</strong> NSAIDs cause sodium retention, raising blood pressure and worsening heart failure. They also carry a class-wide risk of myocardial infarction. **Avoid in NYHA Class III/IV Heart Failure or immediately post-MI**.</li>
+              <li><strong>GI Risk:</strong> In patients with high gastrointestinal bleeding risk, use **Celecoxib** (COX-2 selective) or combine a non-selective NSAID with a proton pump inhibitor (PPI).</li>
+            </ul>`
+          }
+        ]
+      },
+      steroids: {
+        name: 'Corticosteroids (Prednisone, Methylprednisolone)',
+        classDesc: 'Systemic oral Prednisone or Intra-Articular Triamcinolone.',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Preferred Flare Agent in CKD/CVD:</strong> Systemic steroids are the **safest and most effective first-line option for acute flares in patients with moderate-to-severe CKD** (eGFR <30) or those with severe heart failure where NSAIDs/colchicine are contraindicated.</li>
+              <li><strong>Intra-Articular:</strong> For acute monoarticular flares (e.g., a single hot knee or ankle), intra-articular injection of triamcinolone (20–40 mg) is highly effective and avoids systemic side effects.</li>
+            </ul>`
+          },
+          {
+            title: 'Tolerability & Dosing Protocol',
+            content: `<ul>
+              <li><strong>Standard Oral Dose:</strong> Prednisone 30–40 mg daily for 2–5 days, followed by a rapid taper over 7–10 days to prevent rebound flares.</li>
+              <li><strong>Adverse Effects (Short-Term):</strong> Transitory hyperglycemia (requires intensive monitoring in diabetic patients), fluid retention/mild blood pressure elevation, insomnia, mood disturbances, increased appetite.</li>
+            </ul>`
+          }
+        ]
+      },
+      allopurinol: {
+        name: 'Allopurinol (Zyloprim)',
+        classDesc: 'Xanthine Oxidase Inhibitor. Chronic Urate-Lowering Therapy.',
+        sections: [
+          {
+            title: 'Clinical Place & Titration',
+            content: `<ul>
+              <li><strong>First-Line Consensus:</strong> Strongly recommended by the ACR as the first-line urate-lowering therapy for all patients, including those with CKD.</li>
+              <li><strong>The "Treat-to-Target" Rule:</strong> **Do not stop titrating based on renal function**. Historically, clinicians capped allopurinol doses at 300 mg/day due to renal impairment. Current guidelines advise starting low and titrating **beyond renal dosing limits** (up to 800 mg/day if necessary) to achieve target sUA <6.0 mg/dL, provided the patient is monitored for cutaneous hypersensitivity.</li>
+              <li><strong>Initiation Timing:</strong> Can be started **during an active flare**, provided effective anti-inflammatory prophylaxis (colchicine or NSAID) is co-prescribed.</li>
+            </ul>`
+          },
+          {
+            title: 'Allopurinol Hypersensitivity Syndrome (AHS/SCAR)',
+            content: `<ul>
+              <li><strong>AHS Details:</strong> A rare but life-threatening reaction characterized by Steven-Johnson Syndrome (SJS), toxic epidermal necrolysis (TEN), eosinophilia, vasculitis, and acute kidney/hepatic failure. Mortality rate is ~20–30%.</li>
+              <li><strong>HLA-B*5801 Screen:</strong> The risk of AHS is strongly linked to the HLA-B*5801 allele. **Screening is strongly recommended prior to initiation** in:
+                <ul>
+                  <li>Han Chinese ancestry</li>
+                  <li>Thai ancestry</li>
+                  <li>Korean ancestry with CKD stage ≥3</li>
+                  <li>African American patients (who have a high carrier frequency of the allele).</li>
+                </ul>
+              </li>
+            </ul>`
+          }
+        ]
+      },
+      febuxostat: {
+        name: 'Febuxostat (Uloric)',
+        classDesc: 'Xanthine Oxidase Inhibitor. Chronic Urate-Lowering Therapy.',
+        sections: [
+          {
+            title: 'Clinical Place & Cardiovascular Safety',
+            content: `<ul>
+              <li><strong>CARES Trial (2018):</strong> A large safety trial comparing febuxostat to allopurinol in patients with gout and established CVD. Febuxostat demonstrated **higher cardiovascular mortality** (HR 1.34) and higher all-cause mortality, leading to an **FDA Boxed Warning**.</li>
+              <li><strong>FAST Trial (2020):</strong> A subsequent European trial in patients with CV risk factors showed **no difference in CV events or mortality** between febuxostat and allopurinol.</li>
+              <li><strong>ACR Position:</strong> Febuxostat is a second-line agent, reserved for patients who have failed or cannot tolerate allopurinol. **Avoid febuxostat in patients with a history of major CV disease or stroke unless no other options exist.**</li>
+            </ul>`
+          },
+          {
+            title: 'Renal & HLA Safety',
+            content: `<ul>
+              <li><strong>Renal:</strong> Well-tolerated in mild-to-moderate CKD (eGFR 30–80) without dose adjustments. Data is limited in severe CKD (eGFR <30).</li>
+              <li><strong>HLA-B*5801:</strong> **No association with HLA-B*5801**. Febuxostat is a safe alternative chronic ULT for patients who screen positive for the HLA-B*5801 allele.</li>
+            </ul>`
+          }
+        ]
+      },
+      probenecid: {
+        name: 'Probenecid',
+        classDesc: 'Uricosuric Agent. Chronic Urate-Lowering Therapy.',
+        sections: [
+          {
+            title: 'Clinical Place & Limitations',
+            content: `<ul>
+              <li><strong>Mechanism:</strong> Inhibits URAT1 in the proximal tubule, blocking renal uric acid reabsorption and increasing urinary uric acid excretion.</li>
+              <li><strong>CKD Limitation:</strong> **Ineffective if eGFR is <30 mL/min** (requires sufficient glomerular filtration to reach the tubular site of action).</li>
+              <li><strong>Renal Stones:</strong> Contraindicated in patients with a history of nephrolithiasis (kidney stones) or high baseline urinary uric acid excretion, as the massive increase in urinary uric acid can precipitate stones.</li>
+              <li><strong>Counseling:</strong> Instruct patients to maintain high fluid intake (2 liters/day) and consider urine alkalinization (potassium citrate) to prevent uric acid crystallization in the urinary tract.</li>
+            </ul>`
+          }
+        ]
+      }
+    };
+
+    // Drawer functionality
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+  </script>
+</body>
+</html>

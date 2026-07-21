@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFib Anticoagulant Selection Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Evidence-based interactive decision matrix comparing oral anticoagulants (Warfarin + DOACs) for stroke prevention in atrial fibrillation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    
+
+    
+
+    
+
+    
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 2rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--text-primary);
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-section {
+      margin-bottom: 1rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-row .search-box {
+      flex-grow: 1;
+    }
+
+    .search-row .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-row .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-top: 0.2rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 2rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.25rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .citation-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .citation-item {
+      padding: 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.4rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+      .search-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      
+      
+
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+
+    <div class="title-area">
+      <h2>AFib Anticoagulant Selection</h2>
+      <p>Interactive mapping of Warfarin and DOACs (Apixaban, Rivaroxaban, Dabigatran, Edoxaban) for stroke prevention in non-valvular Atrial Fibrillation. Compare dosing frequency, renal clearance, GI bleeding risks, Beers Criteria, food requirements, and reversal strategies.</p>
+    </div>
+
+    <div class="clinical-alert">
+      <strong>Important Market Change:</strong> <strong>Andexanet alfa (Andexxa) was voluntarily withdrawn from the US market in late 2025</strong> due to safety concerns. <strong>4-factor PCC (25–50 U/kg)</strong> is now the primary reversal strategy for all Factor Xa inhibitors (Apixaban, Rivaroxaban, Edoxaban) in the US.
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-panel">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="drugSearch" class="search-input" placeholder="Search anticoagulant by name (e.g., Eliquis, Xarelto, Apixaban, Warfarin)...">
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-label">Patient Characteristic & Safety Filters</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="beers-safe">Safe in Elderly ≥65 (Beers Preferred)</button>
+          <button class="filter-btn" data-filter="low-gi-bleed">Lower GI Bleeding Risk</button>
+          <button class="filter-btn" data-filter="qd-dosing">Once-Daily Dosing Convenience</button>
+          <button class="filter-btn" data-filter="no-food">No Specific Food Requirements</button>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 1rem;">
+        <div class="filter-label">Renal Clearance & Dosing Filters</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="low-renal-clr">Lowest Renal Clearance (<30%)</button>
+          <button class="filter-btn" data-filter="severe-ckd-safe">FDA-Approved in Severe CKD/Dialysis</button>
+          <button class="filter-btn" data-filter="high-egfr-safe">Safe if CrCl >95 mL/min</button>
+          <button class="filter-btn" data-filter="low-cost">Low Cost / Generic Available</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container">
+      <table id="matrixTable">
+        <thead>
+          <tr>
+            <th>Anticoagulant Agent</th>
+            <th>Renal Clearance</th>
+            <th>GI Bleeding Risk</th>
+            <th>ICH Risk vs. Warfarin</th>
+            <th>Beers Criteria (≥65)</th>
+            <th>Dosing Frequency</th>
+            <th>Food Requirement</th>
+            <th>Reversal Strategy</th>
+            <th>Dose Reduction Criteria</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Apixaban -->
+          <tr data-id="apixaban" data-keywords="apixaban eliquis bid twice-daily no food low renal clearance low gi bleed beers safe antidote pcc generic cost-effective aristotle">
+            <td class="drug-name-col">
+              Apixaban
+              <span class="drug-class-label">Eliquis (Generic available)</span>
+            </td>
+            <td><span class="badge badge-benefit">27% (Lowest DOAC)</span></td>
+            <td><span class="badge badge-benefit">No increase vs. Warfarin (Lowest DOAC)</span></td>
+            <td><span class="badge badge-benefit">58% Reduction (HR 0.42)</span></td>
+            <td><span class="badge badge-benefit">Preferred (Beers Safe)</span></td>
+            <td>Twice daily</td>
+            <td><span class="badge badge-neutral">No food requirement</span></td>
+            <td>4-factor PCC (Andexxa withdrawn)</td>
+            <td>Reduce to 2.5 mg BID if ≥2 of 3: Age ≥80, Weight ≤60 kg, or SCr ≥1.5 mg/dL.</td>
+          </tr>
+          <!-- Rivaroxaban -->
+          <tr data-id="rivaroxaban" data-keywords="rivaroxaban xarelto once-daily qd with food evening meal high gi bleed beers avoid beers criteria clearance pcc generic rocket af">
+            <td class="drug-name-col">
+              Rivaroxaban
+              <span class="drug-class-label">Xarelto (Generic available)</span>
+            </td>
+            <td><span class="badge badge-neutral">33% renally cleared</span></td>
+            <td><span class="badge badge-risk">Significantly Increased</span></td>
+            <td><span class="badge badge-benefit">33% Reduction (HR 0.67)</span></td>
+            <td><span class="badge badge-risk">Avoid (Increased bleeding risk)</span></td>
+            <td>Once daily</td>
+            <td><span class="badge badge-risk">**Must take with evening meal**</span></td>
+            <td>4-factor PCC (Andexxa withdrawn)</td>
+            <td>Reduce to 15 mg daily if CrCl 15–50 mL/min (Take with food).</td>
+          </tr>
+          <!-- Edoxaban -->
+          <tr data-id="edoxaban" data-keywords="edoxaban savaysa once-daily qd no food moderate gi bleed beers safe pcc contraindicated crcl >95 high clearance engage af">
+            <td class="drug-name-col">
+              Edoxaban
+              <span class="drug-class-label">Savaysa</span>
+            </td>
+            <td><span class="badge badge-warning">50% renally cleared</span></td>
+            <td><span class="badge badge-warning">Increased (HR 1.23)</span></td>
+            <td><span class="badge badge-benefit">53% Reduction (HR 0.47)</span></td>
+            <td><span class="badge badge-benefit">Preferred (Beers Safe)</span></td>
+            <td>Once daily</td>
+            <td><span class="badge badge-neutral">No food requirement</span></td>
+            <td>4-factor PCC (Andexxa withdrawn)</td>
+            <td>Reduce to 30 mg daily if CrCl 15–50, weight ≤60 kg, or strong P-gp inhibitors. **Contraindicated if CrCl >95**.</td>
+          </tr>
+          <!-- Dabigatran -->
+          <tr data-id="dabigatran" data-keywords="dabigatran pradaxa bid twice-daily no food high renal clearance high gi bleed beers avoid beers criteria idarucizumab praxbind re-ly">
+            <td class="drug-name-col">
+              Dabigatran
+              <span class="drug-class-label">Pradaxa</span>
+            </td>
+            <td><span class="badge badge-risk">80% (Highest DOAC - Avoid in ESRD)</span></td>
+            <td><span class="badge badge-risk">Increased (RR 1.50)</span></td>
+            <td><span class="badge badge-benefit">60% Reduction (RR 0.40)</span></td>
+            <td><span class="badge badge-warning">Avoid if ≥75 (GI bleeding risk)</span></td>
+            <td>Twice daily</td>
+            <td><span class="badge badge-neutral">No food (Capsule whole)</span></td>
+            <td><span class="badge badge-benefit">**Idarucizumab (Praxbind)** (Specific)</span></td>
+            <td>Reduce to 75 mg BID if CrCl 15–30 mL/min. Contraindicated if CrCl <15.</td>
+          </tr>
+          <!-- Warfarin -->
+          <tr data-id="warfarin" data-keywords="warfarin coumadin inr monitoring daily vitamin k beers avoid Beers criteria reversal vitamin k pcc lowest cost generic">
+            <td class="drug-name-col">
+              Warfarin
+              <span class="drug-class-label">Coumadin (Generic)</span>
+            </td>
+            <td><span class="badge badge-benefit">Negligible (Excreted inactive)</span></td>
+            <td><span class="badge badge-warning">Standard Risk (Reference)</span></td>
+            <td><span class="badge badge-risk">High Risk (Reference)</span></td>
+            <td><span class="badge badge-risk">Avoid as initial therapy</span></td>
+            <td>Once daily</td>
+            <td><span class="badge badge-warning">Consistent Vitamin K required</span></td>
+            <td><span class="badge badge-benefit">4-factor PCC + IV Vitamin K</span></td>
+            <td>Titrated to target INR (typically 2.0–3.0). Standard renal dosing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detail Drawer Overlay and Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Class Details</h3>
+        <p id="drawerDrugClass">Class Description</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Content populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    
+
+    // Theme toggler
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Dynamic Filter System
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      safety: new Set(),
+      renal: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isSafety = ['beers-safe', 'low-gi-bleed', 'qd-dosing', 'no-food'].includes(filterType);
+        const filterSet = isSafety ? activeFilters.safety : activeFilters.renal;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchSafety = true;
+        let matchRenal = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'beers-safe') {
+              if (rowId !== 'apixaban' && rowId !== 'edoxaban') matchSafety = false;
+            }
+            if (filter === 'low-gi-bleed') {
+              if (rowId !== 'apixaban') matchSafety = false; // Only apixaban didn't increase GI bleed vs warfarin
+            }
+            if (filter === 'qd-dosing') {
+              if (['apixaban', 'dabigatran'].includes(rowId)) matchSafety = false; // BID dosing
+            }
+            if (filter === 'no-food') {
+              if (rowId === 'rivaroxaban') matchSafety = false; // Must take with evening meal
+            }
+          });
+        }
+
+        if (activeFilters.renal.size > 0) {
+          activeFilters.renal.forEach(filter => {
+            if (filter === 'low-renal-clr') {
+              if (rowId !== 'apixaban' && rowId !== 'warfarin') matchRenal = false;
+            }
+            if (filter === 'severe-ckd-safe') {
+              if (rowId === 'dabigatran' || rowId === 'edoxaban') matchRenal = false; // Dabigatran contraindicated; Edoxaban needs CrCl 15-50.
+            }
+            if (filter === 'high-egfr-safe') {
+              if (rowId === 'edoxaban') matchRenal = false; // Contraindicated if CrCl >95
+            }
+            if (filter === 'low-cost') {
+              if (!['apixaban', 'rivaroxaban', 'warfarin'].includes(rowId)) matchRenal = false;
+            }
+          });
+        }
+
+        if (matchSearch && matchSafety && matchRenal) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Detail Database (OpenEvidence synthesized content)
+    const drugDetails = {
+      apixaban: {
+        name: 'Apixaban (Eliquis)',
+        classDesc: 'Oral Factor Xa Inhibitor. Standard Dose: 5 mg twice daily.',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Efficacy:</strong> Proven superior to warfarin for stroke prevention in non-valvular AF (ARISTOTLE trial), with a 21% reduction in stroke/systemic embolism.</li>
+              <li><strong>Bleeding Safety:</strong> **Superior safety profile among all DOACs**. Associated with a 31% reduction in major bleeding and a 58% reduction in intracranial hemorrhage vs. warfarin. **The only DOAC that did not increase GI bleeding compared to warfarin**.</li>
+              <li><strong>Renal Metabolism:</strong> Lowest renal clearance among DOACs (~27%). Clinically preferred in patients with stage 4 CKD or on hemodialysis.</li>
+              <li><strong>Elderly (Beers Criteria):</strong> Recommended by the American Geriatrics Society as a safer option than warfarin or rivaroxaban in patients ≥65.</li>
+            </ul>`
+          },
+          {
+            title: 'Dose Reduction Criteria',
+            content: `<p>Reduce dose to <strong>2.5 mg twice daily</strong> only if the patient meets at least <strong>two of the following three criteria</strong>:</p>
+            <ul>
+              <li>Age ≥ 80 years</li>
+              <li>Body weight ≤ 60 kg</li>
+              <li>Serum creatinine ≥ 1.5 mg/dL</li>
+            </ul>
+            <p>Or reduce to 2.5 mg BID if co-prescribed with strong dual inhibitors of CYP3A4 and P-gp (e.g., ketoconazole, ritonavir).</p>`
+          },
+          {
+            title: 'Reversal Strategy',
+            content: `<p>Following the **voluntary US market withdrawal of Andexanet alfa (Andexxa) in late 2025** due to safety/thrombotic events and lack of traditional approval, the primary reversal strategy is:</p>
+            <ul>
+              <li><strong>4-Factor Prothrombin Complex Concentrate (PCC):</strong> 25–50 Units/kg IV. Acts immediately to override FXa inhibition.</li>
+              <li>Andexanet alfa retains conditional approval in Europe only for life-threatening bleeding.</li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>ARISTOTLE Trial (Apixaban vs. Warfarin):</strong> Apixaban was superior to warfarin in preventing stroke, caused less bleeding, and resulted in lower mortality.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/21875378" target="_blank">N Engl J Med 2011;365:981-992</a>
+              </div>
+            `
+          }
+        ]
+      },
+      rivaroxaban: {
+        name: 'Rivaroxaban (Xarelto)',
+        classDesc: 'Oral Factor Xa Inhibitor. Standard Dose: 20 mg once daily.',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Dosing Advantage:</strong> Offers once-daily convenience, which can improve patient compliance.</li>
+              <li><strong>Efficacy:</strong> Non-inferior to warfarin for stroke prevention in NVAF (ROCKET AF trial).</li>
+              <li><strong>Food Requirement:</strong> **Must be taken with the evening meal** (for the 15 mg and 20 mg doses). Taking it with food increases bioavailability by ~39%; taking it empty-stomached risks subtherapeutic levels.</li>
+            </ul>`
+          },
+          {
+            title: 'Beers Criteria & Bleeding Risk',
+            content: `<ul>
+              <li><strong>2023 AGS Beers Criteria:</strong> **Avoid rivaroxaban in patients ≥65 years** for long-term treatment of NVAF or VTE. Real-world database analyses and clinical trials showed higher major bleeding (specifically GI bleeding) in elderly patients compared to apixaban.</li>
+              <li><strong>GI Bleeding:</strong> Rates of major GI bleeding are significantly higher than with warfarin (3.2% vs 2.2% in ROCKET AF) and higher than apixaban.</li>
+            </ul>`
+          },
+          {
+            title: 'Dose Reduction Criteria',
+            content: `<p>Dose reduction is based strictly on renal function:</p>
+            <ul>
+              <li><strong>Standard:</strong> 20 mg once daily with the evening meal.</li>
+              <li><strong>CrCl 15–50 mL/min:</strong> Reduce dose to <strong>15 mg once daily with the evening meal</strong>.</li>
+              <li><strong>CrCl <15 mL/min:</strong> Avoid use (lack of clinical outcome data, though FDA label allows 15 mg once daily).</li>
+            </ul>`
+          }
+        ]
+      },
+      edoxaban: {
+        name: 'Edoxaban (Savaysa)',
+        classDesc: 'Oral Factor Xa Inhibitor. Standard Dose: 60 mg once daily.',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Efficacy & Safety:</strong> Non-inferior to warfarin for stroke prevention, with significantly lower major bleeding and ICH (ENGAGE AF-TIMI 48 trial).</li>
+              <li><strong>Beers Criteria:</strong> Preferred alternative along with apixaban in older adults.</li>
+              <li><strong>Food:</strong> Can be taken with or without food.</li>
+            </ul>`
+          },
+          {
+            title: 'High Renal Function Contraindication',
+            content: `<ul>
+              <li><strong>Contraindicated if CrCl > 95 mL/min:</strong> **Do not use edoxaban if renal clearance is highly preserved**. In this population, edoxaban is cleared so rapidly that plasma levels drop, resulting in a higher rate of ischemic stroke compared to warfarin.</li>
+            </ul>`
+          },
+          {
+            title: 'Dose Reduction Criteria',
+            content: `<p>Reduce dose to <strong>30 mg once daily</strong> if any of the following apply:</p>
+            <ul>
+              <li>CrCl 15–50 mL/min</li>
+              <li>Body weight ≤ 60 kg</li>
+              <li>Concomitant strong P-glycoprotein (P-gp) inhibitors (e.g., verapamil, quinidine).</li>
+            </ul>`
+          }
+        ]
+      },
+      dabigatran: {
+        name: 'Dabigatran (Pradaxa)',
+        classDesc: 'Oral Direct Thrombin Inhibitor (Factor IIa). Standard Dose: 150 mg twice daily.',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Efficacy:</strong> At 150 mg BID, superior to warfarin in preventing stroke/systemic embolism with similar major bleeding (RE-LY trial).</li>
+              <li><strong>High Renal Excretion:</strong> **80% renally cleared** (highest among DOACs). Avoid in advanced CKD and dialysis due to rapid drug accumulation.</li>
+              <li><strong>Administration Note:</strong> Must swallow capsules whole. If the capsule shell is opened, bioavailability increases by 75%, vastly raising bleeding risk. Keep in original packaging to protect from moisture.</li>
+            </ul>`
+          },
+          {
+            title: 'GI Side Effects & Reversal',
+            content: `<ul>
+              <li><strong>Dyspepsia:</strong> Causes significant GI upset (dyspepsia/gastritis in ~11% vs. 5% with warfarin) because the capsule contains a tartaric acid core to aid absorption.</li>
+              <li><strong>Reversal:</strong> **Idarucizumab (Praxbind)** — 5 g IV (given as two 2.5 g vials). This is a highly specific monoclonal antibody fragment that binds dabigatran instantly, reversing anticoagulation within minutes. It is the only remaining FDA-approved specific antidote for a DOAC.</li>
+            </ul>`
+          },
+          {
+            title: 'Dose Reduction Criteria',
+            content: `<ul>
+              <li><strong>CrCl 30–50 mL/min + Dronedarone/Ketoconazole:</strong> Reduce to 75 mg BID.</li>
+              <li><strong>CrCl 15–30 mL/min:</strong> Reduce to 75 mg BID.</li>
+              <li><strong>CrCl <15 mL/min:</strong> Contraindicated.</li>
+            </ul>`
+          }
+        ]
+      },
+      warfarin: {
+        name: 'Warfarin (Coumadin)',
+        classDesc: 'Vitamin K Antagonist. Dose titrated to target INR.',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Indications:</strong> Mandatory for patients with **valvular AF** (moderate-to-severe mitral stenosis or mechanical heart valves). DOACs are contraindicated in mechanical valves.</li>
+              <li><strong>Renal:</strong> Negligible renal clearance of active drug; no dose adjustments required for CKD/ESRD.</li>
+              <li><strong>Cost:</strong> Dramatically less expensive drug acquisition cost, though offset by regular laboratory INR testing fees.</li>
+            </ul>`
+          },
+          {
+            title: 'Drawbacks & Interactions',
+            content: `<ul>
+              <li><strong>Monitoring:</strong> Requires regular blood draws for INR monitoring (therapeutic range 2.0-3.0). Narrow therapeutic window.</li>
+              <li><strong>Diet & Interactions:</strong> Massive number of drug-drug interactions (CYP2C9 pathway) and food interactions (requires consistent dietary Vitamin K intake).</li>
+              <li><strong>Bleeding:</strong> Significantly higher risk of intracranial hemorrhage (ICH) compared to all DOACs.</li>
+            </ul>`
+          },
+          {
+            title: 'Reversal Strategy',
+            content: `<ul>
+              <li><strong>4-Factor PCC (Kcentra):</strong> 25–50 U/kg IV depending on pre-treatment INR, combined with **IV Vitamin K** (5–10 mg). Reverses anticoagulation within 10–30 minutes.</li>
+              <li><strong>Fresh Frozen Plasma (FFP):</strong> Historically used but slower and carries volume overload risks.</li>
+            </ul>`
+          }
+        ]
+      }
+    };
+
+    // Drawer functionality
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+  </script>
+</body>
+</html>

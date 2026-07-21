@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CKD Nephroprotective Sequencing Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Interactive clinical decision support matrix for sequencing the four pillars of nephroprotection (RASi, SGLT2i, Finerenone, GLP-1 RA) in CKD.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    
+
+    
+
+    
+
+    
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 2rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--text-primary);
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-section {
+      margin-bottom: 1rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-row .search-box {
+      flex-grow: 1;
+    }
+
+    .search-row .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-row .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-top: 0.2rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 2rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.25rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .citation-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .citation-item {
+      padding: 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.4rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+      .search-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      
+      
+
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+
+    <div class="title-area">
+      <h2>CKD Nephroprotective Therapy Sequencing</h2>
+      <p>Interactive guide for initiating and layering the four pillars of nephroprotection (RASi + SGLT2i + Finerenone + GLP-1 RA). Structure clinical sequencing based on glomerular filtration rate (eGFR), albuminuria (UACR), and serum potassium levels.</p>
+    </div>
+
+    <div class="clinical-alert">
+      <strong>KDIGO 2024/2026 Treatment Sequencing:</strong> Begin with maximum tolerated **RASi** (ACEi/ARB) for any patient with albuminuria (UACR ≥30 mg/g). Add **SGLT2 inhibitor** down to eGFR of 20 mL/min. Introduce **Finerenone** (if T2D and K⁺ ≤4.8) or **GLP-1 RA** (if T2D) to complete cardiorenal protection.
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-panel">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="drugSearch" class="search-input" placeholder="Search pillars (e.g., Finerenone, Kerendia, SGLT2, Lisinopril)...">
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-label">Filter by Patient Renal Status (eGFR / UACR)</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="egfr-gt30">eGFR ≥30 mL/min (All Pillars)</button>
+          <button class="filter-btn" data-filter="egfr-20-30">eGFR 20–30 mL/min (SGLT2i + RASi)</button>
+          <button class="filter-btn" data-filter="uacr-gt300">Severe Albuminuria (UACR ≥300 mg/g)</button>
+          <button class="filter-btn" data-filter="no-t2d">Non-Diabetic CKD (Only RASi + SGLT2i)</button>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 1rem;">
+        <div class="filter-label">Hyperkalemia Risk & Management</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="raises-k">Raises Serum Potassium (Requires Monitoring)</button>
+          <button class="filter-btn" data-filter="lowers-k">Helps Lower Potassium (SGLT2i buffering)</button>
+          <button class="filter-btn" data-filter="k-neutral">Potassium Neutral</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container">
+      <table id="matrixTable">
+        <thead>
+          <tr>
+            <th>Nephroprotective Pillar</th>
+            <th>Indication Criteria</th>
+            <th>eGFR Lower Limit</th>
+            <th>UACR Lower Limit</th>
+            <th>Effect on Serum K⁺</th>
+            <th>Pillar Sequence Position</th>
+            <th>Proven Clinical Benefits</th>
+            <th>Key Monitoring Requirements</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- RASi -->
+          <tr data-id="rasi" data-keywords="rasi acei arb lisinopril losartan first pillar kidney protective raises potassium egfr 30 uacr 30 hyperkalemia foundation">
+            <td class="drug-name-col">
+              Pillar 1: RAS Inhibitors
+              <span class="drug-class-label">ACEi (Lisinopril, etc.) or ARB (Losartan, etc.)</span>
+            </td>
+            <td><span class="badge badge-benefit">Universal (Mandatory in Albuminuria)</span></td>
+            <td>Any eGFR (Start with caution if eGFR <30)</td>
+            <td>≥ 30 mg/g (Strongest if ≥300)</td>
+            <td><span class="badge badge-risk">Raises Potassium (Hyperkalemia risk)</span></td>
+            <td><strong>Pillar 1 (Foundational)</strong></td>
+            <td>Slows eGFR decline, reduces progression to ESKD, lowers CV mortality.</td>
+            <td>Creatinine and K⁺ at 1–2 weeks. Allow up to 30% creatinine rise.</td>
+          </tr>
+          <!-- SGLT2i -->
+          <tr data-id="sglt2i" data-keywords="sglt2 inhibitors farxiga jardiance dapagliflozin empagliflozin second pillar lowers potassium egfr 20 uacr 200 cardiorenal dapa-ckd empakidney">
+            <td class="drug-name-col">
+              Pillar 2: SGLT2 Inhibitors
+              <span class="drug-class-label">Dapagliflozin (Farxiga), Empagliflozin (Jardiance)</span>
+            </td>
+            <td><span class="badge badge-benefit">Recommended (All CKD down to eGFR 20)</span></td>
+            <td>eGFR 20 (Can continue below 20 until dialysis)</td>
+            <td>≥ 200 mg/g (FDA); ≥ 30 mg/g (KDIGO)</td>
+            <td><span class="badge badge-benefit">Lowers Potassium (Buffers RASi hyperkalemia)</span></td>
+            <td><strong>Pillar 2 (Initiate immediately after RASi)</strong></td>
+            <td>Reduces ESKD by ~35%, lowers CV death and heart failure hospitalizations.</td>
+            <td>Check volume/BP. Hold during acute sickness/fasting/surgery (DKA risk).</td>
+          </tr>
+          <!-- Finerenone -->
+          <tr data-id="finerenone" data-keywords="finerenone kerendia non-steroidal mra third pillar raises potassium egfr 25 uacr 30 t2d fidelio figaro confidence">
+            <td class="drug-name-col">
+              Pillar 3: Finerenone
+              <span class="drug-class-label">Kerendia (Non-Steroidal MRA)</span>
+            </td>
+            <td><span class="badge badge-info">Type 2 Diabetes + CKD only</span></td>
+            <td>eGFR 25 (Do not initiate if eGFR <25)</td>
+            <td>≥ 30 mg/g (with retinopathy) or ≥ 300 mg/g</td>
+            <td><span class="badge badge-risk">Raises Potassium (Less than spironolactone)</span></td>
+            <td><strong>Pillar 3 (Add after RASi + SGLT2i are optimized)</strong></td>
+            <td>Reduces composite renal events (FIDELIO-DKD) and CV events (FIGARO-DKD).</td>
+            <td>**Baseline K⁺ must be ≤4.8 mEq/L to start**. Monitor K⁺ at 4 weeks, hold if >5.5.</td>
+          </tr>
+          <!-- GLP-1 RA -->
+          <tr data-id="glp1ra" data-keywords="glp-1 receptor agonists semaglutide ozempic fourth pillar potassium neutral egfr 15 uacr 30 t2d flow weight loss a1c">
+            <td class="drug-name-col">
+              Pillar 4: GLP-1 RAs
+              <span class="drug-class-label">Semaglutide (Ozempic)</span>
+            </td>
+            <td><span class="badge badge-info">Type 2 Diabetes + CKD only</span></td>
+            <td>eGFR 15 (Safe down to dialysis)</td>
+            <td>≥ 30 mg/g</td>
+            <td><span class="badge badge-neutral">Potassium Neutral</span></td>
+            <td><strong>Pillar 4 (Use for residual glycemic/weight/renal risk)</strong></td>
+            <td>Reduces kidney failure composite and CV death (FLOW trial), significant weight loss.</td>
+            <td>GI tolerability. Titrate slowly at 4-week intervals.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detail Drawer Overlay and Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Class Details</h3>
+        <p id="drawerDrugClass">Class Description</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Content populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    
+
+    // Theme toggler
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Dynamic Filter System
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      renal: new Set(),
+      potassium: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isRenal = ['egfr-gt30', 'egfr-20-30', 'uacr-gt300', 'no-t2d'].includes(filterType);
+        const filterSet = isRenal ? activeFilters.renal : activeFilters.potassium;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchRenal = true;
+        let matchPotassium = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.renal.size > 0) {
+          activeFilters.renal.forEach(filter => {
+            if (filter === 'egfr-gt30') {
+              // All 4 pillars are open
+            }
+            if (filter === 'egfr-20-30') {
+              // Finerenone (limit 25) and GLP-1 (limit 15 but not typically initiated here unless T2D is bad) are limited.
+              // SGLT2i allows down to 20. RASi allows any.
+              if (rowId === 'finerenone') matchRenal = false;
+            }
+            if (filter === 'uacr-gt300') {
+              // All are highly indicated
+            }
+            if (filter === 'no-t2d') {
+              // Finerenone and GLP-1 RA are currently only indicated in T2D CKD.
+              if (rowId === 'finerenone' || rowId === 'glp1ra') matchRenal = false;
+            }
+          });
+        }
+
+        if (activeFilters.potassium.size > 0) {
+          activeFilters.potassium.forEach(filter => {
+            if (filter === 'raises-k') {
+              if (rowId !== 'rasi' && rowId !== 'finerenone') matchPotassium = false;
+            }
+            if (filter === 'lowers-k') {
+              if (rowId !== 'sglt2i') matchPotassium = false;
+            }
+            if (filter === 'k-neutral') {
+              if (rowId !== 'glp1ra') matchPotassium = false;
+            }
+          });
+        }
+
+        if (matchSearch && matchRenal && matchPotassium) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Detail Database (OpenEvidence synthesized content)
+    const drugDetails = {
+      rasi: {
+        name: 'Pillar 1: RAS Inhibitors (ACEi/ARB)',
+        classDesc: 'Lisinopril, Enalapril, Losartan, Valsartan. First line of kidney protection.',
+        sections: [
+          {
+            title: 'Clinical Indications & Efficacy',
+            content: `<ul>
+              <li><strong>First-Line Standard:</strong> Mandatory for all CKD patients with albuminuria (UACR ≥30 mg/g). Recommended for diabetic CKD regardless of BP.</li>
+              <li><strong>Mechanism:</strong> Vasodilates the efferent arteriole, reducing intraglomerular pressure and decreasing protein leakage (proteinuria). Slows glomerular sclerosis.</li>
+              <li><strong>Target Dose:</strong> Titrate to the **maximum tolerated label dose** (e.g., Lisinopril 40 mg daily, Losartan 100 mg daily), rather than stopping at the dose that simply controls blood pressure.</li>
+            </ul>`
+          },
+          {
+            title: 'Initiation & Safe Creatinine Rise',
+            content: `<ul>
+              <li><strong>Creatinine Dip:</strong> A transient decrease in GFR occurs immediately after starting a RASi, causing serum creatinine to rise.</li>
+              <li><strong>Acceptable Threshold:</strong> A rise of **up to 30%** from baseline creatinine is expected, normal, and indicates therapeutic intraglomerular pressure reduction. Do not hold or reduce the drug.</li>
+              <li><strong>Unacceptable Rise:</strong> A rise >30% (or potassium >5.5 mEq/L) suggests volume depletion, bilateral renal artery stenosis, or decompensation. Hold the drug, correct volume status, and re-challenge at a lower dose.</li>
+            </ul>`
+          }
+        ]
+      },
+      sglt2i: {
+        name: 'Pillar 2: SGLT2 Inhibitors',
+        classDesc: 'Dapagliflozin (10 mg), Empagliflozin (10 mg). First-line disease modifiers.',
+        sections: [
+          {
+            title: 'Clinical Place & KDIGO Guidelines',
+            content: `<ul>
+              <li><strong>Indication:</strong> Strongly recommended (Grade 1B) for all CKD patients with eGFR ≥20 mL/min and UACR ≥200 mg/g (and eGFR ≥20 down to 20 for non-diabetic CKD). Can be started in patients without diabetes (DAPA-CKD and EMPA-KIDNEY trials).</li>
+              <li><strong>The "Run-Out" Rule:</strong> SGLT2 inhibitors can be safely **continued below eGFR 20** once initiated. Continue the drug until the patient initiates chronic dialysis or undergoes kidney transplantation.</li>
+              <li><strong>Glycemic Efficacy note:</strong> SGLT2 inhibitors lose their glucose-lowering efficacy at eGFR <45 mL/min, but their **cardiorenal protection remains fully preserved**.</li>
+            </ul>`
+          },
+          {
+            title: 'Potassium Buffering Synergy',
+            content: `<ul>
+              <li><strong>The Synergy:</strong> SGLT2 inhibitors promote a mild osmotic diuresis and increase distal sodium delivery, facilitating renal potassium excretion.</li>
+              <li><strong>Clinical Utility:</strong> In patients taking hyperkalemia-inducing agents (like RASi or Finerenone), **co-prescribing an SGLT2 inhibitor reduces the risk of moderate-to-severe hyperkalemia by ~30%**. This enables patients to stay on their guideline-directed therapies.</li>
+            </ul>`
+          },
+          {
+            title: 'Sick-Day Rules & DKA Counseling',
+            content: `<p>Provide clear patient counseling to minimize risks of Euglycemic DKA and acute volume depletion:</p>
+            <ul>
+              <li><strong>Sick-Day Rules:</strong> Hold the SGLT2 inhibitor during periods of acute illness, vomiting, diarrhea, prolonged fasting (e.g., colonoscopy preparation), or major surgery. Restart only when eating and drinking normally.</li>
+              <li><strong>Euglycemic DKA:</strong> Counsel patients that if they feel severely fatigued, nauseous, or have abdominal pain, they should seek emergency care and check for ketones, even if their blood glucose is normal (<250 mg/dL).</li>
+            </ul>`
+          }
+        ]
+      },
+      finerenone: {
+        name: 'Pillar 3: Finerenone (Kerendia)',
+        classDesc: 'Non-Steroidal Mineralocorticoid Receptor Antagonist (MRA).',
+        sections: [
+          {
+            title: 'Clinical Place & Target Population',
+            content: `<ul>
+              <li><strong>Indications:</strong> Indicated to reduce the risk of sustained eGFR decline, ESKD, CV death, non-fatal MI, and HF hospitalization in adults with **Type 2 Diabetes and CKD** with albuminuria.</li>
+              <li><strong>Non-Steroidal vs. Steroidal:</strong> Finerenone is highly selective for the mineralocorticoid receptor and distributes equally between the heart and kidney, unlike spironolactone (steroidal) which is concentrated in the kidney. Finerenone has significantly less hyperkalemia risk than spironolactone and no anti-androgenic side effects (gynecomastia).</li>
+              <li><strong>Initiation Dose:</strong> Dosed based on eGFR:
+                <ul>
+                  <li>eGFR ≥60: 20 mg once daily.</li>
+                  <li>eGFR 25–60: 10 mg once daily.</li>
+                  <li>eGFR <25: Do not initiate.</li>
+                </ul>
+              </li>
+            </ul>`
+          },
+          {
+            title: 'Hyperkalemia Monitoring Protocol',
+            content: `<ul>
+              <li><strong>Baseline Check:</strong> Do not initiate finerenone if serum potassium is **>4.8 mEq/L**.</li>
+              <li><strong>Monitoring:</strong> Check potassium and eGFR at 4 weeks after initiation or dose titration, and periodically thereafter.</li>
+              <li><strong>Dose Adjustment:</strong>
+                <ul>
+                  <li>K⁺ ≤ 4.8: Increase dose from 10 mg to 20 mg daily (if eGFR allows).</li>
+                  <li>K⁺ 4.9 – 5.5: Maintain current dose.</li>
+                  <li>K⁺ > 5.5: **Hold Finerenone**. Restart at 10 mg daily once potassium drops to ≤5.0 mEq/L.</li>
+                </ul>
+              </li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>FIDELIO-DKD Trial:</strong> Finerenone significantly reduced the primary composite kidney outcome (kidney failure, sustained ≥40% eGFR decline, or renal death) by 18% in patients with T2D and CKD.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/33095112" target="_blank">N Engl J Med 2020;383:2219-2229</a>
+              </div>
+              <div class="citation-item">
+                <strong>CONFIDENCE Trial (2025/2026):</strong> Supports the early combined initiation of SGLT2i + Finerenone in patients with T2D, eGFR 30–90, and albuminuria, showing rapid additive proteinuria reduction.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/41239296" target="_blank">Nephrol Dial Transplant 2026</a>
+              </div>
+            `
+          }
+        ]
+      },
+      glp1ra: {
+        name: 'Pillar 4: GLP-1 Receptor Agonists (FLOW trial data)',
+        classDesc: 'Semaglutide (Ozempic). Dosed once weekly subcutaneously.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>Place in Therapy:</strong> Strongly recommended for patients with Type 2 Diabetes and CKD who have persistent albuminuria despite optimized RASi and SGLT2i therapy.</li>
+              <li><strong>Efficacy:</strong> Achieves excellent glycemic control and weight reduction. Safe to initiate down to an eGFR of 15 mL/min.</li>
+              <li><strong>FLOW Kidney Outcomes Trial (2024):</strong> Semaglutide 1.0 mg once weekly demonstrated a **24% risk reduction** in the primary composite kidney outcome (dialysis, transplantation, ≥50% eGFR decline, or renal/CV death) in T2D patients with CKD, alongside reducing cardiovascular death by 29%.</li>
+            </ul>`
+          }
+        ]
+      }
+    };
+
+    // Drawer functionality
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+  </script>
+</body>
+</html>

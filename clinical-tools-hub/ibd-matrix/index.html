@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBD Therapeutics Clinical Decision Matrix | Phenotype Efficacy & SC Dosing</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-teal: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-cyan: #06b6d4;
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Back Button Banner */
+    .back-nav {
+      margin-bottom: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 60%, #064e3b 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #60a5fa, #34d399, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title-group p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    .oe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Toolbar / Filters */
+    .toolbar-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .search-input-wrapper i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .search-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px 10px 40px;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-right: 4px;
+    }
+
+    .btn-pill {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-pill:hover, .btn-pill.active {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .btn-pill.btn-pheno.active { background: #10b981; border-color: #10b981; color: #0f172a; font-weight: 700; }
+    .btn-pill.btn-uc.active { background: #0284c7; border-color: #0284c7; }
+    .btn-pill.btn-cd.active { background: #7c3aed; border-color: #7c3aed; }
+    .btn-pill.btn-tdm { background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24; }
+    .btn-pill.btn-tdm:hover { background: #f59e0b; color: #0f172a; }
+
+    /* Main Table Container */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    thead {
+      background: #0f172a;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    th {
+      padding: 14px 16px;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.15s;
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    td {
+      padding: 14px 16px;
+      vertical-align: top;
+    }
+
+    /* Badges & Tags */
+    .drug-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #60a5fa;
+    }
+
+    .brand-names {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-right: 4px;
+      margin-bottom: 4px;
+    }
+
+    .tag-uc { background: rgba(2, 132, 199, 0.2); color: #38bdf8; border: 1px solid rgba(2, 132, 199, 0.4); }
+    .tag-cd { background: rgba(124, 58, 237, 0.2); color: #c084fc; border: 1px solid rgba(124, 58, 237, 0.4); }
+    .tag-both { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .tag-route { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+
+    .pheno-box {
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 3px solid #10b981;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.82rem;
+    }
+
+    .dosing-box {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 3px solid #3b82f6;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.82rem;
+    }
+
+    .tdm-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 3px solid #f59e0b;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.82rem;
+    }
+
+    .tdm-target {
+      font-weight: 700;
+      color: #fbbf24;
+    }
+
+    .warning-box {
+      background: rgba(244, 63, 94, 0.08);
+      border-left: 3px solid #f43f5e;
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.82rem;
+      color: #fda4af;
+    }
+
+    .btn-details {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-details:hover {
+      background: var(--accent-blue);
+      color: #fff;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 950px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .modal-close:hover { color: #fff; border-color: #fff; }
+
+    /* Interactive TDM Tool Drawer */
+    .calculator-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid #f59e0b;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .calculator-card h3 {
+      color: #fbbf24;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .calc-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .calc-select, .calc-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+    }
+
+    .calc-result-box {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      margin-top: 12px;
+    }
+
+    .calc-result-title {
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 4px;
+    }
+
+    /* References Drawer */
+    .ref-drawer {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      font-size: 0.85rem;
+    }
+
+    .ref-drawer h4 {
+      color: #34d399;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ref-list {
+      list-style-type: decimal;
+      padding-left: 20px;
+      color: var(--text-muted);
+    }
+
+    .ref-list li {
+      margin-bottom: 8px;
+    }
+
+    .ref-list a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    .ref-list a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation back to Clinical Hub -->
+  <div class="back-nav">
+    <a href="../" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Back to Clinical Reference Hub</a>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="header-banner">
+    <div class="header-title-group">
+      <h1><i class="fa-solid fa-dna"></i> IBD Therapeutics Matrix: Subtype Phenotypes & SC Formulations</h1>
+      <p>Gastroenterology Decision Matrix: Selection by Anatomical Phenotype (Perianal, Stricturing, Colonic, ASUC), SC vs IV Regimens, & TDM Targets</p>
+    </div>
+    <div class="oe-badge">
+      <i class="fa-solid fa-shield-halved"></i> Sourced via OpenEvidence Guidelines
+    </div>
+  </header>
+
+  <!-- Toolbar & Filters -->
+  <div class="toolbar-container">
+    <div class="search-row">
+      <div class="search-input-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search drug, phenotype (e.g. perianal, stricturing, colonic, ASUC), SC dosing, or trial name...">
+      </div>
+      <button class="btn-pill btn-tdm" onclick="toggleTDMCalculator()">
+        <i class="fa-solid fa-calculator"></i> TDM & ADA Decision Algorithm
+      </button>
+    </div>
+    
+    <!-- Subtype Phenotype Filter Bar -->
+    <div class="search-row">
+      <div class="filter-group">
+        <span class="filter-label">Anatomical / Clinical Phenotype:</span>
+        <button class="btn-pill btn-pheno active" data-pheno="all" onclick="filterPhenotype('all', this)">All Phenotypes</button>
+        <button class="btn-pill btn-pheno" data-pheno="perianal" onclick="filterPhenotype('perianal', this)"><i class="fa-solid fa-code-branch"></i> Perianal Fistulizing CD</button>
+        <button class="btn-pill btn-pheno" data-pheno="stricturing" onclick="filterPhenotype('stricturing', this)"><i class="fa-solid fa-arrows-to-line"></i> Stricturing / Stenotic CD</button>
+        <button class="btn-pill btn-pheno" data-pheno="colonic" onclick="filterPhenotype('colonic', this)"><i class="fa-solid fa-bacteria"></i> Colonic CD / Pancolitis</button>
+        <button class="btn-pill btn-pheno" data-pheno="ileal" onclick="filterPhenotype('ileal', this)"><i class="fa-solid fa-bullseye"></i> Isolated Terminal Ileal CD</button>
+        <button class="btn-pill btn-pheno" data-pheno="asuc" onclick="filterPhenotype('asuc', this)"><i class="fa-solid fa-truck-medical"></i> Acute Severe UC (ASUC)</button>
+        <button class="btn-pill btn-pheno" data-pheno="eim" onclick="filterPhenotype('eim', this)"><i class="fa-solid fa-bone"></i> Extraintestinal (Arthritis/Skin)</button>
+      </div>
+    </div>
+
+    <!-- Class & Disease Filters -->
+    <div class="search-row">
+      <div class="filter-group">
+        <span class="filter-label">Indication:</span>
+        <button class="btn-pill active" data-filter="all" onclick="filterDisease('all', this)">All</button>
+        <button class="btn-pill btn-uc" data-filter="UC" onclick="filterDisease('UC', this)">Ulcerative Colitis</button>
+        <button class="btn-pill btn-cd" data-filter="CD" onclick="filterDisease('CD', this)">Crohn's Disease</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Class:</span>
+        <button class="btn-pill active" data-class="all" onclick="filterClass('all', this)">All Classes</button>
+        <button class="btn-pill" data-class="anti-tnf" onclick="filterClass('anti-tnf', this)">Anti-TNF</button>
+        <button class="btn-pill" data-class="integrin" onclick="filterClass('integrin', this)">Anti-Integrin</button>
+        <button class="btn-pill" data-class="il23" onclick="filterClass('il23', this)">Anti-IL12/23 & IL23</button>
+        <button class="btn-pill" data-class="jaki" onclick="filterClass('jaki', this)">JAK Inhibitors</button>
+        <button class="btn-pill" data-class="s1p" onclick="filterClass('s1p', this)">S1P Modulators</button>
+        <button class="btn-pill" data-class="immuno" onclick="filterClass('immuno', this)">Immunomodulators / 5-ASA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive TDM Decision Tool Drawer (Hidden by default) -->
+  <div id="tdmCalculator" class="calculator-card" style="display: none;">
+    <h3><i class="fa-solid fa-square-poll-vertical"></i> Therapeutic Drug Monitoring (TDM) Decision Tool</h3>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+      Empirical algorithm for loss of response (LOR) on Anti-TNF and Biologic therapy based on AGA 2024 & ACG clinical guidelines.
+    </p>
+    <div class="calc-grid">
+      <div class="calc-group">
+        <label for="tdmDrug">Select Agent:</label>
+        <select id="tdmDrug" class="calc-select">
+          <option value="IFX">Infliximab (IV or Zymfentra SC)</option>
+          <option value="ADA">Adalimumab (Humira)</option>
+          <option value="VDZ">Vedolizumab (Entyvio IV/SC)</option>
+          <option value="UST">Ustekinumab (Stelara IV/SC)</option>
+        </select>
+      </div>
+      <div class="calc-group">
+        <label for="troughVal">Measured Trough Level (µg/mL):</label>
+        <input type="number" id="troughVal" class="calc-input" placeholder="e.g. 3.2" step="0.1">
+      </div>
+      <div class="calc-group">
+        <label for="adaStatus">Anti-Drug Antibodies (ADA):</label>
+        <select id="adaStatus" class="calc-select">
+          <option value="absent">Undetectable / Low Titer (< 10 U/mL)</option>
+          <option value="high">High Titer Antibodies (> 10 U/mL)</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-pill active" onclick="calculateTDMRecommendation()"><i class="fa-solid fa-bolt"></i> Evaluate TDM Strategy</button>
+    <div id="tdmResult" class="calc-result-box" style="display: none;"></div>
+  </div>
+
+  <!-- Main Table -->
+  <div class="table-wrapper">
+    <table id="matrixTable">
+      <thead>
+        <tr>
+          <th>Agent & Class</th>
+          <th>Phenotypic Subtype Selection</th>
+          <th>Formulation & Dosing Regimens (IV vs. SC)</th>
+          <th>TDM & Target Troughs</th>
+          <th>Black Box / Key Risks</th>
+          <th>Pre-Screening & Pearls</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="matrixTbody">
+        <!-- Rows populated dynamically by JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- References Drawer -->
+  <div class="ref-drawer">
+    <h4><i class="fa-solid fa-book-bookmark"></i> OpenEvidence Sourced Literature & Guideline Citations</h4>
+    <ol class="ref-list">
+      <li><strong>Zymfentra (Infliximab-dyyb SC) FDA Approval & LIBERTY Trials:</strong> Maintenance Subcutaneous Infliximab for Moderately to Severely Active Ulcerative Colitis and Crohn's Disease. <em>Gastroenterology</em>. 2024. FDA Prescribing Info.</li>
+      <li><strong>ACCENT II Trial:</strong> Infliximab Maintenance Therapy for Fistulizing Crohn's Disease. <em>N Engl J Med</em>. 2004;350(9):876-885. <a href="https://www.nejm.org/doi/full/10.1056/NEJMoa030815" target="_blank">PMID: 14985485</a></li>
+      <li><strong>VARSITY Trial:</strong> Vedolizumab vs Adalimumab in Ulcerative Colitis (Gut-Selectivity vs Extraintestinal Manifestations). <em>N Engl J Med</em>. 2019;381:1215-1226.</li>
+      <li><strong>AGA Guidelines on Moderate to Severe UC & Crohn's Disease Management (2020–2024 Updates):</strong> <em>Gastroenterology</em>.</li>
+      <li><strong>ASUC Management Guidelines:</strong> Accelerated Infliximab Dosing in Acute Severe Ulcerative Colitis. <em>Am J Gastroenterol</em>. 2021;116(8):1586-1598.</li>
+    </ol>
+  </div>
+
+  <!-- Detail Monograph Modal -->
+  <div id="detailModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const ibdData = [
+      {
+        id: "infliximab",
+        name: "Infliximab",
+        brand: "Remicade, Inflectra, Renflexis, Avsola | SC: Zymfentra",
+        classKey: "anti-tnf",
+        className: "Anti-TNF Monoclonal Antibody",
+        disease: "BOTH",
+        indication: "UC & CD (Gold Standard for Perianal Fistulas & ASUC)",
+        phenoTags: ["perianal", "asuc", "colonic", "stricturing", "eim"],
+        phenotypeEfficacy: "<strong>🌟 Perianal Fistulizing CD:</strong> #1 Preferred Gold Standard (ACCENT II trial: 55% complete fistula closure). Requires high target trough (>10-15 µg/mL).<br><strong>🌟 Acute Severe UC (ASUC):</strong> First-line rescue therapy (accelerated induction saves colectomy in >75%).<br><strong>🌟 Extraintestinal Manifestations (EIMs):</strong> Highly effective for peripheral/axial spondyloarthritis, pyoderma gangrenosum, and erythema nodosum.",
+        dosing: "<strong>IV Formulation (Remicade/Biosimilars):</strong><br>• <em>Standard Induction:</em> 5 mg/kg IV at wks 0, 2, 6.<br>• <em>Standard Maintenance:</em> 5 mg/kg IV q8w.<br>• <em>ASUC Accelerated:</em> 10 mg/kg IV at wks 0, 1, 4 or 5 mg/kg at days 0, 3, 14.<br><br><strong>Subcutaneous (SC) Formulation (Zymfentra):</strong><br>• <em>Induction:</em> IV Infliximab 5 mg/kg at wks 0, 2, 6.<br>• <em>SC Maintenance Transition:</em> <strong>120 mg SC q2w</strong> starting at <strong>Week 10</strong>.<br>• <em>SC Escalation:</em> 240 mg SC q2w if secondary loss of response occurs.",
+        tdmTarget: "≥ 5–10 µg/mL (≥10–15 for perianal fistula CD & ASUC)",
+        tdmDetails: "High immunogenicity (ADA rate up to 30% without immunomodulator). Co-prescribing AZA/6-MP/MTX significantly reduces ADA formation.",
+        warnings: "Black Box: Serious infections (TB, fungal), Hepatitis B reactivation, Lymphoma (HSTCL in young males on thiopurines). Contraindicated in NYHA III/IV Heart Failure.",
+        screening: "IGRA/TB, HBsAg/HBcAb, VZV, Baseline LFTs, CBC.",
+        pearls: "Zymfentra allows at-home SC maintenance post-IV loading. Target higher troughs for fistula healing."
+      },
+      {
+        id: "adalimumab",
+        name: "Adalimumab",
+        brand: "Humira, Amjevita, Hyrimoz, Hadlima, etc.",
+        classKey: "anti-tnf",
+        className: "Anti-TNF Monoclonal Antibody",
+        disease: "BOTH",
+        indication: "UC & CD",
+        phenoTags: ["perianal", "colonic", "eim", "stricturing"],
+        phenotypeEfficacy: "<strong>Perianal CD:</strong> Effective 2nd-line (CHARM sub-analysis: ~33% fistula closure).<br><strong>Colonic & Ileal CD:</strong> High luminal response.<br><strong>EIMs:</strong> Excellent coverage for co-existing spondyloarthritis, uveitis, and hidradenitis suppurativa.",
+        dosing: "<strong>Subcutaneous (SC) Pen / Auto-injector:</strong><br>• <em>Induction:</em> 160 mg SC wk 0, 80 mg SC wk 2.<br>• <em>Maintenance:</em> 40 mg SC q2w.<br>• <em>Escalation:</em> 40 mg SC weekly OR 80 mg SC q2w for secondary loss of response.",
+        tdmTarget: "≥ 7.5–12 µg/mL",
+        tdmDetails: "ADA rate ~10–20%. Trough level <7.5 µg/mL predicts secondary loss of response. Weekly dosing effective for dose escalation.",
+        warnings: "Black Box: Serious opportunistic infections, TB, Hepatitis B reactivation, Malignancy risk (HSTCL).",
+        screening: "IGRA/TB, HBsAg/HBcAb, Baseline CBC/LFTs.",
+        pearls: "Convenient at-home SC auto-injector. Less rapid than IV infliximab in acute severe UC."
+      },
+      {
+        id: "vedolizumab",
+        name: "Vedolizumab",
+        brand: "Entyvio (IV & SC)",
+        classKey: "integrin",
+        className: "Gut-Selective Anti-Integrin",
+        disease: "BOTH",
+        indication: "UC & CD (First-line for Elderly & Colonic Disease)",
+        phenoTags: ["colonic", "ileal"],
+        phenotypeEfficacy: "<strong>🌟 Isolated Colonic CD & UC:</strong> Highest efficacy due to high dense expression of MAdCAM-1 in colonic endothelium.<br><strong>⚠️ Extraintestinal Manifestations (EIMs):</strong> NOT effective for peripheral/axial arthritis or skin manifestations (gut-selective target does not treat systemic joints).",
+        dosing: "<strong>IV Formulation:</strong><br>• <em>Induction:</em> 300 mg IV at wks 0, 2, 6.<br>• <em>Maintenance:</em> 300 mg IV q8w (shorten to q4w for LOR).<br><br><strong>Subcutaneous (SC) Formulation:</strong><br>• <em>Induction:</em> 300 mg IV at wks 0 and 2.<br>• <em>SC Maintenance:</em> <strong>108 mg SC q2w</strong> starting at <strong>Week 6</strong>.",
+        tdmTarget: "≥ 14–20 µg/mL",
+        tdmDetails: "Very low immunogenicity (<1-4% ADA). Combination immunomodulator NOT routine.",
+        warnings: "Exceptionally clean safety profile. No PML cases reported. Gut-selective.",
+        screening: "Baseline CBC, LFTs, rule out active infection.",
+        pearls: "Safest biologic for elderly patients or patients with cancer/severe infection history."
+      },
+      {
+        id: "ustekinumab",
+        name: "Ustekinumab",
+        brand: "Stelara (IV Loading -> SC Maintenance)",
+        classKey: "il23",
+        className: "Anti-IL-12/23 Dual Inhibitor",
+        disease: "BOTH",
+        indication: "CD & UC (Prior Anti-TNF Failures & Psoriasis Co-existence)",
+        phenoTags: ["stricturing", "colonic", "ileal", "perianal", "eim"],
+        phenotypeEfficacy: "<strong>Stricturing & Transmural CD:</strong> High transmural healing rates.<br><strong>Perianal CD:</strong> Moderate efficacy in bio-refractory fistulizing CD.<br><strong>EIMs:</strong> Outstanding for co-existing psoriasis, psoriatic arthritis, and peripheral joint pain.",
+        dosing: "<strong>IV Loading -> SC Maintenance:</strong><br>• <em>Single IV Loading:</em> Tiered weight-based IV (~6 mg/kg):<br>&nbsp;&nbsp;- ≤55 kg: 260 mg IV<br>&nbsp;&nbsp;- 55–85 kg: 390 mg IV<br>&nbsp;&nbsp;- >85 kg: 520 mg IV<br>• <em>SC Maintenance:</em> <strong>90 mg SC q8w</strong> starting 8 weeks post-IV.<br>• <em>SC Escalation:</em> 90 mg SC q4w for partial response/LOR.",
+        tdmTarget: "≥ 4.5–7.0 µg/mL",
+        tdmDetails: "Extremely low immunogenicity (<3% ADA). Escalation to q4w recaptures response in 60-70%.",
+        warnings: "Low infection risk. Rare non-melanoma skin cancer.",
+        screening: "IGRA/TB, routine labs.",
+        pearls: "Dual IL-12/23 inhibition. Great safety profile and durable long-term response."
+      },
+      {
+        id: "risankizumab",
+        name: "Risankizumab",
+        brand: "Skyrizi (IV Loading -> SC OBI Maintenance)",
+        classKey: "il23",
+        className: "Selective Anti-IL-23 (p19 Inhibitor)",
+        disease: "CD",
+        indication: "Crohn's Disease (Bio-Refractory & Severe Luminal/Stricturing)",
+        phenoTags: ["stricturing", "colonic", "ileal", "eim"],
+        phenotypeEfficacy: "<strong>🌟 Bio-Refractory Luminal CD:</strong> Superior endoscopic remission in anti-TNF refractory CD (ADVANCE/MOTIVATE/COMMAND).<br><strong>Stricturing CD:</strong> Significant reduction in bowel wall thickness on bowel ultrasound/MRE.",
+        dosing: "<strong>IV Loading -> SC On-Body Injector (OBI):</strong><br>• <em>IV Induction:</em> 600 mg IV at wks 0, 4, 8.<br>• <em>SC Maintenance:</em> <strong>180 mg SC</strong> OR <strong>360 mg SC q8w</strong> starting at <strong>Week 12</strong> via On-Body Injector (OBI).",
+        tdmTarget: "Sustained tissue saturation",
+        tdmDetails: "Minimal ADA development.",
+        warnings: "LFT monitoring (infrequent elevation). Active TB screening.",
+        screening: "IGRA/TB, LFTs.",
+        pearls: "Selective p19 IL-23 target. Hands-free wearable On-Body Injector for SC maintenance."
+      },
+      {
+        id: "mirikizumab",
+        name: "Mirikizumab",
+        brand: "Omvoh (IV Loading -> SC Maintenance)",
+        classKey: "il23",
+        className: "Selective Anti-IL-23 (p19 Inhibitor)",
+        disease: "UC",
+        indication: "Ulcerative Colitis (Moderate-Severe & Pancolitis)",
+        phenoTags: ["colonic"],
+        phenotypeEfficacy: "<strong>🌟 Extensive UC & Pancolitis:</strong> High rates of clinical remission, histologic mucosal healing, and bowel urgency resolution (LUCENT trials).",
+        dosing: "<strong>IV Loading -> SC Maintenance:</strong><br>• <em>IV Induction:</em> 300 mg IV q4w × 3 doses (wks 0, 4, 8).<br>• <em>SC Maintenance:</em> <strong>200 mg SC q4w</strong> (two 100 mg prefilled pens) starting at <strong>Week 12</strong>.",
+        tdmTarget: "Standard therapeutic exposure",
+        tdmDetails: "Minimal ADA development.",
+        warnings: "Injection site reactions, upper respiratory infections, LFT elevations.",
+        screening: "IGRA/TB, LFTs, CBC.",
+        pearls: "Selective IL-23 p19 inhibitor specifically targeted for Ulcerative Colitis."
+      },
+      {
+        id: "upadacitinib",
+        name: "Upadacitinib",
+        brand: "Rinvoq",
+        classKey: "jaki",
+        className: "Oral Selective JAK-1 Inhibitor",
+        disease: "BOTH",
+        indication: "UC & Crohn's Disease (Rapid Rescue & Multi-Bio Refractory)",
+        phenoTags: ["asuc", "colonic", "ileal", "stricturing", "eim"],
+        phenotypeEfficacy: "<strong>🌟 Severe Acute UC / Refractory Flares:</strong> Fastest acting oral agent (<48 hr symptom relief). Emerging oral rescue for steroid/bio-refractory severe UC flares.<br><strong>Refractory Luminal CD:</strong> Deep endoscopic & mucosal healing.",
+        dosing: "<strong>Oral Daily Tablet:</strong><br>• <em>UC Induction:</em> 45 mg PO daily × 8 weeks.<br>• <em>CD Induction:</em> 45 mg PO daily × 12 weeks.<br>• <em>Maintenance:</em> 15 mg PO daily (standard) OR 30 mg PO daily (for bio-refractory / severe disease).",
+        tdmTarget: "N/A (Small Molecule - No TDM needed)",
+        tdmDetails: "No antibody formation.",
+        warnings: "Black Box: Serious infections, Herpes Zoster reactivation, VTE (DVT/PE), MACE, Malignancy.",
+        screening: "CBC, LFTs, Fasting Lipids, IGRA/TB, Hep B, Shingrix vaccine prior to start.",
+        pearls: "Fastest onset of action among all oral IBD agents."
+      },
+      {
+        id: "budesonide",
+        name: "Budesonide EC / MMX",
+        brand: "Entocort EC (CD), Uceris (UC)",
+        classKey: "immuno",
+        className: "Targeted Corticosteroid",
+        disease: "BOTH",
+        indication: "Mild-Moderate Active Terminal Ileal CD or Mild-Moderate Active UC",
+        phenoTags: ["ileal", "colonic"],
+        phenotypeEfficacy: "<strong>🌟 Isolated Terminal Ileal CD:</strong> Entocort EC releases in ileum & ascending colon.<br><strong>Left-Sided / Mild UC:</strong> Uceris MMX releases throughout colon.",
+        dosing: "<strong>Oral Daily Dosing:</strong><br>• Entocort EC: 9 mg PO daily AM × 8 weeks (CD).<br>• Uceris MMX: 9 mg PO daily AM × 8 weeks (UC).",
+        tdmTarget: "N/A",
+        tdmDetails: "90% first-pass hepatic metabolism; minimal systemic steroid side effects.",
+        warnings: "Adrenal suppression if prolonged >12 wks; glaucoma/cataract caution.",
+        screening: "Blood pressure, blood glucose.",
+        pearls: "First-line oral targeted steroid with minimal systemic side effects."
+      }
+    ];
+
+    function renderTable(data) {
+      const tbody = document.getElementById('matrixTbody');
+      tbody.innerHTML = '';
+
+      if(data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 40px; color: var(--text-muted);">No matching therapeutic agents found for selected phenotype.</td></tr>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const tr = document.createElement('tr');
+        
+        let diseaseTag = '';
+        if(item.disease === 'UC') diseaseTag = `<span class="tag tag-uc">UC Only</span>`;
+        else if(item.disease === 'CD') diseaseTag = `<span class="tag tag-cd">CD Only</span>`;
+        else diseaseTag = `<span class="tag tag-both">UC & CD</span>`;
+
+        tr.innerHTML = `
+          <td>
+            <div class="drug-name">${item.name}</div>
+            <div class="brand-names">${item.brand}</div>
+            <div style="margin-top:4px;"><span class="tag tag-route">${item.className}</span> ${diseaseTag}</div>
+          </td>
+          <td>
+            <div class="pheno-box">${item.phenotypeEfficacy}</div>
+          </td>
+          <td>
+            <div class="dosing-box">${item.dosing}</div>
+          </td>
+          <td>
+            <div class="tdm-box">
+              <div class="tdm-target"><i class="fa-solid fa-vial"></i> Target: ${item.tdmTarget}</div>
+              <div style="font-size:0.76rem; color:var(--text-muted); margin-top:2px;">${item.tdmDetails}</div>
+            </div>
+          </td>
+          <td>
+            <div class="warning-box">
+              <i class="fa-solid fa-triangle-exclamation"></i> ${item.warnings}
+            </div>
+          </td>
+          <td style="font-size:0.82rem;">
+            <div><strong>Screening:</strong> ${item.screening}</div>
+            <div style="color:#60a5fa; margin-top:4px;">💡 ${item.pearls}</div>
+          </td>
+          <td>
+            <button class="btn-details" onclick="showMonograph('${item.id}')">Monograph</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Filter Logic
+    let currentPheno = 'all';
+    let currentDisease = 'all';
+    let currentClass = 'all';
+
+    function applyFilters() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = ibdData.filter(item => {
+        const matchesPheno = (currentPheno === 'all') || item.phenoTags.includes(currentPheno);
+        const matchesDisease = (currentDisease === 'all') || (item.disease === 'BOTH') || (item.disease === currentDisease);
+        const matchesClass = (currentClass === 'all') || (item.classKey === currentClass);
+        const matchesSearch = query === '' || 
+          item.name.toLowerCase().includes(query) ||
+          item.brand.toLowerCase().includes(query) ||
+          item.phenotypeEfficacy.toLowerCase().includes(query) ||
+          item.dosing.toLowerCase().includes(query) ||
+          item.tdmTarget.toLowerCase().includes(query) ||
+          item.warnings.toLowerCase().includes(query);
+
+        return matchesPheno && matchesDisease && matchesClass && matchesSearch;
+      });
+      renderTable(filtered);
+    }
+
+    function filterPhenotype(pheno, btn) {
+      currentPheno = pheno;
+      document.querySelectorAll('[data-pheno]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function filterDisease(dis, btn) {
+      currentDisease = dis;
+      document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function filterClass(cls, btn) {
+      currentClass = cls;
+      document.querySelectorAll('[data-class]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+    // TDM Calculator Toggle & Logic
+    function toggleTDMCalculator() {
+      const card = document.getElementById('tdmCalculator');
+      card.style.display = card.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function calculateTDMRecommendation() {
+      const drug = document.getElementById('tdmDrug').value;
+      const trough = parseFloat(document.getElementById('troughVal').value);
+      const ada = document.getElementById('adaStatus').value;
+      const resultBox = document.getElementById('tdmResult');
+
+      if (isNaN(trough)) {
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `<div style="color:#f43f5e;"><i class="fa-solid fa-circle-exclamation"></i> Please enter a valid numerical trough level.</div>`;
+        return;
+      }
+
+      let recommendation = "";
+      let title = "";
+
+      if (drug === "IFX") {
+        if (trough < 5) {
+          if (ada === "absent") {
+            title = "Subtherapeutic Trough + No/Low Antibodies (Pharmacokinetic Failure)";
+            recommendation = "<strong>Recommendation:</strong> Escalate Dose or Shorten Interval. Increase IV Infliximab to 10 mg/kg q8w OR switch to Zymfentra 240 mg SC q2w. Re-check trough in 8 weeks.";
+          } else {
+            title = "Subtherapeutic Trough + High Titer Antibodies (Immunogenic Failure)";
+            recommendation = "<strong>Recommendation:</strong> Switch Class out of Anti-TNF. High titers neutralize drug; escalating dose or switching to SC Zymfentra will not overcome high-titer antibodies.";
+          }
+        } else if (trough >= 5 && trough <= 10) {
+          if (ada === "absent") {
+            title = "Therapeutic Trough + Non-Response (Mechanistic Failure)";
+            recommendation = "<strong>Recommendation:</strong> Switch Class out of Anti-TNF (e.g. to Vedolizumab, Ustekinumab, Risankizumab, or Upadacitinib). Disease activity is driven by non-TNF inflammatory pathways.";
+          } else {
+            title = "Therapeutic Trough + Low Titer Antibodies";
+            recommendation = "<strong>Recommendation:</strong> Add immunomodulator (Azathioprine or Methotrexate) to suppress immunogenicity.";
+          }
+        } else {
+          title = "Supratherapeutic Trough (>10 µg/mL)";
+          recommendation = "<strong>Recommendation:</strong> High trough confirmed. If active inflammation persists, switch out of anti-TNF class.";
+        }
+      } else {
+        if (trough < 7.5) {
+          recommendation = "<strong>Recommendation:</strong> Low trough detected. Shorten dosing frequency (e.g., Adalimumab to weekly, Vedolizumab to 108 mg SC q2w, Ustekinumab to 90 mg SC q4w).";
+        } else {
+          recommendation = "<strong>Recommendation:</strong> Target therapeutic trough achieved. If active inflammation persists on endoscopy, switch mechanism of action.";
+        }
+        title = "TDM Evaluation Complete";
+      }
+
+      resultBox.style.display = 'block';
+      resultBox.innerHTML = `
+        <div class="calc-result-title"><i class="fa-solid fa-square-check"></i> ${title}</div>
+        <div style="font-size: 0.88rem; color: #cbd5e1; margin-top: 6px;">${recommendation}</div>
+      `;
+    }
+
+    // Modal Details Monograph
+    function showMonograph(id) {
+      const item = ibdData.find(d => d.id === id);
+      if(!item) return;
+
+      const modalBody = document.getElementById('modalBody');
+      modalBody.innerHTML = `
+        <h2 style="font-size: 1.6rem; color: #60a5fa; margin-bottom: 6px;">${item.name} (${item.brand})</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">${item.className} | Indication: ${item.indication}</p>
+        
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 16px; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 20px;">
+          <h4 style="color: #34d399; margin-bottom: 8px;"><i class="fa-solid fa-bullseye"></i> Anatomical Subtype & Phenotypic Efficacy Selection</h4>
+          <p style="font-size: 0.88rem;">${item.phenotypeEfficacy}</p>
+        </div>
+
+        <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+          <h4 style="color: #60a5fa; margin-bottom: 8px;"><i class="fa-solid fa-syringe"></i> Formulation Breakdown & Exact Dosing Regimens (IV vs SC)</h4>
+          <p style="font-size: 0.9rem;">${item.dosing}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+          <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4 style="color: #fbbf24; margin-bottom: 8px;"><i class="fa-solid fa-vial"></i> TDM & Trough Targets</h4>
+            <p style="font-size: 0.88rem; font-weight:700; color:#fbbf24;">${item.tdmTarget}</p>
+            <p style="font-size: 0.82rem; color:var(--text-muted); margin-top:4px;">${item.tdmDetails}</p>
+          </div>
+          <div style="background: rgba(244, 63, 94, 0.08); padding: 16px; border-radius: 8px; border-left: 4px solid #f43f5e;">
+            <h4 style="color: #f43f5e; margin-bottom: 8px;"><i class="fa-solid fa-triangle-exclamation"></i> Safety & Black Box Warnings</h4>
+            <p style="font-size: 0.85rem; color: #fda4af;">${item.warnings}</p>
+          </div>
+        </div>
+
+        <div style="background: #0f172a; padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+          <h4 style="color: #38bdf8; margin-bottom: 8px;"><i class="fa-solid fa-lightbulb"></i> Clinical Gastroenterology Pearls & Screening</h4>
+          <p style="font-size: 0.88rem;"><strong>Screening:</strong> ${item.screening}</p>
+          <p style="font-size: 0.88rem; margin-top: 6px; color:#60a5fa;">💡 ${item.pearls}</p>
+        </div>
+      `;
+
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').style.display = 'none';
+    }
+
+    // Initialize
+    renderTable(ibdData);
+  </script>
+</body>
+</html>

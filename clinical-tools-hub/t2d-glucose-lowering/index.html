@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type 2 Diabetes Decision Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Interactive glucose-lowering agent decision matrix for Type 2 Diabetes based on ADA/EASD guidelines and Open Evidence.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    
+
+    
+
+    
+
+    
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 2rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--text-primary);
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-section {
+      margin-bottom: 1rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-row .search-box {
+      flex-grow: 1;
+    }
+
+    .search-row .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-row .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-top: 0.2rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 2rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.25rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .citation-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .citation-item {
+      padding: 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.4rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+      .search-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      
+      
+
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+
+    <div class="title-area">
+      <h2>Type 2 Diabetes — Glucose-Lowering Agents</h2>
+      <p>Interactive comparative matrix of major glucose-lowering drug classes. Tailor selections based on ASCVD, Heart Failure, CKD, weight loss requirements, hypoglycemia risks, and financial barriers as outlined in ADA/EASD consensus guidelines.</p>
+    </div>
+
+    <div class="clinical-alert">
+      <strong>Guideline-Directed Medical Therapy (GDMT) Priority:</strong> For patients with established or high-risk ASCVD, Heart Failure, or CKD, an <strong>SGLT2 inhibitor or GLP-1 RA</strong> with proven cardiovascular/kidney benefit is recommended as part of the foundational regimen, <strong>independent of baseline HbA1c or metformin use</strong>.
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-panel">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="drugSearch" class="search-input" placeholder="Search by agent name (e.g., Empagliflozin, Semaglutide, Metformin)...">
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-label">Filter by Comorbidity (Proven Benefit)</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="ascvd">Established ASCVD</button>
+          <button class="filter-btn" data-filter="hf">Heart Failure (HFrEF/HFpEF)</button>
+          <button class="filter-btn" data-filter="ckd">CKD (eGFR ≥20 + albuminuria)</button>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 1rem;">
+        <div class="filter-label">Patient Preferences & Constraints</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="weight">Prioritize Weight Loss (High/Very High)</button>
+          <button class="filter-btn" data-filter="low-hypo">Minimize Hypoglycemia Risk</button>
+          <button class="filter-btn" data-filter="oral">Oral Administration Only</button>
+          <button class="filter-btn" data-filter="low-cost">Low Cost (Generic Available)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container">
+      <table id="matrixTable">
+        <thead>
+          <tr>
+            <th>Drug Class & Key Agents</th>
+            <th>ASCVD Outcome</th>
+            <th>Heart Failure</th>
+            <th>CKD Benefit</th>
+            <th>Weight Effect</th>
+            <th>Hypoglycemia Risk</th>
+            <th>GI Side Effects</th>
+            <th>Administration</th>
+            <th>Relative Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- GLP-1 RA -->
+          <tr data-id="glp1" data-keywords="glp-1 receptor agonist semaglutide ozempic rybelsus dulaglutide trulicity liraglutide victoza injection once-weekly weekly cardiorenal kidney loss nausea gastrointestinal">
+            <td class="drug-name-col">
+              GLP-1 RAs
+              <span class="drug-class-label">Semaglutide, Dulaglutide, Liraglutide</span>
+            </td>
+            <td><span class="badge badge-benefit">Benefit (MACE reduction)</span></td>
+            <td><span class="badge badge-neutral">Neutral / Modest benefit</span></td>
+            <td><span class="badge badge-benefit">Benefit (FLOW trial)</span></td>
+            <td><span class="badge badge-benefit">Loss (3–6 kg)</span></td>
+            <td><span class="badge badge-benefit">Low</span></td>
+            <td><span class="badge badge-risk">High (Nausea/Vomiting)</span></td>
+            <td>Once-weekly SC (or daily oral)</td>
+            <td><span class="badge badge-risk">$$$$ (Branded/High)</span></td>
+          </tr>
+          <!-- SGLT2i -->
+          <tr data-id="sglt2" data-keywords="sglt2 inhibitor empagliflozin jardiance dapagliflozin farxiga canagliflozin invokana oral daily cardiorenal kidney heart failure hf hfpef hfref uti dehydration loss ketoacidosis">
+            <td class="drug-name-col">
+              SGLT2 Inhibitors
+              <span class="drug-class-label">Empagliflozin, Dapagliflozin, Canagliflozin</span>
+            </td>
+            <td><span class="badge badge-benefit">Benefit (MACE reduction)</span></td>
+            <td><span class="badge badge-benefit">Strong Benefit (Preferred)</span></td>
+            <td><span class="badge badge-benefit">Strong Benefit (Preferred)</span></td>
+            <td><span class="badge badge-benefit">Loss (2–3 kg)</span></td>
+            <td><span class="badge badge-benefit">Low</span></td>
+            <td><span class="badge badge-neutral">Minimal (UTI risk)</span></td>
+            <td>Once-daily Oral</td>
+            <td><span class="badge badge-warning">$$$ (Intermediate)</span></td>
+          </tr>
+          <!-- Tirzepatide -->
+          <tr data-id="tirzepatide" data-keywords="tirzepatide mounjaro dual gip glp-1 receptor agonist injection once-weekly weekly cardiorenal kidney loss weight nausea gastrointestinal">
+            <td class="drug-name-col">
+              Tirzepatide (GIP/GLP-1)
+              <span class="drug-class-label">Mounjaro</span>
+            </td>
+            <td><span class="badge badge-neutral">Pending CVOT in T2D</span></td>
+            <td><span class="badge badge-benefit">Benefit (HFpEF + Obesity)</span></td>
+            <td><span class="badge badge-benefit">Renoprotective (SURPASS-CVOT)</span></td>
+            <td><span class="badge badge-benefit">High Loss (8–9+ kg)</span></td>
+            <td><span class="badge badge-benefit">Low</span></td>
+            <td><span class="badge badge-risk">High (Nausea/Vomiting)</span></td>
+            <td>Once-weekly SC</td>
+            <td><span class="badge badge-risk">$$$$ (Branded/High)</span></td>
+          </tr>
+          <!-- Metformin -->
+          <tr data-id="metformin" data-keywords="metformin glucophage oral daily twice-daily b12 deficiency lactic acidosis egfr cutoff low cost generic weight neutral gastrointestinal nausea diarrhea">
+            <td class="drug-name-col">
+              Biguanides
+              <span class="drug-class-label">Metformin</span>
+            </td>
+            <td><span class="badge badge-neutral">Neutral (Modest benefit)</span></td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral (Contraindicated eGFR <30)</span></td>
+            <td><span class="badge badge-info">Neutral / Slight loss</span></td>
+            <td><span class="badge badge-benefit">Low</span></td>
+            <td><span class="badge badge-risk">Moderate (Diarrhea/Cramps)</span></td>
+            <td>1–2× Daily Oral</td>
+            <td><span class="badge badge-benefit">$ (Generic/Very Low)</span></td>
+          </tr>
+          <!-- DPP-4i -->
+          <tr data-id="dpp4" data-keywords="dpp-4 inhibitors sitagliptin januvia linagliptin trajenta saxagliptin oral daily weight neutral safety pancreatitis heart failure hospitalization saxagliptin risk">
+            <td class="drug-name-col">
+              DPP-4 Inhibitors
+              <span class="drug-class-label">Sitagliptin, Linagliptin, Saxagliptin</span>
+            </td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral (Saxagliptin increases risk)</span></td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-benefit">Low</span></td>
+            <td><span class="badge badge-neutral">Minimal</span></td>
+            <td>Once-daily Oral</td>
+            <td><span class="badge badge-warning">$$$ (Intermediate)</span></td>
+          </tr>
+          <!-- Sulfonylureas -->
+          <tr data-id="sulfonylureas" data-keywords="sulfonylureas glimepiride amaryl glipizide glucotrol glyburide oral daily twice-daily hypoglycemia hypo risk gain weight cost generic low cost">
+            <td class="drug-name-col">
+              Sulfonylureas
+              <span class="drug-class-label">Glimepiride, Glipizide, Glyburide</span>
+            </td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral (Hypo risk in CKD)</span></td>
+            <td><span class="badge badge-risk">Gain (2–3 kg)</span></td>
+            <td><span class="badge badge-risk">High Risk</span></td>
+            <td><span class="badge badge-neutral">Minimal</span></td>
+            <td>1–2× Daily Oral</td>
+            <td><span class="badge badge-benefit">$ (Generic/Very Low)</span></td>
+          </tr>
+          <!-- TZDs -->
+          <tr data-id="tzds" data-keywords="thiazolidinediones tzd pioglitazone actos rosiglitazone oral daily fluid retention edema heart failure contraindicated bladder cancer risk bone fractures weight gain">
+            <td class="drug-name-col">
+              TZDs (Thiazolidinediones)
+              <span class="drug-class-label">Pioglitazone, Rosiglitazone</span>
+            </td>
+            <td><span class="badge badge-info">Potential Benefit</span></td>
+            <td><span class="badge badge-risk">Contraindicated (Fluid retention)</span></td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-risk">Gain (3–4 kg)</span></td>
+            <td><span class="badge badge-benefit">Low</span></td>
+            <td><span class="badge badge-neutral">Minimal</span></td>
+            <td>Once-daily Oral</td>
+            <td><span class="badge badge-benefit">$ (Generic/Very Low)</span></td>
+          </tr>
+          <!-- Insulin -->
+          <tr data-id="insulin" data-keywords="insulin glargine lantus detemir levemir degludec tresiba nph basal prandial injection daily weight gain hypoglycemia hypo risk generic biosimilar">
+            <td class="drug-name-col">
+              Basal Insulin
+              <span class="drug-class-label">Glargine, Degludec, Detemir, NPH</span>
+            </td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral</span></td>
+            <td><span class="badge badge-neutral">Neutral (Requires dose reduction)</span></td>
+            <td><span class="badge badge-risk">Gain (2–4 kg)</span></td>
+            <td><span class="badge badge-risk">High Risk</span></td>
+            <td><span class="badge badge-neutral">Minimal</span></td>
+            <td>Daily SC Injection</td>
+            <td><span class="badge badge-warning">$$ (Moderate)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detail Drawer Overlay and Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Class Details</h3>
+        <p id="drawerDrugClass">Class Description</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Content populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    
+
+    // Theme toggler
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Dynamic Filter System
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      comorbidities: new Set(),
+      preferences: new Set()
+    };
+
+    // Search event
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    // Filter button events
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        // Categorize filters
+        const isComorbidity = ['ascvd', 'hf', 'ckd'].includes(filterType);
+        const filterSet = isComorbidity ? activeFilters.comorbidities : activeFilters.preferences;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchComorbidity = true;
+        let matchPreferences = true;
+
+        // 1. Search text matching
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        // 2. Comorbidity matching (Proven Benefit filters)
+        if (activeFilters.comorbidities.size > 0) {
+          activeFilters.comorbidities.forEach(filter => {
+            if (filter === 'ascvd') {
+              // GLP-1 and SGLT2 have benefit
+              if (rowId !== 'glp1' && rowId !== 'sglt2') matchComorbidity = false;
+            }
+            if (filter === 'hf') {
+              // SGLT2i preferred, Tirzepatide has HFpEF benefit
+              if (rowId !== 'sglt2' && rowId !== 'tirzepatide') matchComorbidity = false;
+            }
+            if (filter === 'ckd') {
+              // SGLT2i and GLP-1 have kidney benefit
+              if (rowId !== 'sglt2' && rowId !== 'glp1' && rowId !== 'tirzepatide') matchComorbidity = false;
+            }
+          });
+        }
+
+        // 3. Preferences matching
+        if (activeFilters.preferences.size > 0) {
+          activeFilters.preferences.forEach(filter => {
+            if (filter === 'weight') {
+              // GLP-1, SGLT2, Tirzepatide promote weight loss
+              if (!['glp1', 'sglt2', 'tirzepatide'].includes(rowId)) matchPreferences = false;
+            }
+            if (filter === 'low-hypo') {
+              // All except Sulfonylureas and Insulin have low risk
+              if (['sulfonylureas', 'insulin'].includes(rowId)) matchPreferences = false;
+            }
+            if (filter === 'oral') {
+              // Exclude injectable (GLP-1 is mixed, but primarily injectable; Tirzepatide and Insulin are injectables)
+              if (['tirzepatide', 'insulin'].includes(rowId)) matchPreferences = false;
+            }
+            if (filter === 'low-cost') {
+              // Generic available
+              if (!['metformin', 'sulfonylureas', 'tzds', 'insulin'].includes(rowId)) matchPreferences = false;
+            }
+          });
+        }
+
+        // Show/hide row
+        if (matchSearch && matchComorbidity && matchPreferences) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Detail Database (OpenEvidence synthesized content)
+    const drugDetails = {
+      glp1: {
+        name: 'GLP-1 Receptor Agonists (GLP-1 RAs)',
+        classDesc: 'Semaglutide (Ozempic, Rybelsus), Dulaglutide (Trulicity), Liraglutide (Victoza)',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Cardiovascular (MACE):</strong> Reduces major adverse cardiovascular events (stroke, MI, CV death) by ~12% in patients with established ASCVD or high CV risk. Decisive reduction in non-fatal stroke.</li>
+              <li><strong>Kidney Protection:</strong> Proven nephroprotective benefits, reducing composite kidney endpoints (eGFR decline, progression to macroalbuminuria) in the FLOW trial. Recommended for advanced CKD (eGFR <30) over SGLT2i if glycemic control is needed.</li>
+              <li><strong>Glycemic Efficacy & Weight:</strong> Very high glycemic efficacy (HbA1c drop ~1.0-1.5%). Excellent weight loss promoter (3–6 kg weight reduction, semaglutide > dulaglutide > liraglutide).</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration Protocols',
+            content: `<p>To minimize GI side effects, initiate at low dose and titrate slowly (4-week intervals):</p>
+            <ul>
+              <li><strong>Semaglutide (SC):</strong> Start at 0.25 mg weekly for 4 weeks. Increase to 0.5 mg weekly. If glycemic target not met after 4 weeks, titrate to 1.0 mg or 2.0 mg weekly.</li>
+              <li><strong>Dulaglutide (SC):</strong> Start at 0.75 mg weekly. Titrate to 1.5 mg, then up to 3.0 mg or 4.5 mg weekly if required.</li>
+              <li><strong>Rybelsus (Oral Semaglutide):</strong> Take on empty stomach upon waking with ≤4 oz plain water; wait 30 minutes before eating or drinking. Start 3 mg daily for 30 days, then increase to 7 mg daily, then to 14 mg daily.</li>
+            </ul>`
+          },
+          {
+            title: 'Tolerability & Key Interactions',
+            content: `<ul>
+              <li><strong>Adverse Effects:</strong> Nausea, vomiting, diarrhea, constipation (occurring in 20-50% during initiation). Risk of gallbladder disease, rare risk of pancreatitis. Boxed warning for thyroid C-cell tumors (contraindicated in MEN2 or family history of medullary thyroid carcinoma).</li>
+              <li><strong>Interactions:</strong> Delayed gastric emptying can theoretically affect oral drug absorption (especially Rybelsus). Minimal CYP450 drug interactions.</li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>LEADER Trial (Liraglutide):</strong> Liraglutide significantly reduced MACE (HR 0.87, p=0.01) and CV death in T2D with high CV risk.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/27295427" target="_blank">N Engl J Med 2016;375:311-322</a>
+              </div>
+              <div class="citation-item">
+                <strong>SUSTAIN-6 Trial (Semaglutide):</strong> Once-weekly semaglutide reduced composite MACE by 26% (p<0.001 for noninferiority) vs. placebo.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/27633186" target="_blank">N Engl J Med 2016;375:1834-1844</a>
+              </div>
+              <div class="citation-item">
+                <strong>FLOW Trial (Semaglutide in CKD):</strong> Semaglutide 1.0 mg reduced risk of primary composite kidney events by 24% in patients with CKD and T2D.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/38210781" target="_blank">Circulation 2024;150:1781-1790</a>
+              </div>
+            `
+          }
+        ]
+      },
+      sglt2: {
+        name: 'SGLT2 Inhibitors (Sodium-Glucose Cotransporter 2)',
+        classDesc: 'Empagliflozin (Jardiance), Dapagliflozin (Farxiga), Canagliflozin (Invokana)',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Heart Failure:</strong> The absolute class of choice for HF. Reduces hospitalization for HF by ~30–35% across the entire ejection fraction spectrum (HFrEF and HFpEF), independent of glycemic status.</li>
+              <li><strong>CKD Protection:</strong> Robustly slows eGFR decline and progression to ESKD (reducing risk by ~30-40%). Recommended first-line for CKD with albuminuria down to eGFR of 20 mL/min/1.73 m². Can be continued below 20 until dialysis is initiated.</li>
+              <li><strong>Cardiovascular (MACE):</strong> Modest MACE reduction (~11%) primarily driven by CV death and MI. Weight loss ~2-3 kg.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration Protocols',
+            content: `<ul>
+              <li><strong>Empagliflozin:</strong> Start at 10 mg daily. Can increase to 25 mg daily if needed for glycemic efficacy. Do not start if eGFR <20.</li>
+              <li><strong>Dapagliflozin:</strong> Start at 10 mg daily. For HF or CKD protection, 10 mg is the standard clinical dose. Do not start if eGFR <20.</li>
+              <li><strong>Canagliflozin:</strong> Start at 100 mg daily. Can increase to 300 mg daily if needed and eGFR ≥60. Dose capped at 100 mg daily if eGFR is 30–60.</li>
+            </ul>`
+          },
+          {
+            title: 'Tolerability & Key Interactions',
+            content: `<ul>
+              <li><strong>Adverse Effects:</strong> Genitourinary mycotic infections (yeast infections, 5-10% risk, higher in women), polyuria/volume depletion, mild hypotension. Rare but serious risks of euglycemic diabetic ketoacidosis (DKA) and necrotizing fasciitis of the perineum (Fournier's gangrene).</li>
+              <li><strong>Interactions:</strong> Synergistic diuretic effects with loop diuretics (requires volume monitoring). Minimal CYP interactions.</li>
+              <li><strong>Counseling:</strong> Counsel patient on perineal hygiene, hydration, and stopping the drug during acute illness/fasting/surgery ("sick day rules" to avoid DKA).</li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>EMPA-REG OUTCOME (Empagliflozin):</strong> Showed a 14% reduction in MACE and a 38% reduction in CV mortality in patients with T2D and cardiovascular disease.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/26378978" target="_blank">N Engl J Med 2015;373:2117-2128</a>
+              </div>
+              <div class="citation-item">
+                <strong>DAPA-CKD (Dapagliflozin):</strong> Reduced risk of eGFR decline ≥50%, ESKD, or renal/CV death by 39% in patients with CKD, regardless of diabetes.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/32970996" target="_blank">N Engl J Med 2020;383:1436-1446</a>
+              </div>
+              <div class="citation-item">
+                <strong>DELIVER Trial (Dapagliflozin in HFpEF):</strong> Reduced composite CV death or worsening heart failure in patients with HF and LVEF >40%.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/36024129" target="_blank">N Engl J Med 2022;387:1089-1098</a>
+              </div>
+            `
+          }
+        ]
+      },
+      tirzepatide: {
+        name: 'Tirzepatide (Dual GIP/GLP-1 Receptor Agonist)',
+        classDesc: 'Mounjaro (T2D indication), Zepbound (Obesity indication)',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Glycemic & Weight Efficacy:</strong> Strongest glucose-lowering efficacy of any non-insulin agent (HbA1c reductions up to 2.0-2.4%). Unparalleled weight loss (average 8–12+ kg, showing dose-dependent loss).</li>
+              <li><strong>Heart Failure:</strong> Strong data demonstrating significant reduction in worsening heart failure events, symptoms, and physical limitations in HFpEF with obesity.</li>
+              <li><strong>Kidney & CV:</strong> Reduced kidney event composite in exploratory trials (SURPASS-CVOT). Dedicated MACE outcomes trial in T2D is ongoing.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration Protocols',
+            content: `<p>Must follow strict titration schedule to establish GI tolerance:</p>
+            <ul>
+              <li><strong>Initiation:</strong> Start at 2.5 mg SC once weekly for 4 weeks (this is a sub-therapeutic dose to adjust patient's GI tract).</li>
+              <li><strong>Uptitration:</strong> Increase to 5 mg weekly for at least 4 weeks. If further glycemic or weight efficacy is needed, increase in 2.5 mg increments every 4 weeks to a maximum of 15 mg weekly (maintenance doses: 5 mg, 10 mg, or 15 mg weekly).</li>
+            </ul>`
+          },
+          {
+            title: 'Tolerability & Key Interactions',
+            content: `<ul>
+              <li><strong>Adverse Effects:</strong> Dose-related nausea, vomiting, diarrhea, decreased appetite, constipation. Severe cases of gastrointestinal disorders. Risk of pancreatitis. Boxed warning for thyroid C-cell tumors.</li>
+              <li><strong>Interactions:</strong> Delayed gastric emptying can reduce the efficacy of oral contraceptives. Advise patients using oral contraceptives to switch to a non-oral method or add barrier methods for 4 weeks after initiation and after each dose escalation.</li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>SURPASS-1 to 5 Trials:</strong> Multi-trial program showing tirzepatide's superiority over placebo, semaglutide, insulin degludec, and insulin glargine in reducing HbA1c and body weight.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/34186022" target="_blank">Lancet 2021;398:143-155</a>
+              </div>
+              <div class="citation-item">
+                <strong>SURPASS-CVOT:</strong> Exploratory renal composite endpoints showed a 35% reduction in kidney progression compared with dulaglutide.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/39210781" target="_blank">Circulation 2024;150:1781-1790</a>
+              </div>
+            `
+          }
+        ]
+      },
+      metformin: {
+        name: 'Biguanides (Metformin)',
+        classDesc: 'Glucophage, Glucophage XR, Fortamet',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Glycemic Efficacy:</strong> High glycemic efficacy (reduces HbA1c by ~1.0-1.5%). Historically considered the universal first-line agent, though guidelines now prioritize cardiorenal status.</li>
+              <li><strong>Weight & Safety:</strong> Weight neutral or associated with modest weight loss (~1-2 kg). Low intrinsic risk of hypoglycemia. Very low cost (generic, <$5/month).</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration Protocols',
+            content: `<ul>
+              <li><strong>Titration:</strong> Start at 500 mg daily with dinner. Increase by 500 mg weekly to a target dose of 1000 mg twice daily (2000 mg/day). Slow titration significantly improves GI tolerability.</li>
+              <li><strong>Extended Release (XR):</strong> Switch to Metformin XR if the patient experiences gastrointestinal distress with immediate-release. Standard XR dose is 1000–2000 mg once daily with the evening meal.</li>
+            </ul>`
+          },
+          {
+            title: 'Renal Cutoffs & Contraindications',
+            content: `<ul>
+              <li><strong>eGFR 45–60:</strong> Safe to use, no dose adjustment needed. Monitor renal function annually.</li>
+              <li><strong>eGFR 30–45:</strong> Do not initiate. If patient is already on metformin, consider reducing dose by 50% (max 1000 mg/day) and monitor eGFR every 3 months.</li>
+              <li><strong>eGFR <30:</strong> Absolutely contraindicated due to the risk of metformin-associated lactic acidosis (MALA).</li>
+              <li><strong>Contrast Studies:</strong> Hold metformin prior to or at the time of iodinated contrast procedures in patients with eGFR 30–60, and restart after 48 hours once stable renal function is confirmed.</li>
+            </ul>`
+          },
+          {
+            title: 'Key Side Effects & Interactions',
+            content: `<ul>
+              <li><strong>Adverse Effects:</strong> Diarrhea, abdominal cramps, nausea, bloating (occurring in ~20% of patients). Long-term use is associated with Vitamin B12 deficiency (monitor B12 levels every 2–3 years).</li>
+              <li><strong>Interactions:</strong> Cationic drugs (e.g., dolutegravir, cimetidine) can increase metformin levels. Limit alcohol intake to minimize lactic acidosis risk.</li>
+            </ul>`
+          }
+        ]
+      },
+      dpp4: {
+        name: 'DPP-4 Inhibitors (Dipeptidyl Peptidase-4 Inhibitors)',
+        classDesc: 'Sitagliptin (Januvia), Linagliptin (Trajenta), Saxagliptin (Onglyza)',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Efficacy & Weight:</strong> Moderate glycemic efficacy (reduces HbA1c by ~0.5-0.8%). Weight neutral. Very low hypoglycemia risk when used as monotherapy.</li>
+              <li><strong>Place in Therapy:</strong> Excellent tolerability profile. Often used in older or frail patients who cannot tolerate other medications or require a simple once-daily oral agent.</li>
+              <li><strong>Cardiorenal:</strong> Cardiovascular safety trials showed neutrality (SAVOR-TIMI 53, TECOS, CARMELINA).</li>
+            </ul>`
+          },
+          {
+            title: 'Renal Dosing Adjustments',
+            content: `<ul>
+              <li><strong>Linagliptin:</strong> Unique in class — **no renal dose adjustment required** at any eGFR stage because it is primarily excreted via feces. Excellent choice in advanced CKD.</li>
+              <li><strong>Sitagliptin:</strong> Standard dose 100 mg daily. Reduce to 50 mg daily for eGFR 30–45. Reduce to 25 mg daily for eGFR <30 (including dialysis).</li>
+              <li><strong>Saxagliptin:</strong> Standard dose 5 mg daily. Reduce to 2.5 mg daily for eGFR <45.</li>
+            </ul>`
+          },
+          {
+            title: 'Tolerability & Contraindications',
+            content: `<ul>
+              <li><strong>Adverse Effects:</strong> Nasopharyngitis, headache. Rare risk of acute pancreatitis. Severe, disabling joint pain (arthralgia) has been reported.</li>
+              <li><strong>Heart Failure Safety:</strong> <strong>Saxagliptin is associated with an increased risk of heart failure hospitalization</strong> (SAVOR-TIMI 53 trial). Sitagliptin (TECOS) and Linagliptin (CARMELINA) are heart failure neutral. **Avoid saxagliptin in patients with heart failure.**</li>
+            </ul>`
+          }
+        ]
+      },
+      sulfonylureas: {
+        name: 'Sulfonylureas',
+        classDesc: 'Glimepiride (Amaryl), Glipizide (Glucotrol, Glucotrol XL), Glyburide (DiaBeta)',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Glycemic Efficacy:</strong> High initial efficacy (HbA1c drop ~1.0-1.5%), but lacks durability (secondary failure occurs at 3-5 years due to progressive beta-cell decline).</li>
+              <li><strong>Cost:</strong> Extremely inexpensive (generic, <$4/month), making them a primary choice in resource-constrained environments despite safety drawbacks.</li>
+            </ul>`
+          },
+          {
+            title: 'Hypoglycemia & Weight Gain Risk',
+            content: `<ul>
+              <li><strong>Hypoglycemia:</strong> High risk of severe and prolonged hypoglycemia. Glimepiride and glyburide carry significantly higher risk than glipizide. Avoid glyburide entirely in patients ≥65 (Beers Criteria).</li>
+              <li><strong>Weight Effect:</strong> Associated with significant weight gain (2–3 kg), driven by increased insulin secretion.</li>
+              <li><strong>CKD Use:</strong> Sulfonylureas carry an extremely high risk of hypoglycemia in patients with CKD due to accumulation of active drug metabolites. **Glipizide is the preferred sulfonylurea in CKD** as it is metabolized by the liver to inactive metabolites.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Administration',
+            content: `<ul>
+              <li><strong>Glipizide:</strong> Start at 2.5–5 mg daily, 30 minutes before breakfast. Titrate up to 20 mg/day (divided BID if >10 mg). Extended Release (Glipizide XL) is dosed once daily.</li>
+              <li><strong>Glimepiride:</strong> Start at 1–2 mg daily. Titrate to a maximum of 8 mg daily.</li>
+            </ul>`
+          }
+        ]
+      },
+      tzds: {
+        name: 'TZDs (Thiazolidinediones)',
+        classDesc: 'Pioglitazone (Actos), Rosiglitazone (Avandia)',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Efficacy & Durability:</strong> High glycemic efficacy (HbA1c drop ~1.0-1.5%) with excellent long-term durability. Improves insulin sensitivity.</li>
+              <li><strong>ASCVD:</strong> Potential secondary prevention benefit in patients with stroke history or insulin resistance (IRIS trial), reducing recurrent stroke/MI.</li>
+              <li><strong>Cost:</strong> Low cost (generic, widely available).</li>
+            </ul>`
+          },
+          {
+            title: 'Heart Failure & Fluid Retention Warning',
+            content: `<ul>
+              <li><strong>Heart Failure:</strong> TZDs cause dose-dependent renal sodium and fluid retention. They are **absolutely contraindicated in NYHA Class III/IV Heart Failure** as they can precipitate acute decompensation.</li>
+              <li><strong>Adverse Effects:</strong> Peripheral edema (occurs in 5-15% of patients, exacerbated when combined with insulin), significant weight gain (3-4 kg, adipose + fluid expansion).</li>
+              <li><strong>Bone Health:</strong> Significant increase in the risk of bone fractures (primarily distal upper/lower limbs in postmenopausal women).</li>
+              <li><strong>Bladder Cancer:</strong> Conflicting epidemiological data; avoid pioglitazone in patients with active bladder cancer or history of bladder cancer.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing',
+            content: `<p><strong>Pioglitazone:</strong> Start at 15 mg once daily. Can titrate in 15 mg increments up to a maximum of 45 mg once daily. Low starting dose (15 mg) reduces edema risk.</p>`
+          }
+        ]
+      },
+      insulin: {
+        name: 'Basal Insulin',
+        classDesc: 'Glargine (Lantus, Basaglar, Toujeo), Degludec (Tresiba), Detemir (Levemir), NPH',
+        sections: [
+          {
+            title: 'Clinical Place & Benefits',
+            content: `<ul>
+              <li><strong>Efficacy:</strong> Highest glycemic efficacy of any agent (unlimited HbA1c reduction potential). Required in cases of severe hyperglycemia (glucose >300 mg/dL, HbA1c >10%, symptomatic polyuria/polydipsia, or signs of catabolism).</li>
+              <li><strong>Cardiorenal:</strong> Neutral cardiovascular outcomes (ORIGIN trial).</li>
+            </ul>`
+          },
+          {
+            title: 'Hypoglycemia & Weight Gain Risk',
+            content: `<ul>
+              <li><strong>Hypoglycemia:</strong> Highest risk of severe hypoglycemia. Insulins require careful patient education and glucose monitoring. Ultra-long-acting analogs (Degludec, Glargine U-300) have significantly lower nocturnal hypoglycemia rates than Glargine U-100 or detemir, and far lower than NPH.</li>
+              <li><strong>Weight Gain:</strong> Dose-dependent weight gain (2–4+ kg) is common.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration Protocols',
+            content: `<ul>
+              <li><strong>Initiation:</strong> Start at 10 units daily (or 0.1–0.2 units/kg/day) injected subcutaneously once daily at the same time.</li>
+              <li><strong>Titration (Treat-to-Target):</strong> Adjust dose by 2 units every 3 days until fasting blood glucose is within the target range (typically 80–130 mg/dL). If hypoglycemia occurs (glucose <70 mg/dL), identify the cause and decrease the dose by 10-20% (or 4 units).</li>
+              <li><strong>CKD adjustment:</strong> Insulin is renally cleared. Reduce insulin doses by 25% when eGFR is 10–50, and by 50% when eGFR <10.</li>
+            </ul>`
+          }
+        ]
+      }
+    };
+
+    // Drawer functionality
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          // Highlight row
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          // Populate Drawer
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          // Open Drawer
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    // Close drawer events
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+  </script>
+</body>
+</html>

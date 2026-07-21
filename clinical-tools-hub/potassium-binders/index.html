@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Potassium Binders Selection Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Interactive decision matrix comparing potassium binders (SPS, Patiromer, and Sodium Zirconium Cyclosilicate) for hyperkalemia based on clinical trials and guidelines.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    
+
+    
+
+    
+
+    
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 2rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--text-primary);
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-section {
+      margin-bottom: 1rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-row .search-box {
+      flex-grow: 1;
+    }
+
+    .search-row .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-row .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-top: 0.2rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 2rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.25rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .citation-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .citation-item {
+      padding: 0.75rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.4rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+      .search-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      
+      
+
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+
+    <div class="title-area">
+      <h2>Potassium Binders for Hyperkalemia</h2>
+      <p>Interactive comparative matrix of oral potassium-binding agents (SPS, Patiromer, Sodium Zirconium Cyclosilicate). Evaluate binders by onset speed, GI necrosis warning status, RAASi-enablement evidence (AMBER trial), and cost.</p>
+    </div>
+
+    <div class="clinical-alert">
+      <strong>FDA Safety Boxed Warnings:</strong> <strong>SPS carries a warning for intestinal necrosis</strong> (linked to bowel ischemia and perforation). Patiromer and SZC do not carry this warning. Edema is a specific concern with SZC (Lokelma) due to its high sodium content (~400 mg sodium per 10g dose).
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-panel">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="drugSearch" class="search-input" placeholder="Search potassium binders (e.g., Lokelma, Veltassa, SPS, Patiromer)...">
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-label">Clinical Onset Target</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="acute-speed">Fast Onset (≤1 hour - Acute/Subacute)</button>
+          <button class="filter-btn" data-filter="chronic-maintenance">Chronic Maintenance (Outpatient)</button>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 1rem;">
+        <div class="filter-label">Safety & Enabling Co-Prescriptions</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="no-gi-warning">No FDA Intestinal Necrosis Warning</button>
+          <button class="filter-btn" data-filter="raas-enable">Proven RAASi / MRA Enablement (AMBER Trial)</button>
+          <button class="filter-btn" data-filter="no-sodium">Sodium-Free (Safe in Severe Heart Failure/Edema)</button>
+          <button class="filter-btn" data-filter="low-cost">Low Cost (Generic Available)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="table-container">
+      <table id="matrixTable">
+        <thead>
+          <tr>
+            <th>Binder Agent</th>
+            <th>Speed of Onset</th>
+            <th>FDA GI Warning Status</th>
+            <th>Serious GI Event Rate (Inpatient)</th>
+            <th>RAASi/MRA Enablement RCT Data</th>
+            <th>Dosing Frequency</th>
+            <th>Sodium Content (Edema Risk)</th>
+            <th>Drug-Drug Interactions</th>
+            <th>Relative Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- SPS -->
+          <tr data-id="sps" data-keywords="sps sodium polystyrene sulfonate kayexalate slow hours days necrosis warning gastrointestinal high daily multiple times generic low cost">
+            <td class="drug-name-col">
+              Sodium Polystyrene Sulfonate
+              <span class="drug-class-label">SPS, Kayexalate (Generic)</span>
+            </td>
+            <td><span class="badge badge-warning">Slow (Hours to days)</span></td>
+            <td><span class="badge badge-risk">**Yes — Intestinal Necrosis Warning**</span></td>
+            <td>~0.4% (aOR 1.40 vs. no binder)</td>
+            <td><span class="badge badge-neutral">None</span></td>
+            <td>1–4 times daily (Oral or Rectal)</td>
+            <td><span class="badge badge-warning">High (1.5g sodium/15g dose)</span></td>
+            <td>High (Requires separating all oral meds by 3h).</td>
+            <td><span class="badge badge-benefit">$ (Generic/Very Low)</span></td>
+          </tr>
+          <!-- Patiromer -->
+          <tr data-id="patiromer" data-keywords="patiromer veltassa slow day 3 maintenance no warning amber trial spironolactone once daily sodium free brand">
+            <td class="drug-name-col">
+              Patiromer
+              <span class="drug-class-label">Veltassa</span>
+            </td>
+            <td><span class="badge badge-neutral">Slow (~7 hours; onset at Day 3)</span></td>
+            <td><span class="badge badge-benefit">No warning</span></td>
+            <td>~0.3% (aOR 1.36 vs. no binder)</td>
+            <td><span class="badge badge-benefit">**Strongest (AMBER, DIAMOND)**</span></td>
+            <td>Once daily (Oral powder)</td>
+            <td><span class="badge badge-benefit">**Sodium-Free (Calcium-Sorosil)**</span></td>
+            <td>Separate other oral meds by at least 3 hours.</td>
+            <td><span class="badge badge-risk">$$$$ (Highest; ~24-28% > SZC)</span></td>
+          </tr>
+          <!-- SZC -->
+          <tr data-id="szc" data-keywords="szc sodium zirconium cyclosilicate lokelma fast 1 hour acute maintenance no warning harmonize dialize once daily high sodium edema brand">
+            <td class="drug-name-col">
+              Sodium Zirconium Cyclosilicate
+              <span class="drug-class-label">Lokelma (SZC)</span>
+            </td>
+            <td><span class="badge badge-benefit">**Fastest (~1 hour)**</span></td>
+            <td><span class="badge badge-benefit">No warning</span></td>
+            <td>~0.4% (aOR 1.78 vs. no binder)</td>
+            <td><span class="badge badge-info">Yes (HARMONIZE, DIALIZE)</span></td>
+            <td>Once daily (3× daily in acute loading)</td>
+            <td><span class="badge badge-risk">High (~400 mg sodium/10g dose)</span></td>
+            <td>Separate weak acids/bases by 2h (pH-dependent).</td>
+            <td><span class="badge badge-risk">$$$ (High Cost)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detail Drawer Overlay and Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Class Details</h3>
+        <p id="drawerDrugClass">Class Description</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Content populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    
+
+    // Theme toggler
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Dynamic Filter System
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      onset: new Set(),
+      safety: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isOnset = ['acute-speed', 'chronic-maintenance'].includes(filterType);
+        const filterSet = isOnset ? activeFilters.onset : activeFilters.safety;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchOnset = true;
+        let matchSafety = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.onset.size > 0) {
+          activeFilters.onset.forEach(filter => {
+            if (filter === 'acute-speed') {
+              if (rowId !== 'szc') matchOnset = false; // Only Lokelma is fast (1h)
+            }
+            if (filter === 'chronic-maintenance') {
+              // All are technically usable, but SPS is avoided chronically.
+              if (rowId === 'sps') matchOnset = false;
+            }
+          });
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'no-gi-warning') {
+              if (rowId === 'sps') matchSafety = false;
+            }
+            if (filter === 'raas-enable') {
+              if (rowId === 'sps') matchSafety = false;
+            }
+            if (filter === 'no-sodium') {
+              if (rowId === 'szc' || rowId === 'sps') matchSafety = false; // Lokelma/SPS contain significant sodium
+            }
+            if (filter === 'low-cost') {
+              if (rowId !== 'sps') matchSafety = false;
+            }
+          });
+        }
+
+        if (matchSearch && matchOnset && matchSafety) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Detail Database (OpenEvidence synthesized content)
+    const drugDetails = {
+      sps: {
+        name: 'Sodium Polystyrene Sulfonate (Kayexalate)',
+        classDesc: 'Cation-Exchange Resin. Oldest potassium binder (approved 1958).',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>Efficacy:</strong> Exchanges sodium ions for potassium ions in the large intestine. Lowers serum potassium by 0.8–1.4 mEq/L, but onset is highly variable and slow (taking hours to days).</li>
+              <li><strong>KDIGO Positioning:</strong> Not recommended for chronic management of hyperkalemia due to poor tolerability, lack of randomized safety/enablement data, and significant adverse event profile.</li>
+            </ul>`
+          },
+          {
+            title: 'Intestinal Necrosis Warning & GI Safety',
+            content: `<p><strong>FDA Warning:</strong> The FDA label carries a prominent warning for **intestinal necrosis**, ischemic colitis, rectal hemorrhage, and bowel perforation, which can be fatal.</p>
+            <ul>
+              <li><strong>Sorbitol Link:</strong> Historically co-administered with sorbitol (to prevent severe constipation from the resin), which was strongly linked to necrosis. However, necrosis has also been documented with SPS alone.</li>
+              <li><strong>Elderly Study:</strong> A population-based study of >20,000 older adults showed a **nearly 2-fold increased risk of hospitalization for serious GI events** (HR 1.94) within 30 days of SPS initiation.</li>
+              <li><strong>VA Comparative Study (2025):</strong> A large retrospective study of >3 million hospitalizations found that while SPS carries the only FDA warning, **serious inpatient GI event rates (~0.3–0.4%) did not differ statistically** between SPS, patiromer, and SZC.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Administration',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Standard oral dose is 15g to 60g daily (divided TID or QID). Can also be administered as a retention enema (30g to 50g).</li>
+              <li><strong>Sodium Loading:</strong> SPS contains significant sodium (~1.5g sodium per 15g dose). Use with extreme caution in patients with severe heart failure, edema, or severe hypertension.</li>
+              <li><strong>Interactions:</strong> Binds to many oral medications. **Separate administration of all other oral drugs by at least 3 hours** (6 hours if gastroparesis exists).</li>
+            </ul>`
+          }
+        ]
+      },
+      patiromer: {
+        name: 'Patiromer (Veltassa)',
+        classDesc: 'Non-Absorbed Cation-Exchange Polymer. Calcium-sorbitol counterion.',
+        sections: [
+          {
+            title: 'Mechanism & Pharmacokinetics',
+            content: `<ul>
+              <li><strong>Mechanism:</strong> Binds potassium in exchange for calcium in the colon. It is a fully non-absorbed polymer.</li>
+              <li><strong>Sodium-Free Advantage:</strong> Patiromer uses a calcium-sorbitol complex as its counterion, making it **completely sodium-free**. Highly preferred in patients with heart failure or fluid overload (edema) who cannot tolerate extra sodium.</li>
+              <li><strong>Onset:</strong> Slower onset compared to SZC. Potassium reduction is observed starting ~7 hours after ingestion; it is not indicated for rapid emergency lowering. Full efficacy is evaluated at 4 weeks.</li>
+            </ul>`
+          },
+          {
+            title: 'AMBER Trial & RAASi Enablement',
+            content: `<p>Patiromer has the most robust randomized clinical trial data demonstrating its ability to enable guideline-directed medical therapy (GDMT):</p>
+            <ul>
+              <li><strong>AMBER Trial (Resistant Hypertension + CKD):</strong> Evaluated patients on spironolactone. **86% of patients in the patiromer group remained on spironolactone at week 12 vs. 66% in the placebo group**, with significantly lower rates of hyperkalemia.</li>
+              <li><strong>PEARL-HF & DIAMOND:</strong> Confirmed that patiromer enables target titration of MRAs and ACEi/ARBs in heart failure patients while protecting against hyperkalemia.</li>
+            </ul>`
+          },
+          {
+            title: 'Tolerability & Interactions',
+            content: `<ul>
+              <li><strong>Adverse Effects:</strong> Constipation (7.6%), diarrhea (4.5%), hypomagnesemia (as it also binds magnesium in the gut; monitor serum magnesium levels).</li>
+              <li><strong>Interactions:</strong> Binds other oral drugs. **Separate administration of all other oral drugs by at least 3 hours**.</li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>AMBER Trial (Patiromer in Resistant HTN):</strong> Patiromer enabled continued spironolactone use in patients with CKD and resistant hypertension.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/31533909" target="_blank">Lancet 2019;394:1540-1550</a>
+              </div>
+              <div class="citation-item">
+                <strong>OPAL-HK Trial:</strong> In patients with CKD and hyperkalemia on RAASi, patiromer reduced potassium and maintained normokalemia, preventing recurrence.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/25415805" target="_blank">N Engl J Med 2015;372:211-221</a>
+              </div>
+            `
+          }
+        ]
+      },
+      szc: {
+        name: 'Sodium Zirconium Cyclosilicate (Lokelma)',
+        classDesc: 'Non-Absorbed Inorganic Zirconium Silicate Compound.',
+        sections: [
+          {
+            title: 'Mechanism & Fast Onset Advantage',
+            content: `<ul>
+              <li><strong>Mechanism:</strong> A highly selective inorganic crystalline compound that captures potassium ions in exchange for hydrogen and sodium ions throughout the entire GI tract (starting in the stomach).</li>
+              <li><strong>The Fast Onset:</strong> **SZC is the fastest-acting oral binder**. It achieves a statistically significant potassium reduction of **−0.17 mEq/L within 1 hour** of the first dose. Normokalemia is typically achieved within 24–48 hours (99% of patients in clinical trials). Preferred when rapid outpatient or subacute inpatient lowering is needed.</li>
+            </ul>`
+          },
+          {
+            title: 'Sodium Content & Edema Warning',
+            content: `<ul>
+              <li><strong>Sodium Load:</strong> Each 10g dose of Lokelma contains **approximately 400 mg of sodium** (exchanged during potassium binding).</li>
+              <li><strong>Edema Risk:</strong> In clinical trials, **edema occurred in ~4.4–5.6% of patients** on maintenance therapy (highest risk with the 15g dose). Monitor closely for signs of fluid overload, worsening heart failure, or peripheral edema. Adjust diuretic doses if necessary.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Interactions',
+            content: `<ul>
+              <li><strong>Acute Loading Phase:</strong> 10g administered **three times daily** for up to 48 hours to achieve normokalemia.</li>
+              <li><strong>Maintenance Phase:</strong> 5g to 10g once daily.</li>
+              <li><strong>Interactions:</strong> Because SZC is inorganic and transiently increases gastric pH, it can affect the absorption of pH-dependent drugs. **Separate administration of weak acids/bases by 2 hours** (e.g., azole antifungals, tyrosine kinase inhibitors, clopidogrel). Minimal binding to neutral/other drugs.</li>
+            </ul>`
+          },
+          {
+            title: 'Clinical Trial References (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>HARMONIZE Trial:</strong> SZC once daily maintained normal potassium levels for up to 28 days in patients with hyperkalemia, with low rates of adverse events.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/25421521" target="_blank">JAMA 2014;312:2223-2233</a>
+              </div>
+              <div class="citation-item">
+                <strong>DIALIZE-Outcomes Trial (2025):</strong> In patients on hemodialysis, SZC significantly improved pre-dialysis normokalemia at 12 months but did not show a reduction in hard arrhythmia-related CV events.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/40618849" target="_blank">Kidney Int 2025</a>
+              </div>
+            `
+          }
+        ]
+      }
+    };
+
+    // Drawer functionality
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+  </script>
+</body>
+</html>

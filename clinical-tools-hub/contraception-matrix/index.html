@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive clinical decision matrix dashboard for healthcare providers to select contraception, PEP, and PrEP agents based on USMEC safety criteria and patient factors.">
+  <title>Clinical Decision Matrix Dashboard — Contraception, PEP & PrEP</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Patient Profiler -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">
+          <i class="fas fa-user-md"></i>
+          <span>Clinical Screening</span>
+        </h2>
+      </div>
+
+      <!-- Section: Patient Risk Factors (USMEC Screening) -->
+      <div class="profiler-section">
+        <div class="section-title">
+          <span>Patient Risk Factors</span>
+          <button class="clear-btn" id="clearRisksBtn" title="Clear all risk factors">Clear All</button>
+        </div>
+        <div id="riskFactorsContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Section: Drug Interaction Lookup -->
+      <div class="profiler-section" style="border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+        <div class="section-title">
+          <span>Concurrent Medications</span>
+          <button class="clear-btn" id="clearDrugsBtn" title="Clear all medications">Clear All</button>
+        </div>
+        <div id="interactingDrugsContainer">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Navigation & Branding -->
+      <header class="top-bar">
+        <div class="branding">
+          <h1>Clinical Decision Matrix</h1>
+          <p>Interactive Contraception, PEP, & PrEP Clinical Prescribing Reference</p>
+        </div>
+        
+        <div class="search-theme-container">
+          <!-- Real-Time Search Bar -->
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search generic name..." aria-label="Search generic name">
+          </div>
+          
+          <!-- Theme Toggle Button -->
+          <button class="theme-toggle-btn" id="themeBtn" title="Toggle Theme" aria-label="Toggle Theme">
+            <i class="fas fa-sun"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Category Filter Tabs -->
+      <nav class="tabs-container" aria-label="Method Selection Tabs">
+        <button class="tab active" data-target="all">All Methods</button>
+        <button class="tab" data-target="chc">Combined Hormonal (I)</button>
+        <button class="tab" data-target="pop">Progestin-Only (II)</button>
+        <button class="tab" data-target="nonhormonal">Non-Hormonal (III)</button>
+        <button class="tab" data-target="ec">Emergency Contraception (IV)</button>
+        <button class="tab" data-target="hiv">HIV PEP & PrEP (V)</button>
+        <button class="tab" data-target="efficacy">Efficacy Tiers</button>
+      </nav>
+
+      <!-- Dynamic Rendering Target Container -->
+      <div id="dynamicContainer">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+      
+    </main>
+
+  </div>
+
+  <!-- Detailed Medical Info Modal Overlay -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="modalTitle">Method Generic Name</h2>
+          <p id="modalSubtitle">Method Type</p>
+        </div>
+        <button class="close-modal-btn" id="modalCloseBtn" aria-label="Close details dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="modalContent">
+        <!-- Filled dynamically based on card click -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Medical Logic & Data Script -->
+  <script src="app.js"></script>
+</body>
+</html>
