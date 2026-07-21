@@ -1083,11 +1083,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Normal meds filtering
-    let filtered = ANTIDEPRESSANTS;
+    let baseFiltered = ANTIDEPRESSANTS;
     
+    // Filter out avoid/contraindicated medications if any comorbidity/PGx override results in "avoid"
+    const avoidedMeds = ANTIDEPRESSANTS.filter(m => getMedicationCompatibility(m).status === "avoid");
+    const avoidedCount = avoidedMeds.length;
+    
+    let filtered = baseFiltered.filter(m => getMedicationCompatibility(m).status !== "avoid");
+    
+    if (avoidedCount > 0) {
+      const banner = document.createElement("div");
+      banner.className = "alert alert-warning";
+      banner.style.marginBottom = "1.5rem";
+      banner.style.padding = "0.75rem 1rem";
+      banner.style.borderRadius = "8px";
+      banner.style.fontSize = "0.85rem";
+      banner.style.display = "flex";
+      banner.style.alignItems = "center";
+      banner.style.gap = "0.5rem";
+      banner.style.border = "1px solid var(--color-avoid-border)";
+      banner.style.backgroundColor = "var(--color-avoid-bg)";
+      banner.style.color = "var(--color-avoid)";
+      banner.innerHTML = `<i class="fas fa-eye-slash"></i> <span><strong>Note:</strong> ${avoidedCount} medication(s) contraindicated or marked as "avoid" have been filtered out of the selection pool.</span>`;
+      mainDisplayArea.appendChild(banner);
+    }
+
     // Filter by class
     if (currentTab !== "all") {
-      filtered = ANTIDEPRESSANTS.filter(m => m.class === currentTab);
+      filtered = filtered.filter(m => m.class === currentTab);
     }
 
     // Filter by search query
