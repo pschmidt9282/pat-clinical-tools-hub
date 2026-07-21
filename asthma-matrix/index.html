@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GINA Asthma Step-Up/Step-Down Management Matrix</title>
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .step-slider-container {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+    }
+    .step-indicator-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    .step-dot {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .step-dot:first-child { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); }
+    .step-dot:last-child { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); }
+    .step-dot.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .section-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 1rem 0;
+    }
+    .pill-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .track-btn {
+      flex: 1;
+      padding: 0.6rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      text-align: center;
+    }
+    .track-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../resistant-hypertension/" class="nav-link">Resistant HTN</a>
+      <a href="../masld-fib4/" class="nav-link">FIB-4 Flow</a>
+      <a href="../aub-triage/" class="nav-link">AUB Triage</a>
+      <a href="../rhinosinusitis-allergic-rhinitis/" class="nav-link">Rhinitis</a>
+      <a href="../dizziness-triage/" class="nav-link">Dizziness</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">Asthma Step-Up/Step-Down Management Matrix</h1>
+          <p class="page-subtitle">Interactive symptom control triage, GINA Track selection, tiered maintenance/reliever therapy, and clinical transition criteria.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">2023 / 2024 GINA Guidelines</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Input Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Step 1: Asthma Control Assessment -->
+        <div class="card">
+          <h2 class="card-title">
+            <svg style="width:20px;height:20px;color:var(--primary);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9"/></svg>
+            1. Assess Asthma Symptom Control (Past 4 Weeks)
+          </h2>
+          <p class="card-desc">Check all that apply to calculate patient control status:</p>
+
+          <div class="checkbox-group">
+            <div class="check-list-item">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-day-sym" class="control-chk">
+                <div>
+                  <strong>Daytime Symptoms &gt; Twice a week</strong>
+                  <div class="form-hint">Frequent wheezing, shortness of breath, or chest tightness during the day.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="check-list-item">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-night-wake" class="control-chk">
+                <div>
+                  <strong>Any Night Waking due to Asthma</strong>
+                  <div class="form-hint">Waking up coughing, wheezing, or short of breath overnight.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="check-list-item">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-reliever" class="control-chk">
+                <div>
+                  <strong>Reliever Needed for Symptoms &gt; Twice a week</strong>
+                  <div class="form-hint">Excludes pre-exercise preventive SABA/reliever use.</div>
+                </div>
+              </label>
+            </div>
+
+            <div class="check-list-item">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chk-limitation" class="control-chk">
+                <div>
+                  <strong>Any Activity Limitation due to Asthma</strong>
+                  <div class="form-hint">Difficulty keeping up with exercise, work, or daily tasks.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div id="control-triage-output" class="alert alert-low">
+            <!-- Triage level injected here -->
+          </div>
+        </div>
+
+        <!-- Step 2: Track Selector & Current Step -->
+        <div class="card">
+          <h2 class="card-title">2. GINA Management Pathway & Step Selection</h2>
+          
+          <div class="form-group">
+            <label class="form-label">Select GINA Treatment Track</label>
+            <div class="form-hint">Track 1 (Preferred) uses ICS-Formoterol to reduce exacerbation risks. Track 2 uses SABA relievers.</div>
+            <div class="pill-group">
+              <button class="track-btn active" id="btn-track1" onclick="selectTrack(1)">Track 1: Preferred (ICS-Formoterol SMART)</button>
+              <button class="track-btn" id="btn-track2" onclick="selectTrack(2)">Track 2: Alternative (SABA Rescue)</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Patient Current Treatment Step</label>
+            <div class="step-indicator-group">
+              <button class="step-dot active" onclick="selectStep(1)">Step 1</button>
+              <button class="step-dot" onclick="selectStep(2)">Step 2</button>
+              <button class="step-dot" onclick="selectStep(3)">Step 3</button>
+              <button class="step-dot" onclick="selectStep(4)">Step 4</button>
+              <button class="step-dot" onclick="selectStep(5)">Step 5</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Output Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Treatment Details -->
+        <div class="card">
+          <h2 class="card-title">3. Recommended Medication Regimen</h2>
+          <div id="med-regimen-content">
+            <!-- Dynamic Medication Regimen Injected Here -->
+          </div>
+        </div>
+
+        <!-- Step-Up / Step-Down Transition Logic -->
+        <div class="card">
+          <h2 class="card-title">4. Step Transition Criteria</h2>
+          <div id="transition-criteria-content">
+            <!-- Dynamic Transition Criteria Injected Here -->
+          </div>
+        </div>
+
+        <!-- Copy EHR note -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+            <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-asthma">Copy Note to Clipboard</button>
+          </div>
+          <div class="copy-box" id="asthma-note">Generating clinical summary...</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from GINA 2023 / 2024 Global Strategy for Asthma Management</p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    // State Variables
+    let currentTrack = 1;
+    let currentStep = 1;
+
+    // GINA Database
+    const REGIMENS = {
+      1: { // Track 1: Preferred (ICS-Formoterol SMART)
+        1: {
+          stepName: 'Step 1: As-needed Low-dose ICS-Formoterol',
+          reliever: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 80/4.5 mcg or 160/4.5 mcg',
+            dose: '1 inhalation',
+            freq: 'PRN as needed for symptoms (cough, wheeze, dyspnea)',
+            duration: 'As-needed (long term)',
+            cost: '~$100–$240/inhaler',
+            warnings: 'Rinse mouth and spit after use to prevent oral thrush (candidiasis). Max 12 inhalations/day.'
+          },
+          maintenance: {
+            name: 'None',
+            dose: '—',
+            freq: '—',
+            duration: '—',
+            cost: '—',
+            warnings: 'Reliever Budesonide-Formoterol alone provides concomitant anti-inflammatory controller therapy.'
+          }
+        },
+        2: {
+          stepName: 'Step 2: As-needed Low-dose ICS-Formoterol',
+          reliever: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 80/4.5 mcg or 160/4.5 mcg',
+            dose: '1 inhalation',
+            freq: 'PRN as needed for symptoms',
+            duration: 'As-needed (long term)',
+            cost: '~$100–$240/inhaler',
+            warnings: 'Rinse mouth and spit after use. Budesonide-Formoterol is the preferred rescue option to prevent severe exacerbations.'
+          },
+          maintenance: {
+            name: 'None (or low-dose Budesonide-Formoterol PRN)',
+            dose: '—',
+            freq: '—',
+            duration: '—',
+            cost: '—',
+            warnings: 'Daily low-dose ICS can be considered as an alternative, but GINA Preferred Track 2 Step 2 is PRN ICS-Formoterol.'
+          }
+        },
+        3: {
+          stepName: 'Step 3: Low-dose ICS-Formoterol SMART (Maintenance & Reliever)',
+          reliever: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 80/4.5 mcg or 160/4.5 mcg',
+            dose: '1 inhalation',
+            freq: 'PRN as needed for breakthrough symptoms (acts as both controller and rescue)',
+            duration: 'As-needed (long term)',
+            cost: '~$100–$240/inhaler',
+            warnings: 'Rinse mouth and spit. Maximum daily total is 12 inhalations.'
+          },
+          maintenance: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 80/4.5 mcg or 160/4.5 mcg',
+            dose: '1 to 2 inhalations',
+            freq: 'Twice daily (BID) regularly',
+            duration: 'Maintenance (long term)',
+            cost: '~$100–$240/month',
+            warnings: 'Rinse mouth and spit after every scheduled dose. Confirm correct dry-powder or metered dose inhaler technique.'
+          }
+        },
+        4: {
+          stepName: 'Step 4: Medium-dose ICS-Formoterol SMART (Maintenance & Reliever)',
+          reliever: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 160/4.5 mcg',
+            dose: '1 inhalation',
+            freq: 'PRN as needed for symptoms',
+            duration: 'As-needed (long term)',
+            cost: '~$200–$250/inhaler',
+            warnings: 'Rinse mouth and spit. Max 8-12 inhalations per day.'
+          },
+          maintenance: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 160/4.5 mcg',
+            dose: '2 inhalations',
+            freq: 'Twice daily (BID) regularly',
+            duration: 'Maintenance (long term)',
+            cost: '~$200–$250/month',
+            warnings: 'Rinse mouth and spit. Systemic side effects (adrenal suppression, bone density loss) possible at high cumulative doses.'
+          }
+        },
+        5: {
+          stepName: 'Step 5: High-dose ICS-LABA + Add-on LAMA & Biologic Phenotyping',
+          reliever: {
+            name: 'Budesonide-Formoterol (e.g., Symbicort) 160/4.5 mcg',
+            dose: '1 inhalation',
+            freq: 'PRN as needed for symptoms',
+            duration: 'As-needed',
+            cost: '~$200–$250/inhaler',
+            warnings: 'Rinse mouth.'
+          },
+          maintenance: {
+            name: 'High-dose ICS-LABA (e.g., Symbicort 160/4.5 mcg, 2 puffs BID) PLUS LAMA (Tiotropium Respimat 1.25 mcg, 2 puffs daily)',
+            dose: 'As specified',
+            freq: 'Scheduled daily',
+            duration: 'Maintenance (long term)',
+            cost: '~$500–$700/month combined',
+            warnings: 'Dry mouth and urinary retention (LAMA warning). Refer to pulmonology/allergy. Check blood eosinophils and IgE for biologic therapies (Dupilumab, Omalizumab, Mepolizumab).'
+          }
+        }
+      },
+      2: { // Track 2: Alternative (SABA Rescue)
+        1: {
+          stepName: 'Step 1: As-needed SABA + Concomitant Low-dose ICS',
+          reliever: {
+            name: 'Albuterol HFA (e.g., Ventolin, ProAir) 90 mcg',
+            dose: '2 puffs',
+            freq: 'q4-6h PRN as needed for symptoms',
+            duration: 'As-needed (long term)',
+            cost: '~$25–$65/inhaler',
+            warnings: 'Tachycardia, palpitations, tremors, hypokalemia. SABA overuse (>3 canisters/year) indicates poor control and increases risk of asthma death.'
+          },
+          maintenance: {
+            name: 'Low-dose Inhaled Corticosteroid (e.g., Fluticasone propionate 44 mcg or Budesonide 90 mcg)',
+            dose: '1 to 2 puffs',
+            freq: 'Taken immediately whenever SABA is used (or taken daily)',
+            duration: 'As-needed (taken alongside rescue)',
+            cost: '~$50–$150/inhaler',
+            warnings: 'Rinse mouth and spit to prevent thrush.'
+          }
+        },
+        2: {
+          stepName: 'Step 2: Daily Low-dose Inhaled Corticosteroid (ICS)',
+          reliever: {
+            name: 'Albuterol HFA 90 mcg',
+            dose: '2 puffs',
+            freq: 'q4-6h PRN as needed for symptoms',
+            duration: 'As-needed',
+            cost: '~$25–$65/inhaler',
+            warnings: 'Monitor rescue frequency. High SABA usage is a major risk factor for acute severe asthma exacerbations.'
+          },
+          maintenance: {
+            name: 'Daily Low-dose ICS (e.g., Fluticasone propionate 44–110 mcg)',
+            dose: '1 to 2 puffs',
+            freq: 'Twice daily (BID) regularly',
+            duration: 'Daily maintenance (long term)',
+            cost: '~$60–$150/month',
+            warnings: 'Requires consistent daily adherence. Rinse mouth.'
+          }
+        },
+        3: {
+          stepName: 'Step 3: Daily Low-dose ICS-LABA Combination',
+          reliever: {
+            name: 'Albuterol HFA 90 mcg',
+            dose: '2 puffs',
+            freq: 'q4-6h PRN as needed for symptoms',
+            duration: 'As-needed',
+            cost: '~$25–$65/inhaler',
+            warnings: 'If patient requires rescue inhaler >2 times a week, current step therapy is uncontrolled.'
+          },
+          maintenance: {
+            name: 'Low-dose ICS-LABA (e.g., Fluticasone-Salmeterol / Advair 100/50 mcg)',
+            dose: '1 puff (DPI)',
+            freq: 'Twice daily (BID) regularly',
+            duration: 'Daily maintenance (long term)',
+            cost: '~$70–$130/month (generic)',
+            warnings: 'Salmeterol is a long-acting bronchodilator; do NOT use for acute symptom rescue.'
+          }
+        },
+        4: {
+          stepName: 'Step 4: Daily Medium-dose ICS-LABA Combination',
+          reliever: {
+            name: 'Albuterol HFA 90 mcg',
+            dose: '2 puffs',
+            freq: 'q4-6h PRN as needed',
+            duration: 'As-needed',
+            cost: '~$25–$65/inhaler',
+            warnings: 'Ensure spacer is used with MDI to maximize lung deposition.'
+          },
+          maintenance: {
+            name: 'Medium-dose ICS-LABA (e.g., Fluticasone-Salmeterol / Advair 250/50 mcg)',
+            dose: '1 puff (DPI) or 2 puffs (HFA)',
+            freq: 'Twice daily (BID)',
+            duration: 'Daily maintenance',
+            cost: '~$90–$160/month',
+            warnings: 'Verify adherence and correct dry-powder inhaler technique (forceful, deep inhalation).'
+          }
+        },
+        5: {
+          stepName: 'Step 5: Daily High-dose ICS-LABA + Add-on LAMA & Referral',
+          reliever: {
+            name: 'Albuterol HFA 90 mcg',
+            dose: '2 puffs',
+            freq: 'q4-6h PRN as needed',
+            duration: 'As-needed',
+            cost: '~$25–$65/inhaler',
+            warnings: 'High risk of severe exacerbations. Emergency action plan must be in place.'
+          },
+          maintenance: {
+            name: 'High-dose ICS-LABA (e.g., Fluticasone-Salmeterol 500/50 mcg BID) PLUS LAMA (Tiotropium Respimat 1.25 mcg, 2 puffs once daily)',
+            dose: 'As specified',
+            freq: 'Scheduled daily',
+            duration: 'Daily maintenance',
+            cost: '~$550–$800/month combined',
+            warnings: 'Dry mouth, glaucoma warning, tachycardia. Arrange prompt pulmonology referral for biologic phenotyping (anti-IL5, anti-IL4R, anti-IgE).'
+          }
+        }
+      }
+    };
+
+    // UI Event Handlers
+    const controlChks = document.querySelectorAll('.control-chk');
+    const controlTriageOutput = document.getElementById('control-triage-output');
+    const medRegimenContent = document.getElementById('med-regimen-content');
+    const transitionCriteriaContent = document.getElementById('transition-criteria-content');
+    const asthmaNote = document.getElementById('asthma-note');
+
+    function selectTrack(trackNum) {
+      currentTrack = trackNum;
+      document.getElementById('btn-track1').classList.toggle('active', trackNum === 1);
+      document.getElementById('btn-track2').classList.toggle('active', trackNum === 2);
+      updateMatrix();
+    }
+
+    function selectStep(stepNum) {
+      currentStep = stepNum;
+      const dots = document.querySelectorAll('.step-dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx + 1 === stepNum);
+      });
+      updateMatrix();
+    }
+
+    function evaluateControl() {
+      let yesCount = 0;
+      controlChks.forEach(chk => {
+        if (chk.checked) yesCount++;
+      });
+
+      let status = '';
+      let badgeClass = '';
+      let triageMsg = '';
+
+      if (yesCount === 0) {
+        status = 'Well Controlled';
+        badgeClass = 'badge-low';
+        triageMsg = '<strong>Triage Assessment: Well Controlled.</strong><br>• Maintain current step.<br>• If well controlled for <strong>3 consecutive months</strong>, consider stepping down 1 step (reduce ICS dose by 25-50%).';
+      } else if (yesCount <= 2) {
+        status = 'Partially Controlled';
+        badgeClass = 'badge-int';
+        triageMsg = '<strong>Triage Assessment: Partially Controlled.</strong><br>• **Action:** Consider stepping up 1 step.<br>• **Before stepping up:** Review inhaler technique (watch patient use it), verify medication adherence, and assess for environmental triggers (allergens, smoking) or comorbidities (GERD, rhinosinusitis).';
+      } else {
+        status = 'Uncontrolled';
+        badgeClass = 'badge-high';
+        triageMsg = '<strong>Triage Assessment: Uncontrolled.</strong><br>• **Action:** Step up 1 to 2 steps. Consider a short course of oral corticosteroids (e.g., Prednisone 40mg daily x 5 days) if patient is in active flare.<br>• Check and correct inhaler technique immediately. Rule out non-adherence and review comorbidities.';
+      }
+
+      controlTriageOutput.className = `alert ${yesCount === 0 ? 'alert-low' : (yesCount <= 2 ? 'alert-int' : 'alert-high')}`;
+      controlTriageOutput.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <div>
+          <div style="margin-bottom:0.25rem;">Control Status: <span class="badge ${badgeClass}">${status}</span></div>
+          <div style="font-size:0.9rem;">${triageMsg}</div>
+        </div>
+      `;
+
+      return { status, yesCount };
+    }
+
+    function updateMatrix() {
+      const controlData = evaluateControl();
+      const regimen = REGIMENS[currentTrack][currentStep];
+
+      // 1. Render Medication Regimen
+      medRegimenContent.innerHTML = `
+        <h3 style="font-size:1.1rem; font-weight:700; color:var(--primary-text); margin-bottom:0.75rem;">${regimen.stepName}</h3>
+        
+        <div class="check-list-item" style="border-left: 4px solid var(--risk-high); margin-bottom:1rem;">
+          <strong style="color:var(--risk-high-text);">Reliever (Rescue) Therapy:</strong>
+          <div style="margin-top:0.35rem; font-size:0.9rem;">
+            • <strong>Inhaler Name:</strong> ${regimen.reliever.name}<br>
+            • <strong>Dose:</strong> ${regimen.reliever.dose}<br>
+            • <strong>Frequency:</strong> ${regimen.reliever.freq}<br>
+            • <strong>Duration:</strong> ${regimen.reliever.duration}<br>
+            • <strong>Estimated Cost:</strong> ${regimen.reliever.cost}<br>
+            • <strong style="color:var(--risk-high-text);">Critical Warning:</strong> ${regimen.reliever.warnings}
+          </div>
+        </div>
+
+        <div class="check-list-item" style="border-left: 4px solid var(--risk-low);">
+          <strong style="color:var(--risk-low-text);">Maintenance (Controller) Therapy:</strong>
+          <div style="margin-top:0.35rem; font-size:0.9rem;">
+            • <strong>Inhaler Name:</strong> ${regimen.maintenance.name}<br>
+            • <strong>Dose:</strong> ${regimen.maintenance.dose}<br>
+            • <strong>Frequency:</strong> ${regimen.maintenance.freq}<br>
+            • <strong>Duration:</strong> ${regimen.maintenance.duration}<br>
+            • <strong>Estimated Cost:</strong> ${regimen.maintenance.cost}<br>
+            • <strong>Clinical Warning:</strong> ${regimen.maintenance.warnings}
+          </div>
+        </div>
+      `;
+
+      // 2. Render Transition Logic
+      let transitionHTML = '';
+      if (controlData.yesCount === 0) {
+        transitionHTML = `
+          <div class="alert alert-low" style="flex-direction:column; align-items:flex-start;">
+            <strong>Step-Down Consideration:</strong>
+            <div style="margin-top:0.35rem; font-size:0.9rem;">
+              • Patient is **Well Controlled** at Step ${currentStep}.<br>
+              • If control is maintained for **3 consecutive months**, consider stepping down:
+              <br>  - For Step 3/4 SMART: Reduce maintenance frequency (e.g. from Budesonide-Formoterol BID to once daily) or step down to Step 1/2 PRN-only ICS-Formoterol.
+              <br>  - For Track 2: Reduce daily ICS controller dose by 25-50%.
+            </div>
+          </div>
+        `;
+      } else {
+        transitionHTML = `
+          <div class="alert alert-int" style="flex-direction:column; align-items:flex-start;">
+            <strong>Step-Up Protocol:</strong>
+            <div style="margin-top:0.35rem; font-size:0.9rem;">
+              • Patient is **Partially Controlled / Uncontrolled** at Step ${currentStep}.<br>
+              • **First-line Actions before stepping up:**
+              <br>  1. *Verify Technique:* Ensure Spacer is used for MDIs, or check for deep/rapid inhalation with DPIs.
+              <br>  2. *Verify Adherence:* Confirm fills and actual daily usage.
+              <br>  3. *Review Triggers:* Allergen/dust exposure, tobacco smoke, cold air.
+              • **Step-Up Dosing:** 
+              ${currentStep < 5 ? `  - Step up from Step ${currentStep} to **Step ${currentStep + 1}** pharmacotherapy.` : '  - Patient is at Step 5. Refer to pulmonology/allergy for biologic therapy phenotyping.'}
+            </div>
+          </div>
+        `;
+      }
+      transitionCriteriaContent.innerHTML = transitionHTML;
+
+      // 3. Render EHR Note
+      const yesAnswers = [];
+      if (document.getElementById('chk-day-sym').checked) yesAnswers.push('Daytime symptoms > 2/wk');
+      if (document.getElementById('chk-night-wake').checked) yesAnswers.push('Nocturnal awakening');
+      if (document.getElementById('chk-reliever').checked) yesAnswers.push('Reliever use > 2/wk');
+      if (document.getElementById('chk-limitation').checked) yesAnswers.push('Activity limitations');
+
+      const note = `ASTHMA STEP-UP/STEP-DOWN CLINICAL DECISION NOTE
+--------------------------------------------------
+ASSESSMENT OF CONTROL (PAST 4 WEEKS):
+- Control Score: ${controlData.yesCount}/4 Yes
+- Triage Category: ${controlData.status.toUpperCase()}
+- Active Symptoms: ${yesAnswers.length > 0 ? yesAnswers.join(', ') : 'None (Well Controlled)'}
+
+GINA MANAGEMENT PATHWAY:
+- Selected Pathway: Track ${currentTrack} (${currentTrack === 1 ? 'Preferred SMART' : 'Alternative SABA Rescue'})
+- Current Level: Step ${currentStep}
+
+RECOMMENDED REGIMEN MODIFICATIONS:
+- Reliever: ${regimen.reliever.name} (${regimen.reliever.dose} ${regimen.reliever.freq})
+- Maintenance: ${regimen.maintenance.name} (${regimen.maintenance.dose} ${regimen.maintenance.freq})
+
+TRANSITION & EDUCATION PLAN:
+- Plan: ${controlData.yesCount === 0 ? 'Maintain current step. Step-down considered if controlled for 3 months.' : `Optimize technique & adherence. Step up from Step ${currentStep} to Step ${Math.min(currentStep + 1, 5)}.`}
+- Education: Verified correct inhaler technique. Patient instructed to rinse mouth and spit after using inhaled corticosteroids.`;
+
+      asthmaNote.textContent = note;
+    }
+
+    // Set Listeners
+    controlChks.forEach(chk => chk.addEventListener('change', updateMatrix));
+
+    document.getElementById('btn-copy-asthma').addEventListener('click', () => {
+      navigator.clipboard.writeText(asthmaNote.textContent).then(() => {
+        alert('Asthma Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Initial load
+    updateMatrix();
+  </script>
+</body>
+</html>

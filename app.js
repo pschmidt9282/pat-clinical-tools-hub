@@ -148,6 +148,13 @@ const INITIAL_TOOLS = [
         url: "./dizziness-triage/",
         category: "Primary Care",
         description: "Interactive HINTS exam module (INFARCT stroke rules), BPPV Dix-Hallpike interpretation, step-by-step Epley Maneuver guide, and Meclizine safety warnings."
+    },
+    {
+        id: "asthma-matrix",
+        title: "Asthma Step-Up/Step-Down Management Matrix",
+        url: "./asthma-matrix/",
+        category: "Primary Care",
+        description: "GINA-based decision matrix featuring interactive symptom control assessment, SMART/reliever track triage, and detailed step 1–5 inhaler regimens with cost guidelines."
     }
 ];
 
