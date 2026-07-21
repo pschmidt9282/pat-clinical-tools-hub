@@ -1,4 +1,4 @@
-// --- CLINICAL TOOLS HUB LOGIC ---
+// --- CLINICAL TOOLS HUB LOGIC - Automated Sync Active ---
 
 // 1. Initial Curated Clinical Tools
 const INITIAL_TOOLS = [
