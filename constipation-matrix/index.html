@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constipation Treatment Decision Matrix | Clinical Tools Hub</title>
+  
+  <!-- Modern Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      /* Theme colors (Gastroenterology Green Accent) */
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --primary-glow: rgba(16, 185, 129, 0.15);
+      
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #1f2937;
+      --border-color: #374151;
+      --text-primary: #f9fafb;
+      --text-secondary: #d1d5db;
+      --text-muted: #9ca3af;
+      
+      /* Status badges */
+      --color-safe: #10b981;
+      --color-warn: #fbbf24;
+      --color-risk: #f87171;
+      
+      /* Animation variables */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Light Theme Overrides */
+    body.light-theme {
+      --bg-primary: #f3f4f6;
+      --bg-secondary: #ffffff;
+      --bg-card: #f9fafb;
+      --border-color: #e5e7eb;
+      --text-primary: #111827;
+      --text-secondary: #374151;
+      --text-muted: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      padding-bottom: 3rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: var(--transition-smooth);
+      background: var(--bg-card);
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .back-btn:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .header-title-container h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .header-title-container p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      font-size: 0.875rem;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Stepwise Escalation Triage Widget */
+    .widget-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .widget-header {
+      background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .widget-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .widget-body {
+      padding: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-control {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
+    .calc-btn-container {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .result-card {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      background-color: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card.show {
+      display: block;
+    }
+
+    .result-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .result-plan-box {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .result-step {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .result-med-detail {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-left: 1.2rem;
+    }
+
+    /* Filter System and Table */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-md);
+    }
+
+    .filter-groups-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn-group {
+      display: flex;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    .filter-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.4rem 1rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-tab.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .search-container {
+      position: relative;
+      min-width: 250px;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem 0.5rem 2.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Premium Table System */
+    .table-container {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: rgba(17, 24, 39, 0.8);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    tr.highlighted td {
+      background-color: rgba(16, 185, 129, 0.08);
+    }
+
+    .med-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .med-brand {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .badge-primary { background-color: rgba(16, 185, 129, 0.15); color: var(--primary); }
+    .badge-safe { background-color: rgba(16, 185, 129, 0.15); color: var(--color-safe); }
+    .badge-warn { background-color: rgba(251, 191, 36, 0.15); color: var(--color-warn); }
+    .badge-risk { background-color: rgba(248, 113, 113, 0.15); color: var(--color-risk); }
+
+    .btn-details {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      font-weight: 600;
+    }
+
+    .btn-details:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-smooth);
+      backdrop-filter: var(--glass-blur);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -450px;
+      width: 450px;
+      max-width: 100%;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      z-index: 1001;
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+    }
+
+    .drawer-title-area h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .drawer-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      color: var(--primary);
+    }
+
+    .drawer-content {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .drawer-section {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+
+    .drawer-section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    .drawer-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .drawer-list li {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .drawer-list li i {
+      color: var(--primary);
+      margin-top: 0.25rem;
+    }
+
+    /* EHR Note Card */
+    .note-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-top: 4px solid var(--primary);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .note-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .note-box {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      max-height: 250px;
+      overflow-y: auto;
+      line-height: 1.4;
+    }
+
+    /* Quick Guide / Evidence Footer */
+    .evidence-footer {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      font-size: 0.85rem;
+    }
+
+    .evidence-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .evidence-list {
+      list-style-type: decimal;
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: var(--text-muted);
+    }
+
+    .evidence-list a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .evidence-list a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <a href="../index.html" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Hub
+      </a>
+      <div class="header-title-container">
+        <h1><i class="fa-solid fa-toilet"></i> Constipation Management Matrix</h1>
+        <p>Evidence-based guidelines (AGA/ACG) for stepwise escalation and comorbidity-specific treatment selection.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" id="themeBtn" title="Toggle Light/Dark Theme">
+        <i class="fa-solid fa-sun"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Stepwise Escalation Triage Widget -->
+    <div class="widget-container">
+      <div class="widget-header">
+        <h3 class="widget-title"><i class="fa-solid fa-stairs"></i> Clinical Triage & Stepwise Escalation Helper</h3>
+      </div>
+      <div class="widget-body">
+        <form id="triage-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="comorbidity">Patient Comorbidity / Profile</label>
+              <select id="comorbidity" class="form-control">
+                <option value="none">Standard Chronic Idiopathic Constipation (CIC)</option>
+                <option value="ibsc">Irritable Bowel Syndrome with Constipation (IBS-C)</option>
+                <option value="oic">Opioid-Induced Constipation (OIC)</option>
+                <option value="ckd">Severe CKD (eGFR &lt; 30)</option>
+                <option value="pregnancy">Pregnancy</option>
+                <option value="peds">Pediatric Patient (&lt; 2 years old)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="current-step">Current laxative level / trials failed</label>
+              <select id="current-step" class="form-control">
+                <option value="0">None / Non-pharmacological only</option>
+                <option value="1">Step 1 failed (Bulk-forming fiber / Docusate)</option>
+                <option value="2">Step 2 failed (Osmotics: Polyethylene glycol / Lactulose)</option>
+                <option value="3">Step 3 failed (Stimulants: Senna / Bisacodyl trials)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="calc-btn-container">
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-calculator"></i> Calculate Escalation Plan
+            </button>
+          </div>
+        </form>
+
+        <div id="triage-result" class="result-card">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Filters & Database Table -->
+    <div class="filter-bar">
+      <div class="filter-groups-left">
+        <span style="font-size: 0.825rem; font-weight: 600; color: var(--text-muted);">Medication Class:</span>
+        <div class="filter-btn-group" id="classFilters">
+          <button class="filter-tab active" data-class="all">All</button>
+          <button class="filter-tab" data-class="bulk">Bulk-forming</button>
+          <button class="filter-tab" data-class="osmotic">Osmotic</button>
+          <button class="filter-tab" data-class="stimulant">Stimulant</button>
+          <button class="filter-tab" data-class="secretagogue">Secretagogue</button>
+          <button class="filter-tab" data-class="prokinetic">Prokinetic</button>
+        </div>
+      </div>
+      
+      <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search drug or brand name...">
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="matrixTable">
+        <thead>
+          <tr>
+            <th>Medication (Generic / Brand)</th>
+            <th>Standard Adult Dose & Freq</th>
+            <th>Primary Mechanism</th>
+            <th>Estimated Monthly Cost</th>
+            <th>Clinical Placement & Duration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EHR Progress Note summary -->
+    <div class="note-card">
+      <div class="note-header">
+        <h3 class="note-title"><i class="fa-solid fa-clipboard-list"></i> Clinical Note & Prescription Plan Summary</h3>
+        <button class="btn btn-secondary" id="btn-copy-note">
+          <i class="fa-solid fa-copy"></i> Copy Note to Clipboard
+        </button>
+      </div>
+      <div class="note-box" id="note-output">Generating clinical plan...</div>
+    </div>
+
+    <!-- Evidence & Guidelines Citation Footer -->
+    <div class="evidence-footer">
+      <h3 class="evidence-title"><i class="fa-solid fa-book"></i> OpenEvidence Sourced Guidelines & Citations</h3>
+      <ol class="evidence-list">
+        <li><strong>AGA-ACG Clinical Practice Guideline on Pharmacological Management of Chronic Idiopathic Constipation:</strong> <em>American Journal of Gastroenterology / Gastroenterology</em>. 2023. Recommended first-line PEG, followed by secretagogues (Linaclotide, Plecanatide, Lubiprostone) or Prucalopride for refractory cases.</li>
+        <li><strong>AGA Clinical Practice Update on Opioid-Induced Constipation (OIC) Management:</strong> <em>Gastroenterology</em>. 2019. Recommends PAMORAs (e.g. Methylnaltrexone, Naloxegol) or Lubiprostone for patients failing standard OTC laxatives.</li>
+        <li><strong>Safety Warning on Secretagogues in Pediatrics:</strong> FDA Black Box Warning. Avoid use of Linaclotide and Plecanatide in children under 2 years of age due to risk of serious dehydration.</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- Detail Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Details</h3>
+        <p id="drawerDrugClass">Class Description</p>
+      </div>
+      <button class="drawer-close" id="drawerClose"><i class="fa-solid fa-x"></i></button>
+    </div>
+    <div class="drawer-content" id="drawerContent">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    // Laxative Medication Database (AGA/ACG Guidelines Sourced)
+    const MED_DATABASE = [
+      {
+        id: "psyllium",
+        name: "Psyllium",
+        brands: "Metamucil, Konsyl",
+        classKey: "bulk",
+        classLabel: "Bulk-Forming Laxative",
+        dose: "3.4g – 6.8g (1 tbsp) active fiber powder in 8 oz water, 1 to 3 times daily.",
+        mechanism: "Absorbs water in the bowel lumen to increase stool bulk and promote peristalsis.",
+        cost: "$ (Low / OTC)",
+        placement: "First-line chronic therapy for CIC. Highly safe, but requires adequate hydration.",
+        sideEffects: "Bloating, gas, flatulence, esophageal choking risk if taken with insufficient fluid.",
+        contraindications: "Mechanical bowel obstruction, fecal impaction, swallowing dysfunction.",
+        switchingNotes: "If gas/bloating is intolerable, switch to Methylcellulose. If no response in 1-2 weeks, escalate to osmotic laxatives (PEG 3350)."
+      },
+      {
+        id: "methylcellulose",
+        name: "Methylcellulose",
+        brands: "Citrucel",
+        classKey: "bulk",
+        classLabel: "Bulk-Forming Laxative",
+        dose: "2g (1 tbsp powder or 2 tablets) daily or up to 3 times daily with 8 oz water.",
+        mechanism: "Soluble synthetic fiber that increases stool mass without fermenting in the colon.",
+        cost: "$ (Low / OTC)",
+        placement: "First-line alternative. Less gas and flatulence compared to psyllium.",
+        sideEffects: "Mild abdominal distention, impaction risk if fluid intake is low.",
+        contraindications: "Mechanical bowel obstruction, stenosis.",
+        switchingNotes: "If bulk-forming fibers fail to produce clinical response, escalate to Step 2 (Osmotic laxative: PEG 3350)."
+      },
+      {
+        id: "peg",
+        name: "Polyethylene Glycol 3350",
+        brands: "Miralax, Glycolax",
+        classKey: "osmotic",
+        classLabel: "Osmotic Laxative",
+        dose: "17g powder dissolved in 4–8 oz of beverage daily.",
+        mechanism: "Retains water within the colon through osmotic force, softening stool and increasing stool volume.",
+        cost: "$ (Low / OTC)",
+        placement: "First-line maintenance therapy for CIC. High-quality evidence supports long-term safety.",
+        sideEffects: "Cramping, nausea, mild bloating, diarrhea with excessive dosing.",
+        contraindications: "Known or suspected bowel obstruction, toxic megacolon.",
+        switchingNotes: "If daily use fails after 1 week, consider adding PRN stimulants (Senna/Bisacodyl) as rescue. For refractory CIC/IBS-C, escalate to secretagogues (Linaclotide)."
+      },
+      {
+        id: "lactulose",
+        name: "Lactulose",
+        brands: "Constulose, Enulose",
+        classKey: "osmotic",
+        classLabel: "Osmotic Laxative",
+        dose: "10g – 20g (15 – 30 mL) daily. Can titrate up to 60 mL daily if needed.",
+        mechanism: "Synthetic disaccharide metabolized by colonic bacteria into organic acids, creating osmotic gradient.",
+        cost: "$$ (Moderate / Rx)",
+        placement: "Second-line osmotic alternative. Commonly used in chronic liver disease (hepatic encephalopathy).",
+        sideEffects: "Significant flatulence, severe abdominal cramping, borborygmi, electrolyte shifts.",
+        contraindications: "Patients requiring a low-galactose diet (galactosemia), bowel obstruction.",
+        switchingNotes: "Often poorly tolerated long-term due to gas. PEG 3350 is preferred. If osmotic laxatives fail, transition to stimulants or advanced secretagogues."
+      },
+      {
+        id: "mag-hydroxide",
+        name: "Magnesium Hydroxide",
+        brands: "Milk of Magnesia",
+        classKey: "osmotic",
+        classLabel: "Osmotic Laxative / Antacid",
+        dose: "2.4g – 4.8g (30 – 60 mL) daily, or in divided doses.",
+        mechanism: "Osmotic retention of fluid in bowel lumen. Rapid acting (typically within 2 to 6 hours).",
+        cost: "$ (Low / OTC)",
+        placement: "Short-term relief or acute rescue therapy. Avoid chronic daily use due to mineral accumulation.",
+        sideEffects: "Hypermagnesemia, diarrhea, abdominal cramps, dehydration.",
+        contraindications: "Severe renal impairment (eGFR < 30) absolute contraindication, bowel obstruction.",
+        switchingNotes: "Do not use chronically in kidney disease. Switch to PEG 3350 or Lubiprostone."
+      },
+      {
+        id: "docusate",
+        name: "Docusate Sodium",
+        brands: "Colace",
+        classKey: "bulk", // grouped under standard OTC step
+        classLabel: "Stool Softener / Surfactant",
+        dose: "100mg – 200mg daily or in divided doses.",
+        mechanism: "Anionic surfactant that lowers surface tension of stool, allowing water/lipids to penetrate.",
+        cost: "$ (Low / OTC)",
+        placement: "Used to prevent straining (e.g. post-operative, post-myocardial infarction). Poor efficacy for active chronic constipation.",
+        sideEffects: "Bitter taste, mild throat irritation, nausea.",
+        contraindications: "Concomitant mineral oil use (increases systemic absorption of oil).",
+        switchingNotes: "AGA guidelines do NOT support docusate for chronic constipation. Upgrade immediately to PEG 3350 or stimulant laxatives."
+      },
+      {
+        id: "senna",
+        name: "Senna",
+        brands: "Senokot, Ex-Lax",
+        classKey: "stimulant",
+        classLabel: "Stimulant Laxative",
+        dose: "8.6mg – 17.2mg (1 to 2 tablets) daily at bedtime. Max 34.4mg BID.",
+        mechanism: "Directly stimulates colonic myenteric plexus to increase motility and active electrolyte/fluid secretion.",
+        cost: "$ (Low / OTC)",
+        placement: "Second-line or rescue therapy. Safe for intermittent PRN use or short-term daily courses.",
+        sideEffects: "Abdominal cramping, hypokalemia, benign melanosis coli (harmless dark discoloration of colonic mucosa).",
+        contraindications: "Mechanical obstruction, undiagnosed acute abdominal pain, severe dehydration.",
+        switchingNotes: "If stimulant laxative dependency is suspected or response is inadequate, transition to secretagogues."
+      },
+      {
+        id: "bisacodyl",
+        name: "Bisacodyl",
+        brands: "Dulcolax",
+        classKey: "stimulant",
+        classLabel: "Stimulant Laxative",
+        dose: "5mg – 15mg daily oral tablet, or 10mg rectal suppository PRN.",
+        mechanism: "Direct stimulant of mucosal nerves in colon, promoting peristalsis and mucosal fluid accumulation.",
+        cost: "$ (Low / OTC)",
+        placement: "Rescue therapy. Suppository is highly effective for acute rectal outlet delay.",
+        sideEffects: "Severe cramping, abdominal pain, rectal burning (with suppository), proctitis with chronic use.",
+        contraindications: "Intestinal obstruction, acute surgical abdomen, appendicitis, ulcerative colitis.",
+        switchingNotes: "Limit consecutive daily use to 10 days. For chronic refractoriness, move to Linaclotide or Prucalopride."
+      },
+      {
+        id: "lubiprostone",
+        name: "Lubiprostone",
+        brands: "Amitiza",
+        classKey: "secretagogue",
+        classLabel: "Chloride Channel Activator (Secretagogue)",
+        dose: "24 mcg BID with food/water (for CIC and OIC). 8 mcg BID with food/water (for IBS-C).",
+        mechanism: "Selectively activates ClC-2 chloride channels in apical membrane, increasing chloride-rich fluid secretion.",
+        cost: "$$$$ (High / Rx)",
+        placement: "Third-line advanced agent. Approved for CIC, IBS-C (females only), and OIC.",
+        sideEffects: "Dose-dependent nausea (avoided by taking with food), diarrhea, headache, dyspnea (resolves in hours).",
+        contraindications: "Mechanical bowel obstruction, pregnancy (caution, consult animal studies).",
+        switchingNotes: "If nausea prevents compliance, switch to Linaclotide or Plecanatide (which do not cause nausea)."
+      },
+      {
+        id: "linaclotide",
+        name: "Linaclotide",
+        brands: "Linzess",
+        classKey: "secretagogue",
+        classLabel: "Guanylate Cyclase-C Agonist (Secretagogue)",
+        dose: "145 mcg or 72 mcg daily on empty stomach 30 mins before breakfast (CIC). 290 mcg daily (IBS-C).",
+        mechanism: "Binds GC-C receptors locally in intestinal epithelium, elevating cyclic GMP to stimulate chloride/bicarbonate secretion and reduce visceral pain.",
+        cost: "$$$$ (High / Rx)",
+        placement: "Third-line advanced agent. High efficacy for severe CIC and IBS-C pain/bloating.",
+        sideEffects: "Diarrhea (most common, can be severe), flatulence, abdominal distention.",
+        contraindications: "Mechanical bowel obstruction, pediatric patients under 2 years (Black Box: severe dehydration risk).",
+        switchingNotes: "Take strictly on empty stomach to minimize diarrhea. If diarrhea is intolerable, decrease dose or switch to Plecanatide or Prucalopride."
+      },
+      {
+        id: "plecanatide",
+        name: "Plecanatide",
+        brands: "Trulance",
+        classKey: "secretagogue",
+        classLabel: "Guanylate Cyclase-C Agonist (Secretagogue)",
+        dose: "3mg daily, taken with or without food.",
+        mechanism: "Structural analog of uroguanylin that selectively activates GC-C receptors to promote fluid secretion.",
+        cost: "$$$$ (High / Rx)",
+        placement: "Third-line advanced agent. Approved for both CIC and IBS-C.",
+        sideEffects: "Diarrhea (lower incidence of severe diarrhea vs linaclotide in trials).",
+        contraindications: "Mechanical bowel obstruction, pediatric patients under 2 years of age.",
+        switchingNotes: "Interchangeable with Linaclotide. Can be taken with food, offering dosing flexibility."
+      },
+      {
+        id: "prucalopride",
+        name: "Prucalopride",
+        brands: "Motegrity",
+        classKey: "prokinetic",
+        classLabel: "Selective 5-HT4 Receptor Agonist",
+        dose: "2mg daily. Reduce to 1mg daily if severe renal impairment (eGFR < 30).",
+        mechanism: "Stimulates 5-HT4 receptors to promote high-amplitude propagating contractions (HAPCs) throughout the colon.",
+        cost: "$$$$ (High / Rx)",
+        placement: "Fourth-line advanced agent. Indicated for CIC refractory to standard laxatives and secretagogues. Excellent for gastroparesis overlap.",
+        sideEffects: "Headache (typically self-limiting, occurs in first 2 days), nausea, diarrhea, abdominal pain, rare suicidal ideation.",
+        contraindications: "Intestinal perforation/obstruction, severe inflammatory bowel disease (Crohn's/UC), toxic megacolon.",
+        switchingNotes: "Monitor mood changes. Adjust dose to 1 mg for renal impairment (CrCl < 30)."
+      }
+    ];
+
+    // DOM Elements
+    const tableBody = document.getElementById("tableBody");
+    const classFilters = document.getElementById("classFilters");
+    const searchInput = document.getElementById("searchInput");
+    const themeBtn = document.getElementById("themeBtn");
+    
+    const triageForm = document.getElementById("triage-form");
+    const triageResult = document.getElementById("triage-result");
+    const noteOutput = document.getElementById("note-output");
+
+    let currentClass = "all";
+    let searchQuery = "";
+    
+    // Stepwise Escalation Rules Sourced from AGA Guidelines
+    triageForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const comorb = document.getElementById("comorbidity").value;
+      const step = parseInt(document.getElementById("current-step").value);
+      
+      let resultHtml = "";
+      
+      // Step-by-Step Triage Logic
+      if (comorb === "peds") {
+        resultHtml = `
+          <div class="result-title"><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-risk);"></i> Pediatric Decision Matrix (Age &lt; 2)</div>
+          <div class="result-plan-box">
+            <div class="result-step">🚨 CRITICAL WARNING:</div>
+            <div class="result-med-detail">Secretagogues (Linaclotide, Plecanatide) are <strong>absolute contraindications</strong> in children &lt; 2 years old due to the risk of fatal dehydration.</div>
+          </div>
+          <div class="result-plan-box">
+            <div class="result-step">Step 1 Plan:</div>
+            <div class="result-med-detail">Focus on dietary changes (pear/prune juices) and Glycerin suppositories for acute hard stools.</div>
+            <div class="result-step" style="margin-top: 0.5rem;">Step 2 Plan (Maintenance):</div>
+            <div class="result-med-detail">Use Polyethylene Glycol (PEG 3350) titrated to 1 soft stool daily. Lactulose is an approved second-line alternative. Avoid stimulants.</div>
+          </div>
+        `;
+      } else if (comorb === "pregnancy") {
+        resultHtml = `
+          <div class="result-title"><i class="fa-solid fa-baby" style="color: #f472b6;"></i> Pregnancy Constipation Protocol</div>
+          <div class="result-plan-box">
+            <div class="result-step">Contraindicated Agents:</div>
+            <div class="result-med-detail">Avoid Castor Oil (risk of uterine contractions) and mineral oil (absorption/vitamin deficiency risks). Use secretagogues with extreme caution (lack of human trials).</div>
+          </div>
+          <div class="result-plan-box">
+            <div class="result-step">First-Line Safe Agents:</div>
+            <div class="result-med-detail">Psyllium or Methylcellulose (increase fiber). Stool softeners (Docusate 100mg BID) are commonly co-administered.</div>
+            <div class="result-step" style="margin-top: 0.5rem;">Maintenance Step-Up:</div>
+            <div class="result-med-detail">Polyethylene Glycol (PEG 3350) is minimally absorbed and is the preferred first-line osmotic. Intermittent Senna is safe for rescue therapy.</div>
+          </div>
+        `;
+      } else if (comorb === "ckd") {
+        resultHtml = `
+          <div class="result-title"><i class="fa-solid fa-kidney" style="color: var(--primary);"></i> Chronic Kidney Disease (eGFR &lt; 30) Protocol</div>
+          <div class="result-plan-box">
+            <div class="result-step">🚨 Avoid Magnesium-Based Agents:</div>
+            <div class="result-med-detail">Avoid Magnesium Hydroxide (Milk of Magnesia) and Magnesium Citrate due to high risk of hypermagnesemia, cardiac arrhythmias, and neuromuscular toxicity.</div>
+          </div>
+          <div class="result-plan-box">
+            <div class="result-step">Escalation Pathway:</div>
+            ${step === 0 ? `
+              <div class="result-step">Initiate Step 1:</div>
+              <div class="result-med-detail">Increase soluble fiber (Psyllium). Maintain standard hydration. Add PEG 3350 17g daily if fiber is insufficient.
+            ` : step === 1 ? `
+              <div class="result-step">Initiate Step 2:</div>
+              <div class="result-med-detail">Start Polyethylene Glycol (PEG 3350) 17g daily. Avoid magnesium. Lactulose Rx can be used if PEG is not tolerated.
+            ` : step === 2 ? `
+              <div class="result-step">Initiate Step 3:</div>
+              <div class="result-med-detail">Add stimulant laxatives (Senna 1-2 tabs QHS or Bisacodyl 5-10mg PRN) for rescue.
+            ` : `
+              <div class="result-step">Initiate Step 4 (Advanced Rx):</div>
+              <div class="result-med-detail">Initiate Linaclotide 145 mcg daily or Plecanatide 3 mg daily. If choosing prokinetic Prucalopride (Motegrity), <strong>you must reduce the dose to 1 mg daily</strong> (instead of 2 mg) due to renal clearance limitations.</div>
+            `}
+          </div>
+        `;
+      } else if (comorb === "oic") {
+        resultHtml = `
+          <div class="result-title"><i class="fa-solid fa-pills" style="color: var(--color-warn);"></i> Opioid-Induced Constipation (OIC) Protocol</div>
+          <div class="result-plan-box">
+            <div class="result-step">Mechanism Warning:</div>
+            <div class="result-med-detail">Opioids bind mu-receptors in the bowel wall, inhibiting peristalsis and fluid secretion. Standard fiber (bulk laxatives) is rarely effective and can cause impaction. Do not use Psyllium monotherapy.</div>
+          </div>
+          <div class="result-plan-box">
+            <div class="result-step">Recommended Escalation Plan:</div>
+            ${step === 0 || step === 1 ? `
+              <div class="result-step">Step 2 (Laxative Foundation):</div>
+              <div class="result-med-detail">Prescribe scheduled stimulant + osmotic combo: Senna 1–2 tablets QHS + Polyethylene Glycol (PEG 3350) 17g daily.</div>
+            ` : `
+              <div class="result-step">Step 4 (Advanced Rx):</div>
+              <div class="result-med-detail">OIC is refractory to standard laxatives. Switch to:<br>
+              1. <strong>Peripherally Acting Mu-Opioid Receptor Antagonists (PAMORAs)</strong>: Methylnaltrexone (Relistor) or Naloxegol (Movantik 25mg daily). These block peripheral bowel opioid receptors without reversing central analgesia.<br>
+              2. <strong>Chloride Channel Activator</strong>: Lubiprostone (Amitiza) 24 mcg BID (FDA-approved for OIC).</div>
+            `}
+          </div>
+        `;
+      } else if (comorb === "ibsc") {
+        resultHtml = `
+          <div class="result-title"><i class="fa-solid fa-disease" style="color: var(--primary);"></i> Irritable Bowel Syndrome with Constipation (IBS-C)</div>
+          <div class="result-plan-box">
+            <div class="result-step">Clinical Goals:</div>
+            <div class="result-med-detail">Address both bowel frequency and visceral pain/cramping. Standard stimulants (Bisacodyl) can worsen abdominal cramping pain.</div>
+          </div>
+          <div class="result-plan-box">
+            <div class="result-step">Recommended Escalation Plan:</div>
+            ${step === 0 ? `
+              <div class="result-step">Step 1 & 2:</div>
+              <div class="result-med-detail">Start soluble fiber (Psyllium). Add Polyethylene Glycol (PEG 3350) 17g daily for stool consistency.</div>
+            ` : `
+              <div class="result-step">Advanced IBS-C Secretagogues:</div>
+              <div class="result-med-detail">Transition patient to GC-C agonists which relieve abdominal pain by reducing visceral afferent nerve firing:<br>
+              1. <strong>Linaclotide (Linzess) 290 mcg daily</strong> (specific dose for IBS-C pain relief).<br>
+              2. <strong>Plecanatide (Trulance) 3 mg daily</strong>.<br>
+              3. <strong>Lubiprostone (Amitiza) 8 mcg BID</strong> (approved for adult females with IBS-C).</div>
+            `}
+          </div>
+        `;
+      } else {
+        // Standard CIC
+        resultHtml = `
+          <div class="result-title"><i class="fa-solid fa-circle-check" style="color: var(--primary);"></i> Chronic Idiopathic Constipation (CIC) Standard Stepwise Plan</div>
+          <div class="result-plan-box">
+            <div class="result-step">Recommended Next Step:</div>
+            ${step === 0 ? `
+              <div class="result-step">Step 1 (First-Line):</div>
+              <div class="result-med-detail">Optimize dietary fiber, fluid intake, and add Psyllium (Metamucil) 3.4g–6.8g daily in 8 oz water.</div>
+            ` : step === 1 ? `
+              <div class="result-step">Step 2 (Osmotics):</div>
+              <div class="result-med-detail">Discontinue docusate/ineffective fiber. Start scheduled Polyethylene Glycol (PEG 3350 / Miralax) 17g daily in beverage. Allow 2–3 days for effect.</div>
+            ` : step === 2 ? `
+              <div class="result-step">Step 3 (Stimulants / Rescue):</div>
+              <div class="result-med-detail">Keep PEG 3350 maintenance. Add rescue stimulant laxatives (Senna 8.6mg–17.2mg daily QHS or Bisacodyl 5mg–10mg QHS) 2–3 times per week when bowel movements are delayed.</div>
+            ` : `
+              <div class="result-step">Step 4 (Advanced Prescription Agents):</div>
+              <div class="result-med-detail">Patient is refractory to standard laxatives. Transition to advanced prescription agents:<br>
+              1. <strong>Guanylate Cyclase-C Agonist</strong>: Linaclotide (Linzess) 145 mcg daily or Plecanatide (Trulance) 3 mg daily.<br>
+              2. <strong>Chloride Channel Activator</strong>: Lubiprostone (Amitiza) 24 mcg BID.<br>
+              3. <strong>5-HT4 Receptor Agonist</strong>: Prucalopride (Motegrity) 2 mg daily (reduce to 1 mg if CrCl &lt; 30).</div>
+            `}
+          </div>
+        `;
+      }
+      
+      triageResult.innerHTML = resultHtml;
+      triageResult.classList.add("show");
+      triageResult.scrollIntoView({ behavior: "smooth" });
+      updateEHRNote();
+    });
+
+    // Populate Table
+    function renderTable() {
+      tableBody.innerHTML = "";
+      
+      const filtered = MED_DATABASE.filter(m => {
+        const matchesClass = currentClass === "all" || m.classKey === currentClass;
+        const matchesSearch = searchQuery === "" || 
+          m.name.toLowerCase().includes(searchQuery) ||
+          m.brands.toLowerCase().includes(searchQuery) ||
+          m.classLabel.toLowerCase().includes(searchQuery) ||
+          m.placement.toLowerCase().includes(searchQuery);
+        return matchesClass && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No medications found matching the filters.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const tr = document.createElement("tr");
+        tr.setAttribute("data-id", m.id);
+        
+        let costBadgeClass = "badge-safe";
+        if (m.cost.includes("$$$$")) costBadgeClass = "badge-risk";
+        else if (m.cost.includes("$$")) costBadgeClass = "badge-warn";
+
+        tr.innerHTML = `
+          <td>
+            <div class="med-name">${m.name}</div>
+            <div class="med-brand">${m.brands}</div>
+          </td>
+          <td>${m.dose}</td>
+          <td>
+            <span class="badge badge-primary">${m.classLabel}</span>
+            <div style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-muted);">${m.mechanism.substring(0, 55)}...</div>
+          </td>
+          <td><span class="badge ${costBadgeClass}">${m.cost}</span></td>
+          <td style="font-size: 0.825rem; max-width: 250px;">${m.placement}</td>
+          <td>
+            <button class="btn-details" onclick="showDrawer('${m.id}')">Details</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // Class Filters
+    classFilters.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        classFilters.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentClass = btn.getAttribute("data-class");
+        renderTable();
+      });
+    });
+
+    // Search Input
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      renderTable();
+    });
+
+    // Theme Toggle
+    themeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      const isLight = document.body.classList.contains("light-theme");
+      themeBtn.innerHTML = isLight ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+    });
+
+    // Drawer Functionality
+    function showDrawer(id) {
+      const med = MED_DATABASE.find(m => m.id === id);
+      if (!med) return;
+
+      document.getElementById("drawerDrugName").textContent = med.name;
+      document.getElementById("drawerDrugClass").textContent = `${med.classLabel} (Brand: ${med.brands})`;
+
+      const htmlContent = `
+        <div class="drawer-section">
+          <div class="drawer-section-title"><i class="fa-solid fa-vial"></i> Mechanism of Action</div>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">${med.mechanism}</p>
+        </div>
+
+        <div class="drawer-section">
+          <div class="drawer-section-title"><i class="fa-solid fa-prescription-bottle-medical"></i> Adult Dosage & Administration</div>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); font-weight: 600;">${med.dose}</p>
+        </div>
+
+        <div class="drawer-section">
+          <div class="drawer-section-title"><i class="fa-solid fa-shield-halved"></i> Side Effects & Tolerability</div>
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">${med.sideEffects}</p>
+        </div>
+
+        <div class="drawer-section">
+          <div class="drawer-section-title"><i class="fa-solid fa-ban" style="color: var(--color-risk);"></i> Contraindications & Exclusions</div>
+          <p style="font-size: 0.875rem; color: var(--color-risk); font-weight: 500;">${med.contraindications}</p>
+        </div>
+
+        <div class="drawer-section">
+          <div class="drawer-section-title"><i class="fa-solid fa-shuffle"></i> Switching & Escalation Guidelines</div>
+          <p style="font-size: 0.875rem; color: var(--text-muted); font-style: italic;">${med.switchingNotes}</p>
+        </div>
+      `;
+
+      document.getElementById("drawerContent").innerHTML = htmlContent;
+      document.getElementById("drawerOverlay").classList.add("active");
+      document.getElementById("detailDrawer").classList.add("active");
+
+      // Highlight the active row in table
+      document.querySelectorAll("#matrixTable tbody tr").forEach(tr => {
+        tr.classList.remove("highlighted");
+        if (tr.getAttribute("data-id") === id) {
+          tr.classList.add("highlighted");
+        }
+      });
+    }
+
+    function closeDrawer() {
+      document.getElementById("drawerOverlay").classList.remove("active");
+      document.getElementById("detailDrawer").classList.remove("active");
+      document.querySelectorAll("#matrixTable tbody tr").forEach(tr => tr.classList.remove("highlighted"));
+    }
+
+    document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+    document.getElementById("drawerOverlay").addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
+
+    // EHR Note Generation
+    function updateEHRNote() {
+      const comorb = document.getElementById("comorbidity").options[document.getElementById("comorbidity").selectedIndex].text;
+      const trialLevel = document.getElementById("current-step").options[document.getElementById("current-step").selectedIndex].text;
+
+      let clinicalPlanNote = "";
+      const selectedComorbVal = document.getElementById("comorbidity").value;
+      const stepVal = parseInt(document.getElementById("current-step").value);
+
+      if (selectedComorbVal === "peds") {
+        clinicalPlanNote = "- Screened safety limits. Pediatric patient (< 2yo): Contraindicated GC-C secretagogues (Linaclotide/Plecanatide) due to dehydration risks.\n- Plan: Support dietary modifications (fruit juices), Glycerin PRN, and Polyethylene Glycol (PEG 3350) maintenance.";
+      } else if (selectedComorbVal === "pregnancy") {
+        clinicalPlanNote = "- Pregnancy care pathway active. Avoided castor oil and mineral oil.\n- Plan: Initiate Bulk-forming fiber (Psyllium) and Docusate Sodium 100mg BID. Step up to Polyethylene Glycol (PEG 3350) 17g daily for maintenance. PRN Senna for rescue.";
+      } else if (selectedComorbVal === "ckd") {
+        clinicalPlanNote = `- Severe CKD (eGFR < 30) risk screen. Avoided magnesium containing laxatives to prevent toxic hypermagnesemia.
+- Plan: ${stepVal === 3 ? "Initiate advanced prescription agents. Linaclotide 145mcg daily or Prucalopride (Motegrity) adjusted to renal dose of 1mg PO daily." : "Use fiber (Psyllium) and Polyethylene glycol 3350. Avoid magnesium."}`;
+      } else if (selectedComorbVal === "oic") {
+        clinicalPlanNote = `- Opioid-Induced Constipation (OIC) treatment pathway active. Standard fiber is insufficient.
+- Plan: ${stepVal >= 2 ? "Initiate OIC specific advanced therapy: Peripherally Acting Mu-Opioid Receptor Antagonist (PAMORA) Naloxegol (Movantik) 25mg daily or SC Methylnaltrexone." : "Initiate stimulant + osmotic regimen: scheduled Senna 1-2 tabs QHS + PEG 3350 17g daily."}`;
+      } else if (selectedComorbVal === "ibsc") {
+        clinicalPlanNote = `- Visceral pain and chronic constipation typical of IBS-C presentation.
+- Plan: ${stepVal >= 2 ? "Escalate to advanced Guanylate Cyclase-C (GC-C) receptor agonist: Linaclotide (Linzess) 290 mcg daily or Plecanatide (Trulance) 3 mg daily to relieve abdominal pain and accelerate transit." : "Start Psyllium soluble fiber and Polyethylene Glycol (PEG 3350) 17g daily."}`;
+      } else {
+        clinicalPlanNote = `- Standard CIC stepwise escalation plan.
+- Plan: ${stepVal === 0 ? "Initiate dietary adjustments and Psyllium (Metamucil) 3.4g-6.8g daily with water." : stepVal === 1 ? "Start scheduled Polyethylene glycol (PEG 3350) 17g daily." : stepVal === 2 ? "Add rescue stimulant laxative: Senna 1-2 tablets or Bisacodyl 5-10mg QHS 2-3 times per week." : "Initiate advanced Rx agent: Linaclotide 145 mcg daily or Plecanatide 3 mg daily."}`;
+      }
+
+      const note = `CONSTIPATION TREATMENT EVALUATION NOTE
+--------------------------------------------------
+PATIENT CLINICAL METADATA:
+- Profile/Comorbidity: ${comorb}
+- Current Therapy Trials: ${trialLevel}
+
+CLINICAL RECOMMENDATIONS & PRESCRIPTION PLAN:
+${clinicalPlanNote}
+- Counselled patient on adequate fluid intake (8 oz of water per dose of fiber/PEG).
+- Mandated warning parameters (immediate cessation if severe cramping, diarrhea, or symptoms of obstruction occur).`;
+
+      noteOutput.textContent = note;
+    }
+
+    // Copy to Clipboard Event
+    document.getElementById("btn-copy-note").addEventListener("click", () => {
+      navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+        alert("Constipation progress note copied to clipboard!");
+      });
+    });
+
+    // Initialize Page
+    renderTable();
+    updateEHRNote();
+  </script>
+</body>
+</html>

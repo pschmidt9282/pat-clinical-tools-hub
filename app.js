@@ -155,6 +155,13 @@ const INITIAL_TOOLS = [
         url: "./asthma-matrix/",
         category: "Primary Care",
         description: "GINA-based decision matrix featuring interactive symptom control assessment, SMART/reliever track triage, and detailed step 1–5 inhaler regimens with cost guidelines."
+    },
+    {
+        id: "constipation-matrix",
+        title: "Constipation Treatment Matrix",
+        url: "./constipation-matrix/",
+        category: "Gastroenterology",
+        description: "AGA/ACG-based stepwise decision matrix featuring comorbidity triage (IBS-C, OIC, CKD, pregnancy, pediatrics), detailed drug monographs, and automated clinical note generator."
     }
 ];
 
