@@ -162,6 +162,34 @@ const INITIAL_TOOLS = [
         url: "./constipation-matrix/",
         category: "Gastroenterology",
         description: "AGA/ACG-based stepwise decision matrix featuring comorbidity triage (IBS-C, OIC, CKD, pregnancy, pediatrics), detailed drug monographs, and automated clinical note generator."
+    },
+    {
+        id: "hyponatremia",
+        title: "Hyponatremia Correction Matrix",
+        url: "./hyponatremia/",
+        category: "Nephrology",
+        description: "Point-of-care reference for hypotonic hyponatremia triage, safe 24h sodium correction calculator, and drug monographs to prevent Osmotic Demyelination Syndrome (ODS)."
+    },
+    {
+        id: "hypernatremia",
+        title: "Hypernatremia Correction Matrix",
+        url: "./hypernatremia/",
+        category: "Nephrology",
+        description: "Interactive Free Water Deficit (FWD) calculator and fluid replacement guide (D5W, oral water, half-normal saline) to safely manage chronic or acute hypernatremia."
+    },
+    {
+        id: "hypothyroidism",
+        title: "Hypothyroidism Prescribing Matrix",
+        url: "./hypothyroidism/",
+        category: "Endocrinology",
+        description: "Weight-based Levothyroxine dose starting calculator, subclinical hypothyroidism treatment thresholds, and comparative thyroid replacement monographs."
+    },
+    {
+        id: "hyperthyroidism",
+        title: "Hyperthyroidism Therapy Matrix",
+        url: "./hyperthyroidism/",
+        category: "Endocrinology",
+        description: "Interactive antithyroid drug starting dose selector, clinical scenario filters (pregnancy, storm), beta-blocker dosing, and agranulocytosis safety monitoring protocols."
     }
 ];
 

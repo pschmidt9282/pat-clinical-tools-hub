@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypernatremia & Free Water Deficit | Clinical Decision Support</title>
+  <meta name="description" content="Interactive clinical decision tool for hypernatremia correction, Free Water Deficit calculator, and treatment monographs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        grid-template-columns: 340px 1fr;
+      }
+      .main-content {
+        grid-column: 2;
+      }
+      .sidebar-content {
+        grid-column: 1;
+        grid-row: 1 / 3;
+      }
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 1.5rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-danger);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--accent-danger);
+    }
+
+    /* Interactive Calculator & Diagnostic Sidebar */
+    .sidebar-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input-field {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .select-field {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-field:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .calc-result {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .calc-result-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .calc-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      font-family: var(--font-heading);
+      margin-bottom: 0.5rem;
+    }
+
+    .calc-warning {
+      color: var(--accent-warning);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .search-box {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .filter-section {
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* EHR Section */
+    .ehr-section {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ehr-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .ehr-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+    }
+
+    .ehr-textarea {
+      width: 100%;
+      height: 150px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.2rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .citation-item {
+      padding: 0.6rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Sidebar: FWD Calculator -->
+    <div class="sidebar-content">
+      <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+      
+      <div class="sidebar-panel">
+        <div class="panel-title">
+          <span>💧</span> Free Water Deficit (FWD)
+        </div>
+        
+        <div class="form-group">
+          <label for="patientType">Patient Demographics</label>
+          <select id="patientType" class="select-field">
+            <option value="0.6" selected>Adult Male (0.6)</option>
+            <option value="0.5">Adult Female (0.5)</option>
+            <option value="0.5">Elderly Male (0.5)</option>
+            <option value="0.45">Elderly Female (0.45)</option>
+            <option value="0.6">Child (0.6)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="patientWeight">Weight</label>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="number" id="patientWeight" class="input-field" value="70" style="flex-grow: 1;">
+            <select id="weightUnit" class="select-field" style="width: 80px;">
+              <option value="kg" selected>kg</option>
+              <option value="lbs">lbs</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="currentNa">Current Serum Sodium (mEq/L)</label>
+          <input type="number" id="currentNa" class="input-field" value="160" min="140" max="190">
+        </div>
+
+        <div class="form-group">
+          <label for="targetNa">Target Serum Sodium (mEq/L)</label>
+          <input type="number" id="targetNa" class="input-field" value="145" min="130" max="155">
+        </div>
+        
+        <div class="calc-result">
+          <div class="calc-result-title">Total Body Water (TBW)</div>
+          <div id="tbwValue" style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">42.0 Liters</div>
+
+          <div class="calc-result-title">Free Water Deficit</div>
+          <div id="fwdValue" class="calc-value">4.35 Liters</div>
+          
+          <div class="calc-result-title">First 24h Goal (50% Deficit)</div>
+          <div id="fwd24hValue" style="font-size: 1.1rem; font-weight: 700; color: var(--accent-success); margin-bottom: 0.5rem;">2.17 Liters</div>
+
+          <div class="calc-result-title">D5W IV Infusion Rate</div>
+          <div id="d5wInfusionRate" style="font-size: 1.1rem; font-weight: 700; color: var(--accent-primary);">
+            ~91 mL/hour
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+            *Plus replacement of ongoing clinical fluid losses (urine, insensible).
+          </div>
+          
+          <div class="calc-warning">
+            ⚠️ Chronic hypernatremia: Do NOT correct sodium faster than 8-10 mEq/L per 24 hours (0.5 mEq/L/hour) to prevent cerebral edema.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="title-area">
+        <h2>Hypernatremia & Free Water Deficit Matrix</h2>
+        <p>Outpatient and inpatient management tool for hypernatremia. Calculate the water deficit, choose appropriate hydration fluids, and treat underlying Diabetes Insipidus.</p>
+      </div>
+
+      <div class="clinical-alert">
+        <strong>CRITICAL SAFETY WARNING:</strong> Overly rapid correction of chronic hypernatremia (&gt;0.5 mEq/L/hour or &gt;8–10 mEq/L in 24 hours) causes water influx into brain cells, leading to <strong>cerebral edema, seizures, coma, and death</strong>. Check serum sodium every 4 hours during active IV fluid titration.
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filter-panel">
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="drugSearch" class="search-input" placeholder="Search hypernatremia therapies (e.g. D5W, DDAVP, Amiloride)...">
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">Clinical Scenario & Etiology</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="scenario-resuscitate">Severe Hypovolemia / Instability</button>
+            <button class="filter-btn" data-filter="scenario-hydration">Euvolemic / Stable Hydration</button>
+            <button class="filter-btn" data-filter="etiology-cdi">Central Diabetes Insipidus</button>
+            <button class="filter-btn" data-filter="etiology-ndi">Nephrogenic Diabetes Insipidus</button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">PRACTICE CONSIDERATIONS</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="route-oral">Oral / Tube Feeds</button>
+            <button class="filter-btn" data-filter="safety-low-cost">Low Cost</button>
+            <button class="filter-btn" data-filter="outpatient">Outpatient Friendly</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Table -->
+      <div class="table-container">
+        <table id="matrixTable">
+          <thead>
+            <tr>
+              <th>Hydration / Therapy</th>
+              <th>Clinical Match</th>
+              <th>Typical Dosing & Route</th>
+              <th>Monitoring Frequency</th>
+              <th>Primary Safety Warning</th>
+              <th>Est. Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="oralwater" data-keywords="oral water po ng tube gastric tube hydration enteral">
+              <td class="drug-name-col">
+                Oral Water (PO/NG)
+                <span class="drug-class-label">Enteral Free Water Hydration</span>
+              </td>
+              <td><span class="badge badge-success">First-line (Euv/Stable)</span></td>
+              <td>200–300 mL PO or via NG tube every 4–6 hours (or continuous feed)</td>
+              <td>Every 4–6 hours (Inpatient) or daily/weekly (Outpatient)</td>
+              <td><span class="badge badge-neutral">Aspiration Risk</span> in patients with impaired mental status</td>
+              <td><span class="badge badge-benefit">Free ($0)</span></td>
+            </tr>
+            <tr data-id="d5w" data-keywords="d5w 5% dextrose in water iv fluid free water infusion">
+              <td class="drug-name-col">
+                5% Dextrose in Water (D5W)
+                <span class="drug-class-label">Isotonic IV Infusion (Metabolized to Free Water)</span>
+              </td>
+              <td><span class="badge badge-info">Stable Inpatient Hydration</span></td>
+              <td>Infuse IV at calculated rate (e.g. 50–150 mL/hour based on FWD)</td>
+              <td>Every 4 hours during initial correction</td>
+              <td><span class="badge badge-warning">Hyperglycemia</span>, causing osmotic diuresis and worsening hypernatremia</td>
+              <td><span class="badge badge-benefit">$ (Low)</span></td>
+            </tr>
+            <tr data-id="halfns" data-keywords="half normal saline 0.45% nacl iv fluid hypotonic">
+              <td class="drug-name-col">
+                0.45% Sodium Chloride (Half NS)
+                <span class="drug-class-label">Hypotonic IV Crystalloid Solution</span>
+              </td>
+              <td><span class="badge badge-info">Hypovolemic Hypernatremia</span></td>
+              <td>100–200 mL/hour IV infusion based on volume status</td>
+              <td>Every 4 hours</td>
+              <td><span class="badge badge-warning">Slower Sodium Drop</span> (Contains sodium; less free water than D5W)</td>
+              <td><span class="badge badge-benefit">$ (Low)</span></td>
+            </tr>
+            <tr data-id="normal_saline" data-keywords="normal saline 0.9% nacl isotonic iv fluid resuscitation shock">
+              <td class="drug-name-col">
+                Normal Saline (0.9% NaCl)
+                <span class="drug-class-label">Isotonic IV Crystalloid Solution</span>
+              </td>
+              <td><span class="badge badge-risk">Hemodynamic Instability / Shock</span></td>
+              <td>500 mL to 1000 mL IV bolus, repeat as needed for perfusion</td>
+              <td>Hourly during resuscitation</td>
+              <td><span class="badge badge-warning">Resuscitation Only</span>; switch to hypotonic fluids once stable</td>
+              <td><span class="badge badge-benefit">$ (Low)</span></td>
+            </tr>
+            <tr data-id="ddavp" data-keywords="desmopressin ddavp central diabetes insipidus cdi polyuria dtd">
+              <td class="drug-name-col">
+                Desmopressin (DDAVP)
+                <span class="drug-class-label">Exogenous Vasopressin (V2 Receptor) Analogue</span>
+              </td>
+              <td><span class="badge badge-warning">Central Diabetes Insipidus</span></td>
+              <td>0.1 mg to 0.2 mg PO daily or BID; OR 10–20 mcg intranasal QD/BID</td>
+              <td>Weekly/monthly once sodium stable</td>
+              <td><span class="badge badge-risk">Hyponatremia Warning</span> if fluid intake is excessive</td>
+              <td><span class="badge badge-warning">$$ (Moderate)</span></td>
+            </tr>
+            <tr data-id="hctz" data-keywords="hydrochlorothiazide hctz thiazide diuretic nephrogenic di ndi">
+              <td class="drug-name-col">
+                Hydrochlorothiazide (HCTZ)
+                <span class="drug-class-label">Thiazide Diuretic (Induces mild volume depletion)</span>
+              </td>
+              <td><span class="badge badge-warning">Nephrogenic DI (Chronic)</span></td>
+              <td>25 mg to 50 mg PO once daily (QD)</td>
+              <td>Weekly during initiation, then monthly</td>
+              <td><span class="badge badge-warning">Hypokalemia / Volume Depletion</span></td>
+              <td><span class="badge badge-benefit">$ (Low)</span></td>
+            </tr>
+            <tr data-id="amiloride" data-keywords="amiloride lithium induced nephrogenic di ndi potassium sparing">
+              <td class="drug-name-col">
+                Amiloride
+                <span class="drug-class-label">Potassium-Sparing Diuretic (ENaC Blocker)</span>
+              </td>
+              <td><span class="badge badge-warning">Lithium-Induced NDI</span></td>
+              <td>5 mg to 10 mg PO once or twice daily (QD/BID)</td>
+              <td>Weekly during initiation, then monthly</td>
+              <td><span class="badge badge-warning">Hyperkalemia</span> (Especially in CKD)</td>
+              <td><span class="badge badge-benefit">$ (Low)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EHR Section -->
+      <div class="ehr-section">
+        <div class="ehr-header">
+          <h3>Point-of-Care EHR Documentation Note</h3>
+          <button id="btn-copy-note" class="btn btn-primary">
+            <span>📋</span> Copy EHR Note
+          </button>
+        </div>
+        <textarea id="note-output" class="ehr-textarea" readonly></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Name</h3>
+        <p id="drawerDrugClass">Class</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggling
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // FWD Calculator Logic
+    const patientTypeSelect = document.getElementById('patientType');
+    const patientWeightInput = document.getElementById('patientWeight');
+    const weightUnitSelect = document.getElementById('weightUnit');
+    const currentNaInput = document.getElementById('currentNa');
+    const targetNaInput = document.getElementById('targetNa');
+
+    const tbwValue = document.getElementById('tbwValue');
+    const fwdValue = document.getElementById('fwdValue');
+    const fwd24hValue = document.getElementById('fwd24hValue');
+    const d5wInfusionRate = document.getElementById('d5wInfusionRate');
+
+    function calculateFWD() {
+      let weight = parseFloat(patientWeightInput.value) || 0;
+      const unit = weightUnitSelect.value;
+      
+      // Convert weight to kg if in lbs
+      if (unit === 'lbs') {
+        weight = weight * 0.45359237;
+      }
+
+      const factor = parseFloat(patientTypeSelect.value);
+      const currentNa = parseFloat(currentNaInput.value) || 140;
+      const targetNa = parseFloat(targetNaInput.value) || 140;
+
+      if (weight <= 0 || currentNa <= targetNa) {
+        tbwValue.textContent = '—';
+        fwdValue.textContent = '0.00 Liters';
+        fwd24hValue.textContent = '0.00 Liters';
+        d5wInfusionRate.textContent = '0 mL/hour';
+        return;
+      }
+
+      // TBW = factor * weight
+      const tbw = factor * weight;
+      tbwValue.textContent = `${tbw.toFixed(1)} Liters`;
+
+      // FWD = TBW * ((currentNa / targetNa) - 1)
+      const fwd = tbw * ((currentNa / targetNa) - 1);
+      fwdValue.textContent = `${fwd.toFixed(2)} Liters`;
+
+      // 24h deficit target = 50% of deficit
+      const fwd24 = fwd * 0.5;
+      fwd24hValue.textContent = `${fwd24.toFixed(2)} Liters`;
+
+      // Rate = (fwd24 * 1000) / 24 hours
+      const rate = (fwd24 * 1000) / 24;
+      d5wInfusionRate.textContent = `~${Math.round(rate)} mL/hour`;
+
+      updateEHRNote();
+    }
+
+    [patientTypeSelect, patientWeightInput, weightUnitSelect, currentNaInput, targetNaInput].forEach(el => {
+      el.addEventListener('change', calculateFWD);
+      el.addEventListener('input', calculateFWD);
+    });
+
+    // Filtering & Table Logic
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      scenario: new Set(),
+      safety: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isScenario = ['scenario-resuscitate', 'scenario-hydration', 'etiology-cdi', 'etiology-ndi'].includes(filterType);
+        const filterSet = isScenario ? activeFilters.scenario : activeFilters.safety;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchScenario = true;
+        let matchSafety = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.scenario.size > 0) {
+          matchScenario = false;
+          activeFilters.scenario.forEach(filter => {
+            if (filter === 'scenario-resuscitate' && rowId === 'normal_saline') matchScenario = true;
+            if (filter === 'scenario-hydration' && ['oralwater', 'd5w', 'halfns'].includes(rowId)) matchScenario = true;
+            if (filter === 'etiology-cdi' && ['oralwater', 'd5w', 'ddavp'].includes(rowId)) matchScenario = true;
+            if (filter === 'etiology-ndi' && ['oralwater', 'd5w', 'hctz', 'amiloride'].includes(rowId)) matchScenario = true;
+          });
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'route-oral' && ['oralwater', 'ddavp', 'hctz', 'amiloride'].includes(rowId) === false) matchSafety = false;
+            if (filter === 'safety-low-cost' && ['ddavp'].includes(rowId)) matchSafety = false;
+            if (filter === 'outpatient' && ['d5w', 'halfns', 'normal_saline'].includes(rowId)) matchSafety = false;
+          });
+        }
+
+        if (matchSearch && matchScenario && matchSafety) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+      updateEHRNote();
+    }
+
+    // Monographs Database
+    const drugDetails = {
+      oralwater: {
+        name: 'Oral Water (PO/NG)',
+        classDesc: 'Enteral Hydration Therapy.',
+        sections: [
+          {
+            title: 'Indication & Clinical Place',
+            content: `<ul>
+              <li><strong>Safest Free Water Replacement:</strong> The absolute preferred method of correcting free water deficits in conscious, alert patients who have an intact swallowing reflex.</li>
+              <li><strong>Enteral Feeds (NG/PEG):</strong> Highly useful in intensive care or stroke units via nasogastric or gastrostomy tubes, bypassing IV lines and avoiding dextrose-induced hyperglycemia.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Administration',
+            content: `<ul>
+              <li><strong>Intermittent Boluses:</strong> Standard prescription is <strong>200 mL to 300 mL every 4 to 6 hours</strong>.</li>
+              <li><strong>Titration:</strong> Modify volume based on daily weights, urine output, and sodium tracking.</li>
+            </ul>`
+          },
+          {
+            title: 'Cautions & Warnings',
+            content: `<ul>
+              <li><strong>Impaired Consciousness:</strong> Contraindicated in patients with encephalopathy, severe dysphagia, or high aspiration risk.</li>
+              <li><strong>Free Water Deficit limits:</strong> The speed of correction limits (0.5 mEq/L/hour) apply to oral water as well; restrict access if the drop is too rapid.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Free ($0). Standard hospital utility.</p>`
+          }
+        ]
+      },
+      d5w: {
+        name: '5% Dextrose in Water (D5W)',
+        classDesc: 'Hypotonic Intravenous Fluid (Once dextrose is metabolized, behaves as pure free water).',
+        sections: [
+          {
+            title: 'Indication & Clinical Place',
+            content: `<ul>
+              <li><strong>Severe / Inpatient Hypernatremia:</strong> Mainstay of IV treatment for patients who are unable to take oral fluids or who have refractory hypernatremia.</li>
+              <li><strong>Speed of Correction:</strong> Easily titrated in an inpatient unit. Behavior is highly predictable.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing, Rate & Titration',
+            content: `<ul>
+              <li><strong>Dosing Rate:</strong> Calculate FWD (e.g. 4.8L). Standard plan is to correct 50% in the first 24 hours (2.4L), which equals 100 mL/hour.</li>
+              <li><strong>Adjustments:</strong> Monitor sodium levels every 4 hours. If sodium drops by &gt;0.5 mEq/L/hour, decrease the infusion rate by 20-30%.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings, Side Effects & Interactions',
+            content: `<ul>
+              <li><strong>Hyperglycemia:</strong> The high dextrose load can cause hyperglycemia, especially in patients with diabetes or severe infection/sepsis.</li>
+              <li><strong>Osmotic Diuresis:</strong> Uncontrolled hyperglycemia leads to glucosuria, inducing an osmotic diuresis that increases renal water loss and **worsens the hypernatremia**.</li>
+              <li><strong>Frequency of Monitoring:</strong> Monitor serum sodium and blood glucose every 4 hours initially.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. ~$10-$20 per bag.</p>`
+          }
+        ]
+      },
+      halfns: {
+        name: '0.45% Sodium Chloride (Half NS)',
+        classDesc: 'Hypotonic IV Crystalloid Solution.',
+        sections: [
+          {
+            title: 'Indication & Efficacy',
+            content: `<ul>
+              <li><strong>Hypovolemic Hypernatremia:</strong> Preferred fluid when the patient is hemodynamically stable but has both a significant sodium deficit and a water deficit.</li>
+              <li><strong>Volume & Electrolyte Balance:</strong> Supplies ~77 mEq/L of sodium and chloride, correcting hypovolemia while still providing hypotonic fluid to lower serum sodium.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Monitoring',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Standard infusion rates are 100 mL/hr to 200 mL/hr.</li>
+              <li><strong>Caution:</strong> Lowering sodium will be slower than with D5W due to the sodium content in the solution. Monitor sodium every 4-6 hours.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Low (~$10 per bag).</p>`
+          }
+        ]
+      },
+      normal_saline: {
+        name: 'Normal Saline (0.9% NaCl)',
+        classDesc: 'Isotonic IV Crystalloid Solution (Sodium 154 mEq/L).',
+        sections: [
+          {
+            title: 'Indication & Resuscitation Shock',
+            content: `<ul>
+              <li><strong>Hemodynamic Shock / Severe Dehydration:</strong> ONLY indicated for patients with hypernatremia who are hemodynamically unstable (e.g. hypotensive, tachycardic, signs of shock).</li>
+              <li><strong>Clinical Priority:</strong> Perfusion restoration is the first priority. Correcting the sodium level is secondary.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Transition',
+            content: `<ul>
+              <li><strong>Dosing:</strong> 500 mL to 1000 mL boluses.</li>
+              <li><strong>Transition Warning:</strong> Once blood pressure is restored and the patient is stable, <strong>stop 0.9% NaCl immediately and switch to hypotonic fluids</strong> (D5W or 0.45% NaCl). Continuing 0.9% NaCl will increase the sodium burden and fail to resolve the free water deficit.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Low (~$5-$10 per bag).</p>`
+          }
+        ]
+      },
+      ddavp: {
+        name: 'Desmopressin (DDAVP)',
+        classDesc: 'Synthetic Antidiuretic Hormone (ADH) replacement.',
+        sections: [
+          {
+            title: 'Indication & Central DI',
+            content: `<ul>
+              <li><strong>Central Diabetes Insipidus (CDI):</strong> First-line therapy for patients who lack endogenous vasopressin production (due to pituitary surgery, trauma, or idiopathic causes).</li>
+              <li><strong>Efficacy:</strong> Rapidly concentrates the urine, reducing polyuria (urine output &gt;3 L/day) and normalizing serum sodium.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing, Routes & Frequency',
+            content: `<ul>
+              <li><strong>Oral Tablets:</strong> 0.1 mg to 0.2 mg PO once to twice daily (QD/BID). Titrate up to 1.2 mg/day based on urine volume.</li>
+              <li><strong>Nasal Spray:</strong> 10 mcg to 20 mcg (1 to 2 sprays) intranasally once or twice daily.</li>
+              <li><strong>IV / Subcutaneous:</strong> 1 mcg to 2 mcg once or twice daily (inpatient).</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings & Side Effects',
+            content: `<ul>
+              <li><strong>Water Intoxication / Hyponatremia:</strong> Major risk. If patients continue to drink excessive fluids out of habit while on DDAVP, they can develop severe, rapid-onset hyponatremia.</li>
+              <li><strong>Monitoring:</strong> Check electrolytes and urine osmolality weekly during dose initiation.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Moderate. Generic tablets: ~$40-$100/month. Intranasal spray: ~$60-$120/bottle.</p>`
+          }
+        ]
+      },
+      hctz: {
+        name: 'Hydrochlorothiazide (HCTZ)',
+        classDesc: 'Thiazide Diuretic.',
+        sections: [
+          {
+            title: 'Indication & Nephrogenic DI',
+            content: `<ul>
+              <li><strong>Nephrogenic Diabetes Insipidus (NDI):</strong> Preferred treatment. NDI is characterized by renal resistance to vasopressin (ADH).</li>
+              <li><strong>Paradoxical Effect:</strong> Thiazides inhibit sodium resorption in the distal tubule, causing mild volume depletion. This increases proximal tubule water and sodium reabsorption, reducing delivery of filtrate to the collecting duct, thereby **excreting less urine** (reducing polyuria by up to 50%).</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration',
+            content: `<ul>
+              <li><strong>Dosing:</strong> 25 mg to 50 mg PO once daily.</li>
+              <li><strong>Dietary Pairing:</strong> Must be paired with a **low-sodium diet** to maintain the mild volume depletion state.</li>
+            </ul>`
+          },
+          {
+            title: 'Side Effects & Monitoring',
+            content: `<ul>
+              <li><strong>Electrolytes:</strong> Hypokalemia, hypercalcemia, hyponatremia, hyperuricemia.</li>
+              <li><strong>Monitoring:</strong> Check BMP weekly for 3-4 weeks after initiating.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. ~$4 per month on generic lists.</p>`
+          }
+        ]
+      },
+      amiloride: {
+        name: 'Amiloride',
+        classDesc: 'Potassium-Sparing Diuretic / ENaC Inhibitor.',
+        sections: [
+          {
+            title: 'Lithium-Induced Nephrogenic DI',
+            content: `<ul>
+              <li><strong>Specific Indication:</strong> Preferred drug of choice for lithium-induced Nephrogenic Diabetes Insipidus.</li>
+              <li><strong>Mechanism:</strong> Lithium enters the renal collecting duct cells via the epithelial sodium channel (ENaC) and disrupts cell function. Amiloride **specifically blocks ENaC**, preventing lithium accumulation in the collecting duct cells and reversing the resistance to ADH.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration',
+            content: `<ul>
+              <li><strong>Dosing:</strong> 5 mg to 10 mg PO once daily. Can titrate to 10 mg BID.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings & Side Effects',
+            content: `<ul>
+              <li><strong>Hyperkalemia:</strong> Major warning, particularly in patients with chronic kidney disease (CKD) or those taking potassium supplements/ACE inhibitors.</li>
+              <li><strong>Monitoring:</strong> Monitor serum potassium and creatinine closely.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Low. ~$15-$30 for a monthly supply.</p>`
+          }
+        ]
+      }
+    };
+
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+
+    // EHR Note Generator
+    function updateEHRNote() {
+      const typeText = patientTypeSelect.options[patientTypeSelect.selectedIndex].text;
+      const weight = patientWeightInput.value;
+      const unit = weightUnitSelect.value;
+      const currentNa = currentNaInput.value;
+      const targetNa = targetNaInput.value;
+      
+      const tbw = tbwValue.textContent;
+      const fwd = fwdValue.textContent;
+      const fwd24 = fwd24hValue.textContent;
+      const rate = d5wInfusionRate.textContent;
+
+      const note = `HYPERNATREMIA POINT-OF-CARE CLINICAL NOTE
+--------------------------------------------------
+PATIENT CHARACTERISTICS:
+- Demographic Profile: ${typeText}
+- Weight Entered: ${weight} ${unit}
+- Baseline Serum Sodium: ${currentNa} mEq/L
+- Target Serum Sodium: ${targetNa} mEq/L
+
+FREE WATER DEFICIT WORKUP:
+- Calculated Total Body Water (TBW): ${tbw}
+- Estimated Free Water Deficit (FWD): ${fwd}
+- Goal Volume for first 24 hours (50%): ${fwd24}
+- Suggested Initial D5W IV Infusion Rate: ${rate} (excluding ongoing losses)
+
+CLINICAL RECOMMENDATIONS & TARGETS:
+- Reviewed clinical hydration fluid types. Isotonic saline used only for hemodynamic shock, transitioning to enteral free water or IV D5W once perfusion is stable.
+- Chronic hypernatremia: target drop rate of <0.5 mEq/L/hour (max 8-10 mEq/L/24 hours) to avoid cerebral edema.
+- Central DI: treat with Desmopressin (DDAVP). Nephrogenic DI: treat with HCTZ and low-sodium diet; Amiloride specifically for lithium-induced cases.
+- Inpatient tracking: check serum sodium and blood glucose levels every 4 hours.`;
+
+      document.getElementById('note-output').textContent = note;
+    }
+
+    const btnCopyNote = document.getElementById('btn-copy-note');
+    btnCopyNote.addEventListener('click', () => {
+      const noteOutput = document.getElementById('note-output');
+      navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+        alert('Hypernatremia Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Initial load
+    calculateFWD();
+  </script>
+</body>
+</html>

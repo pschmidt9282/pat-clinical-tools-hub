@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hypothyroidism Prescribing & Titration | Clinical Decision Support</title>
+  <meta name="description" content="Interactive clinical decision support tool for hypothyroidism, weight-based Levothyroxine dosing calculator, subclinical thresholds, and treatment monographs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        grid-template-columns: 340px 1fr;
+      }
+      .main-content {
+        grid-column: 2;
+      }
+      .sidebar-content {
+        grid-column: 1;
+        grid-row: 1 / 3;
+      }
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 1.5rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-warning);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--accent-warning);
+    }
+
+    /* Interactive Calculator & Diagnostic Sidebar */
+    .sidebar-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input-field {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: var(--transition-smooth);
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .select-field {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-field:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .checkbox-label input {
+      margin-top: 0.2rem;
+    }
+
+    .calc-result {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .calc-result-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .calc-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      font-family: var(--font-heading);
+      margin-bottom: 0.5rem;
+    }
+
+    .calc-warning {
+      color: var(--accent-warning);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .search-box {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .filter-section {
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* EHR Section */
+    .ehr-section {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ehr-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .ehr-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+    }
+
+    .ehr-textarea {
+      width: 100%;
+      height: 150px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.2rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .citation-item {
+      padding: 0.6rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Sidebar: Dosing Calculator & Subclinical flow -->
+    <div class="sidebar-content">
+      <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+      
+      <div class="sidebar-panel">
+        <div class="panel-title">
+          <span>⚖️</span> Levothyroxine Dose Calculator
+        </div>
+        
+        <div class="form-group">
+          <label for="calcProfile">Clinical Profile</label>
+          <select id="calcProfile" class="select-field">
+            <option value="healthy" selected>Young & Healthy (1.6 mcg/kg)</option>
+            <option value="elderly">Elderly / CAD (25 mcg starting)</option>
+            <option value="pregnancy">Pregnancy (+30% pre-existing dose)</option>
+            <option value="subclinical">Subclinical starting (25-50 mcg)</option>
+          </select>
+        </div>
+        
+        <div class="form-group" id="weightGroup">
+          <label for="patientWeight">Patient Weight</label>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="number" id="patientWeight" class="input-field" value="70" style="flex-grow: 1;">
+            <select id="weightUnit" class="select-field" style="width: 80px;">
+              <option value="kg" selected>kg</option>
+              <option value="lbs">lbs</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group" id="preExistingGroup" style="display: none;">
+          <label for="preDose">Pre-Pregnancy Dose (mcg/day)</label>
+          <input type="number" id="preDose" class="input-field" value="100">
+        </div>
+
+        <div class="calc-result">
+          <div class="calc-result-title">Exact Calculated Dose</div>
+          <div id="exactDoseValue" style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">112.0 mcg/day</div>
+
+          <div class="calc-result-title">Suggested Commercial Strength</div>
+          <div id="suggestedStrength" class="calc-value">112 mcg</div>
+          
+          <div id="pregnancyAdjustmentTip" style="font-size: 0.8rem; color: var(--accent-success); margin-top: 0.25rem; display: none;">
+            💡 <strong>Pregnancy Instructions:</strong> Take 2 extra tablets of pre-pregnancy strength per week (e.g. double dose on Monday & Thursday) to achieve a 28.5% dosage increase.
+          </div>
+        </div>
+      </div>
+
+      <!-- Subclinical Checklist Panel -->
+      <div class="sidebar-panel">
+        <div class="panel-title">
+          <span>🔍</span> Subclinical Hypothyroidism Flow
+        </div>
+        
+        <div class="form-group">
+          <label>Select Patient Criteria</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="subTsh10">
+              TSH &ge; 10 mIU/L
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="subSymptom">
+              TSH 5–10 mIU/L + Severe Symptoms
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="subTpo">
+              TSH 5–10 mIU/L + TPO Antibody Positive
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="subGoiter">
+              TSH 5–10 mIU/L + Goiter / Dyslipidemia
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="subPreg">
+              Pregnancy or Seeking Pregnancy
+            </label>
+          </div>
+        </div>
+
+        <div class="calc-result" style="background-color: var(--bg-primary);">
+          <div class="calc-result-title">Recommendation</div>
+          <div id="subclinicalRec" style="font-weight: 700; font-size: 0.9rem; color: var(--accent-warning);">
+            Monitor: TSH & FT4 in 3-6 months. No immediate therapy.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="title-area">
+        <h2>Hypothyroidism Prescribing & Titration Matrix</h2>
+        <p>Evidence-based clinical decision matrix for hypothyroidism replacement therapy. Calculate Levothyroxine dosing, resolve subclinical treatment dilemmas, and review thyroid drug monographs.</p>
+      </div>
+
+      <div class="clinical-alert">
+        <strong>PRACTICE UPDATE (2026 ATA GUIDELINES):</strong> Individualize therapy targets. Avoid over-treating mild TSH elevations in the elderly (&ge;70 years), as excessive dosing increases the risk of atrial fibrillation, tachyarrhythmias, and osteoporosis. Confirmed diagnosis with repeat testing is recommended before starting therapy.
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filter-panel">
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="drugSearch" class="search-input" placeholder="Search thyroid replacements (e.g. Synthroid, T3, Cytomel, Armour)...">
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">Drug Class & ATA Status</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="status-standard">ATA Recommended / Standard</button>
+            <button class="filter-btn" data-filter="status-alternative">Alternative / Combine Only</button>
+            <button class="filter-btn" data-filter="status-notrec">Not Recommended for Routine Use</button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">PRACTICE CONSIDERATIONS</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="half-life-long">Long Half-Life (Once Weekly Rescue)</button>
+            <button class="filter-btn" data-filter="safety-pregnancy">Preferred in Pregnancy</button>
+            <button class="filter-btn" data-filter="safety-low-cost">Low Cost</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Table -->
+      <div class="table-container">
+        <table id="matrixTable">
+          <thead>
+            <tr>
+              <th>Thyroid Medication</th>
+              <th>ATA Guidelines Status</th>
+              <th>Typical Dosing & Frequency</th>
+              <th>Monitoring Frequency</th>
+              <th>Primary Clinical Warning / Side Effect</th>
+              <th>Est. Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="levo" data-keywords="levothyroxine levo t4 synthroid levothroid generic standard long half life pregnancy">
+              <td class="drug-name-col">
+                Levothyroxine (T4)
+                <span class="drug-class-label">Synthetic Thyroxine (T4) Monotherapy</span>
+              </td>
+              <td><span class="badge badge-success">First-Line (Strongly Recommended)</span></td>
+              <td>1.6 mcg/kg/day PO QD (Healthy); 25–50 mcg PO QD (Elderly/CAD)</td>
+              <td>TSH in 6–8 weeks initially, then annually</td>
+              <td><span class="badge badge-warning">Overtreatment Risk</span> (Atrial fibrillation, bone loss)</td>
+              <td><span class="badge badge-benefit">$ (Low - ~$4/mo)</span></td>
+            </tr>
+            <tr data-id="lio" data-keywords="liothyronine lio t3 cytomel generic standard alternative combination">
+              <td class="drug-name-col">
+                Liothyronine (T3)
+                <span class="drug-class-label">Synthetic Triiodothyronine (T3)</span>
+              </td>
+              <td><span class="badge badge-info">Alternative (Combination therapy only)</span></td>
+              <td>5 mcg PO QD starting; usually added to Levothyroxine</td>
+              <td>TSH & Free T3 in 4–6 weeks initially</td>
+              <td><span class="badge badge-risk">Supraphysiologic T3 Spikes</span>, anxiety, palpitations</td>
+              <td><span class="badge badge-warning">$$ (Moderate - ~$15-30/mo)</span></td>
+            </tr>
+            <tr data-id="armour" data-keywords="desiccated thyroid extract dte armour thyroid nature throid porcine extract porcine animal">
+              <td class="drug-name-col">
+                Desiccated Thyroid (DTE)
+                <span class="drug-class-label">Porcine Desiccated Thyroid Extract (Armour)</span>
+              </td>
+              <td><span class="badge badge-risk">Not Recommended for Routine Use</span></td>
+              <td>15 mg to 120 mg PO once daily (QD)</td>
+              <td>TSH & Free T3/T4 in 6–8 weeks initially</td>
+              <td><span class="badge badge-risk">Supraphysiologic T3 Ratio</span> (4:1 porcine vs 14:1 human)</td>
+              <td><span class="badge badge-warning">$$ (Moderate - ~$20-40/mo)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EHR Section -->
+      <div class="ehr-section">
+        <div class="ehr-header">
+          <h3>Point-of-Care EHR Documentation Note</h3>
+          <button id="btn-copy-note" class="btn btn-primary">
+            <span>📋</span> Copy EHR Note
+          </button>
+        </div>
+        <textarea id="note-output" class="ehr-textarea" readonly></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Name</h3>
+        <p id="drawerDrugClass">Class</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggling
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Levothyroxine Calculator Logic
+    const calcProfile = document.getElementById('calcProfile');
+    const patientWeight = document.getElementById('patientWeight');
+    const weightUnit = document.getElementById('weightUnit');
+    const preDose = document.getElementById('preDose');
+    
+    const weightGroup = document.getElementById('weightGroup');
+    const preExistingGroup = document.getElementById('preExistingGroup');
+    
+    const exactDoseValue = document.getElementById('exactDoseValue');
+    const suggestedStrength = document.getElementById('suggestedStrength');
+    const pregnancyAdjustmentTip = document.getElementById('pregnancyAdjustmentTip');
+
+    // Standard commercial doses of Levothyroxine (mcg)
+    const COMMERCIAL_DOSES = [25, 50, 75, 88, 112, 125, 137, 150, 175, 200, 300];
+
+    function getNearestStrength(mcg) {
+      return COMMERCIAL_DOSES.reduce((prev, curr) => 
+        Math.abs(curr - mcg) < Math.abs(prev - mcg) ? curr : prev
+      );
+    }
+
+    function calculateLevoDose() {
+      const profile = calcProfile.value;
+      let weight = parseFloat(patientWeight.value) || 0;
+      const unit = weightUnit.value;
+      const preDoseVal = parseFloat(preDose.value) || 0;
+
+      // Convert lbs to kg if needed
+      if (unit === 'lbs') {
+        weight = weight * 0.45359237;
+      }
+
+      let exactDose = 0;
+      let suggestion = '';
+
+      if (profile === 'healthy') {
+        weightGroup.style.display = 'flex';
+        preExistingGroup.style.display = 'none';
+        pregnancyAdjustmentTip.style.display = 'none';
+        
+        exactDose = weight * 1.6;
+        suggestion = getNearestStrength(exactDose) + ' mcg daily';
+        exactDoseValue.textContent = `${exactDose.toFixed(1)} mcg/day`;
+      } else if (profile === 'elderly') {
+        weightGroup.style.display = 'none';
+        preExistingGroup.style.display = 'none';
+        pregnancyAdjustmentTip.style.display = 'none';
+        
+        exactDose = 25.0;
+        suggestion = '25 mcg daily (Titrate by 12.5–25 mcg Q6-8 weeks)';
+        exactDoseValue.textContent = '25.0 mcg/day';
+      } else if (profile === 'pregnancy') {
+        weightGroup.style.display = 'none';
+        preExistingGroup.style.display = 'flex';
+        pregnancyAdjustmentTip.style.display = 'block';
+        
+        exactDose = preDoseVal * 1.3;
+        suggestion = getNearestStrength(exactDose) + ' mcg daily';
+        exactDoseValue.textContent = `${exactDose.toFixed(1)} mcg/day`;
+      } else if (profile === 'subclinical') {
+        weightGroup.style.display = 'flex';
+        preExistingGroup.style.display = 'none';
+        pregnancyAdjustmentTip.style.display = 'none';
+        
+        exactDose = Math.min(weight * 0.8, 50.0); // Subclinical starts lower, capped at 50mcg
+        if (exactDose < 25) exactDose = 25.0;
+        suggestion = getNearestStrength(exactDose) + ' mcg daily';
+        exactDoseValue.textContent = `${exactDose.toFixed(1)} mcg/day`;
+      }
+
+      suggestedStrength.textContent = suggestion;
+      updateEHRNote();
+    }
+
+    [calcProfile, patientWeight, weightUnit, preDose].forEach(el => {
+      el.addEventListener('change', calculateLevoDose);
+      el.addEventListener('input', calculateLevoDose);
+    });
+
+    // Subclinical Triage Logic
+    const subTsh10 = document.getElementById('subTsh10');
+    const subSymptom = document.getElementById('subSymptom');
+    const subTpo = document.getElementById('subTpo');
+    const subGoiter = document.getElementById('subGoiter');
+    const subPreg = document.getElementById('subPreg');
+    const subclinicalRec = document.getElementById('subclinicalRec');
+
+    function checkSubclinicalRec() {
+      const tsh10 = subTsh10.checked;
+      const symptom = subSymptom.checked;
+      const tpo = subTpo.checked;
+      const goiter = subGoiter.checked;
+      const preg = subPreg.checked;
+
+      if (tsh10 || preg) {
+        subclinicalRec.textContent = 'TREATMENT HIGHLY RECOMMENDED: Initiate Levothyroxine (weight-based subclinical or 25-50 mcg starting).';
+        subclinicalRec.style.color = 'var(--accent-success)';
+      } else if (symptom || tpo || goiter) {
+        subclinicalRec.textContent = 'TREATMENT CONSIDERED REASONABLE: Start trial of Levothyroxine (25-50 mcg daily). Re-evaluate TSH in 8 weeks.';
+        subclinicalRec.style.color = 'var(--accent-primary)';
+      } else {
+        subclinicalRec.textContent = 'MONITOR PATIENT: Repeat TSH and Free T4 in 3–6 months. Avoid treatment for asymptomatic elevations <10 mIU/L.';
+        subclinicalRec.style.color = 'var(--accent-warning)';
+      }
+      updateEHRNote();
+    }
+
+    [subTsh10, subSymptom, subTpo, subGoiter, subPreg].forEach(el => {
+      el.addEventListener('change', checkSubclinicalRec);
+    });
+
+    // Filtering & Table Logic
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      scenario: new Set(),
+      safety: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isScenario = ['status-standard', 'status-alternative', 'status-notrec'].includes(filterType);
+        const filterSet = isScenario ? activeFilters.scenario : activeFilters.safety;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchScenario = true;
+        let matchSafety = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.scenario.size > 0) {
+          matchScenario = false;
+          activeFilters.scenario.forEach(filter => {
+            if (filter === 'status-standard' && rowId === 'levo') matchScenario = true;
+            if (filter === 'status-alternative' && rowId === 'lio') matchScenario = true;
+            if (filter === 'status-notrec' && rowId === 'armour') matchScenario = true;
+          });
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'half-life-long' && rowId !== 'levo') matchSafety = false;
+            if (filter === 'safety-pregnancy' && rowId !== 'levo') matchSafety = false;
+            if (filter === 'safety-low-cost' && rowId !== 'levo') matchSafety = false;
+          });
+        }
+
+        if (matchSearch && matchScenario && matchSafety) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+      updateEHRNote();
+    }
+
+    // Monographs Database
+    const drugDetails = {
+      levo: {
+        name: 'Levothyroxine (Synthroid / Generic)',
+        classDesc: 'Synthetic Levothyroxine (T4) Monotherapy.',
+        sections: [
+          {
+            title: 'Clinical Place & Guidelines Consensus',
+            content: `<ul>
+              <li><strong>First-Line Standard of Care:</strong> Strongly recommended by the American Thyroid Association (ATA) and the American Association of Clinical Endocrinologists (AACE) as the preferred treatment for hypothyroidism.</li>
+              <li><strong>Efficacy:</strong> Highly effective, predictable, stable, and restores natural physiological levels of both T4 and T3 (via peripheral conversion).</li>
+            </ul>`
+          },
+          {
+            title: 'Administration Instructions (Crucial for Adherence)',
+            content: `<ul>
+              <li><strong>Empty Stomach:</strong> Must be taken with a full glass of water first thing in the morning, <strong>30 to 60 minutes before breakfast</strong>.</li>
+              <li><strong>Alternative:</strong> Can be taken at bedtime, <strong>3 to 4 hours after the last meal</strong>.</li>
+              <li><strong>Malabsorption Separations:</strong> Separate from the following substances by <strong>at least 4 hours</strong>: calcium carbonate supplements, iron tablets (ferrous sulfate), aluminum hydroxide (antacids), proton pump inhibitors (PPIs), sucralfate, and multivitamins.</li>
+            </ul>`
+          },
+          {
+            title: 'Titration, Half-Life & Monitoring',
+            content: `<ul>
+              <li><strong>Half-Life:</strong> Very long (~7 days). This provides buffer space if a patient misses a dose, but means changes take **6 to 8 weeks** to reach steady state.</li>
+              <li><strong>Missed Doses:</strong> If a patient misses a dose, they can double up the next day, or take the missed dose as soon as they remember.</li>
+              <li><strong>Monitoring:</strong> Check TSH levels 6–8 weeks after dose initiation or adjustments. Recheck annually once stable.</li>
+              <li><strong>Overtreatment Risk:</strong> Manifests as hyperthyroidism (anxiety, palpitations, heat intolerance, weight loss). Long-term overtreatment (TSH suppressed <0.1 mIU/L) increases risk of atrial fibrillation and bone resorption (osteoporosis) in older adults.</li>
+            </ul>`
+          },
+          {
+            title: 'Pregnancy Dosing Detaill',
+            content: `<ul>
+              <li><strong>Thyroid Demand:</strong> Fetal thyroid gland is inactive during the first trimester. Increased maternal T4 production is required.</li>
+              <li><strong>Immediate Dose Increase:</strong> For women with pre-existing hypothyroidism who become pregnant, **increase the levothyroxine dose by ~30% immediately** upon confirmation of pregnancy.</li>
+              <li><strong>Practical Dosing Strategy:</strong> Advise the patient to take **2 extra tablets per week** of their current daily dose (e.g. double their daily dose on Monday and Friday).</li>
+              <li><strong>Monitoring in Pregnancy:</strong> Check TSH every **4 weeks** during the first half of pregnancy.</li>
+            </ul>`
+          },
+          {
+            title: 'ATA Guidelines Reference & Cost',
+            content: `
+              <div class="citation-item">
+                <strong>ATA Hypothyroidism Guidelines:</strong> Declares Levothyroxine as standard of care, cautions against combination therapy.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/25266247" target="_blank">Thyroid 2014;24(12):1670-1751</a>
+              </div>
+              <div class="citation-item">
+                <strong>ATA Pregnancy Guidelines:</strong> Confirms immediate weight-based or ~30% dose increases and 4-week TSH checks.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/28052975" target="_blank">Thyroid 2017;27(3):315-389</a>
+              </div>
+              <p><strong>Cost:</strong> Extremely low. Standard generic costs ~$4/month at major pharmacies.</p>`
+          }
+        ]
+      },
+      lio: {
+        name: 'Liothyronine (Cytomel / Generic)',
+        classDesc: 'Synthetic Triiodothyronine (T3).',
+        sections: [
+          {
+            title: 'Clinical Place & Indications',
+            content: `<ul>
+              <li><strong>Combination Therapy:</strong> Not recommended for routine use. Guidelines state that if combination T4/T3 is used, it should only be attempted in patients who feel persistently fatigued/impaired on T4 monotherapy despite achieving normal TSH levels, and who understand the safety risks.</li>
+              <li><strong>Monotherapy Warning:</strong> **Contraindicated for routine monotherapy** due to short half-life, which causes large, unphysiological peaks and troughs in serum T3.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Titration',
+            content: `<ul>
+              <li><strong>Starting Dose:</strong> Typically 5 mcg daily. Titrate up in 5 mcg increments. Often administered as split doses twice daily due to its short half-life (~24 hours).</li>
+              <li><strong>T4 Reduction:</strong> If adding T3, reduce the Levothyroxine dose by 12.5 mcg to 25 mcg to prevent hyperthyroid toxicity.</li>
+            </ul>`
+          },
+          {
+            title: 'Side Effects & Safety Risks',
+            content: `<ul>
+              <li><strong>Safety Concerns:</strong> Suppressed TSH, palpitations, tremors, sleep disturbances, anxiety, bone loss, and increased cardiovascular risks (tachycardia, atrial fibrillation, angina).</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Low to moderate (~$15-$30/month for generic).</p>`
+          }
+        ]
+      },
+      armour: {
+        name: 'Desiccated Thyroid Extract (Armour Thyroid)',
+        classDesc: 'Porcine-derived Desiccated Thyroid Extract (DTE).',
+        sections: [
+          {
+            title: 'Description & Guidelines Position',
+            content: `<ul>
+              <li><strong>Porcine Origin:</strong> Derived from pig thyroid glands. Contains both T4 and T3.</li>
+              <li><strong>ATA Guidelines Position:</strong> **Not recommended** for routine management of hypothyroidism due to:
+                <ul>
+                  <li>Lack of long-term randomized clinical trial data demonstrating safety/efficacy benefits over T4.</li>
+                  <li>Supra-physiological T3 content (porcine ratio is 4:1 T4:T3, compared to the human thyroid secretion ratio of 14:1). This leads to elevated serum T3 levels post-ingestion.</li>
+                </ul>
+              </li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Conversion',
+            content: `<ul>
+              <li><strong>Dosing units:</strong> Measured in "grains" or milligrams (1 grain = ~60-65 mg DTE).</li>
+              <li><strong>Standard conversion:</strong> 1 grain (60 mg) DTE is roughly equivalent to 74-100 mcg of Levothyroxine monotherapy.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings',
+            content: `<ul>
+              <li><strong>Consistency:</strong> Biological variability in hormone concentrations (especially in non-standardized formulations).</li>
+              <li><strong>Toxicity:</strong> Elevated T3 levels causing cardiac arrhythmias and osteoporosis.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Moderate (~$20-$40/month; brand-only name is common and not always covered by formularies).</p>`
+          }
+        ]
+      }
+    };
+
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+
+    // EHR Note Generator
+    function updateEHRNote() {
+      const profile = calcProfile.value;
+      const weight = patientWeight.value;
+      const unit = weightUnit.value;
+      const preD = preDose.value;
+      const suggestion = suggestedStrength.textContent;
+      const subRec = subclinicalRec.textContent;
+
+      const tsh10 = subTsh10.checked ? 'Yes' : 'No';
+      const symptom = subSymptom.checked ? 'Yes' : 'No';
+      const tpo = subTpo.checked ? 'Yes' : 'No';
+      const goiter = subGoiter.checked ? 'Yes' : 'No';
+      const preg = subPreg.checked ? 'Yes' : 'No';
+
+      const note = `HYPOTHYROIDISM POINT-OF-CARE CLINICAL NOTE
+--------------------------------------------------
+LEVOTHYROXINE DOSE CALCULATION:
+- Patient Profile Selected: ${profile}
+- Patient Weight: ${weight} ${unit}
+- Pre-Pregnancy Dose (if applicable): ${preD} mcg
+- Calculated Suggestion: ${suggestion}
+
+SUBCLINICAL EVALUATION CHECKLIST:
+- TSH >= 10 mIU/L: ${tsh10}
+- TSH 5-10 + Symptoms: ${symptom}
+- TSH 5-10 + TPO positive: ${tpo}
+- TSH 5-10 + Goiter/Dyslipidemia: ${goiter}
+- Pregnancy or seeking pregnancy: ${preg}
+- Treatment recommendation flow: ${subRec}
+
+CLINICAL RECOMMENDATIONS & EDUCATION:
+- Confirmed patient compliance rules: take Levothyroxine on empty stomach, 30-60 min before breakfast, with water only.
+- Separated binding agents (calcium, iron, antacids, PPIs) by at least 4 hours.
+- Set therapeutic plan: check TSH level in 6-8 weeks to guide dosage titration. Target normal TSH range (usually 0.5 - 4.5 mIU/L, lower target <2.5 in pregnancy).`;
+
+      document.getElementById('note-output').textContent = note;
+    }
+
+    const btnCopyNote = document.getElementById('btn-copy-note');
+    btnCopyNote.addEventListener('click', () => {
+      const noteOutput = document.getElementById('note-output');
+      navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+        alert('Hypothyroidism Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Initial load
+    calculateLevoDose();
+    checkSubclinicalRec();
+  </script>
+</body>
+</html>

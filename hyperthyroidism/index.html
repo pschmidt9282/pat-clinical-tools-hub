@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hyperthyroidism & Antithyroid Therapy Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Interactive clinical decision support tool for hyperthyroidism, antithyroid drug starting dose helper, and medication monographs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(210, 100%, 65%);
+      --accent-secondary: hsl(175, 80%, 45%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(210, 100%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(217, 90%, 55%);
+      --accent-secondary: hsl(175, 80%, 35%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(217, 90%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        grid-template-columns: 340px 1fr;
+      }
+      .main-content {
+        grid-column: 2;
+      }
+      .sidebar-content {
+        grid-column: 1;
+        grid-row: 1 / 3;
+      }
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 1.5rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-danger);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--accent-danger);
+    }
+
+    /* Interactive Calculator & Diagnostic Sidebar */
+    .sidebar-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .select-field {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-field:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .calc-result {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .calc-result-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .calc-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      font-family: var(--font-heading);
+      margin-bottom: 0.5rem;
+    }
+
+    .calc-warning {
+      color: var(--accent-warning);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .search-box {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .filter-section {
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* EHR Section */
+    .ehr-section {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ehr-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .ehr-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+    }
+
+    .ehr-textarea {
+      width: 100%;
+      height: 150px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.2rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .citation-item {
+      padding: 0.6rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Sidebar: ATD Starting Dose Helper -->
+    <div class="sidebar-content">
+      <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+      
+      <div class="sidebar-panel">
+        <div class="panel-title">
+          <span>⚡</span> Antithyroid Starting Dose
+        </div>
+        
+        <div class="form-group">
+          <label for="clinicalScenario">Patient Clinical Profile</label>
+          <select id="clinicalScenario" class="select-field">
+            <option value="standard" selected>Normal Adult / Graves'</option>
+            <option value="preg1st">1st Trimester Pregnancy</option>
+            <option value="pregLate">2nd/3rd Trimester Pregnancy</option>
+            <option value="storm">Thyroid Storm / ICU crisis</option>
+          </select>
+        </div>
+        
+        <div class="form-group" id="t4ElevationGroup">
+          <label for="t4Elevation">Free T4 Elevation Level</label>
+          <select id="t4Elevation" class="select-field">
+            <option value="mild" selected>Mild (T4 &lt; 1.5x ULN)</option>
+            <option value="moderate">Moderate (T4 1.5 – 2.0x ULN)</option>
+            <option value="severe">Severe (T4 &gt; 2.0x ULN)</option>
+          </select>
+        </div>
+        
+        <div class="calc-result">
+          <div class="calc-result-title">Suggested Antithyroid Drug</div>
+          <div id="atdValue" style="font-size: 1.15rem; font-weight: 700; color: var(--accent-success); margin-bottom: 0.5rem;">Methimazole (Tapazole)</div>
+
+          <div class="calc-result-title">Suggested Starting Regimen</div>
+          <div id="atdStartingRegimen" class="calc-value">5 – 10 mg PO once daily</div>
+          
+          <div id="safetyWarningBox" class="calc-warning">
+            ⚠️ Baseline monitoring required: Obtain Free T4, Total T3, TSH, liver function tests (LFTs), and complete blood count (CBC) before starting antithyroid drug therapy.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="title-area">
+        <h2>Hyperthyroidism & Antithyroid Therapy Matrix</h2>
+        <p>Evidence-based point-of-care tool to initiate and monitor hyperthyroidism treatments. Select therapies matching pregnancy status, symptom severity, and manage agranulocytosis risk.</p>
+      </div>
+
+      <div class="clinical-alert">
+        <strong>CRITICAL SAFETY WARNING (AGRANULOCYTOSIS):</strong> Antithyroid drugs (Methimazole, PTU) carry a rare but fatal risk of **agranulocytosis** (0.1–0.5%). **Instruct all patients to stop the drug immediately and seek an urgent CBC if they develop a fever, chills, sore throat, or mouth ulcers.** Routine white blood cell monitoring is NOT recommended due to the rapid onset of agranulocytosis.
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filter-panel">
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="drugSearch" class="search-input" placeholder="Search hyperthyroid treatments (e.g. Methimazole, PTU, Propranolol, Surgery)...">
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">Clinical Scenario & Preference</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="scenario-graves">Graves' Disease</button>
+            <button class="filter-btn" data-filter="scenario-nodule">Toxic Nodule / TMNG</button>
+            <button class="filter-btn" data-filter="scenario-symptoms">Symptom / Adrenergic Control</button>
+            <button class="filter-btn" data-filter="scenario-pregnancy">Pregnancy Preferred</button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">PRACTICE CONSIDERATIONS</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="therapy-definitive">Definitive Therapy (Non-drug)</button>
+            <button class="filter-btn" data-filter="safety-low-liver">Lowest Liver Failure Risk</button>
+            <button class="filter-btn" data-filter="safety-low-cost">Low Cost</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Table -->
+      <div class="table-container">
+        <table id="matrixTable">
+          <thead>
+            <tr>
+              <th>Treatment Option</th>
+              <th>Etiology / Placement</th>
+              <th>Starting Dose & Route</th>
+              <th>Dosing Frequency</th>
+              <th>Severe Cautions & Boxed Warnings</th>
+              <th>Est. Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="methimazole" data-keywords="methimazole tapazole atd graves toxic nodule tmng once daily first line pregnancy late safety low liver low cost">
+              <td class="drug-name-col">
+                Methimazole (Tapazole)
+                <span class="drug-class-label">First-Line Thionamide Antithyroid Drug (ATD)</span>
+              </td>
+              <td><span class="badge badge-success">First-line (Graves/TMNG)</span></td>
+              <td>5 mg to 30 mg PO once daily (based on severity/T4)</td>
+              <td>Once daily (QD) (Long half-life)</td>
+              <td><span class="badge badge-risk">Agranulocytosis</span>, fetal scalp defects (1st trimester)</td>
+              <td><span class="badge badge-benefit">$ (Low - ~$10/mo)</span></td>
+            </tr>
+            <tr data-id="ptu" data-keywords="propylthiouracil ptu atd pregnancy 1st trimester thyroid storm liver failure black box low cost">
+              <td class="drug-name-col">
+                Propylthiouracil (PTU)
+                <span class="drug-class-label">Thionamide ATD (Inhibits T4-to-T3 peripheral conversion)</span>
+              </td>
+              <td><span class="badge badge-info">1st Trimester & Storm Preferred</span></td>
+              <td>100 mg to 150 mg PO Q8H (Storm: 200mg Q4H)</td>
+              <td>Three times daily (TID) (Short half-life)</td>
+              <td><span class="badge badge-risk">Severe Liver Failure</span> (FDA Boxed Warning)</td>
+              <td><span class="badge badge-warning">$$ (Moderate - ~$25/mo)</span></td>
+            </tr>
+            <tr data-id="propranolol" data-keywords="propranolol beta blocker adrenergic palpitations tachycardia asthma storm safety low cost">
+              <td class="drug-name-col">
+                Propranolol
+                <span class="drug-class-label">Non-Selective Beta-Blocker</span>
+              </td>
+              <td><span class="badge badge-benefit">Symptom Control</span></td>
+              <td>10 mg to 40 mg PO Q6-8H (Storm: 60-80mg PO Q4-6H)</td>
+              <td>Three to four times daily (TID/QID)</td>
+              <td><span class="badge badge-warning">Bronchospasm in Asthma</span>/COPD, heart block</td>
+              <td><span class="badge badge-benefit">$ (Low - ~$4/mo)</span></td>
+            </tr>
+            <tr data-id="atenolol" data-keywords="atenolol beta blocker selective cardioselective compliance safety low cost">
+              <td class="drug-name-col">
+                Atenolol
+                <span class="drug-class-label">Cardioselective Beta-1 Blocker</span>
+              </td>
+              <td><span class="badge badge-benefit">Symptom Control</span></td>
+              <td>25 mg to 50 mg PO once daily (QD) (up to 100mg QD)</td>
+              <td>Once daily (QD) (Better compliance)</td>
+              <td><span class="badge badge-warning">Bradycardia</span>, hypotension, fatigue</td>
+              <td><span class="badge badge-benefit">$ (Low - ~$4/mo)</span></td>
+            </tr>
+            <tr data-id="rai" data-keywords="radioactive iodine rai i-131 definitive graves toxic nodule tmng surgery">
+              <td class="drug-name-col">
+                Radioactive Iodine (RAI - I-131)
+                <span class="drug-class-label">Definitive Ablative Therapy (Isotope)</span>
+              </td>
+              <td><span class="badge badge-neutral">Definitive (Graves/TMNG)</span></td>
+              <td>Calculated single oral dose (capsule/liquid) in specialist clinic</td>
+              <td>One-time dose (can repeat in 6 months if failed)</td>
+              <td><span class="badge badge-risk">Contraindicated in Pregnancy</span>/Nursing, worsens eye disease</td>
+              <td><span class="badge badge-warning">$$$ (Moderate-High)</span></td>
+            </tr>
+            <tr data-id="surgery" data-keywords="thyroidectomy surgery subtotal total thyroidectomy definitive graves compressive nodules goiter">
+              <td class="drug-name-col">
+                Total Thyroidectomy
+                <span class="drug-class-label">Definitive Surgical Resection</span>
+              </td>
+              <td><span class="badge badge-neutral">Definitive (Large Goiter/Eye Disease)</span></td>
+              <td>Bilateral total thyroidectomy by high-volume surgeon</td>
+              <td>One-time surgery</td>
+              <td><span class="badge badge-risk">Laryngeal Nerve Damage</span>, permanent hypoparathyroidism</td>
+              <td><span class="badge badge-risk">$$$$ (High)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EHR Section -->
+      <div class="ehr-section">
+        <div class="ehr-header">
+          <h3>Point-of-Care EHR Documentation Note</h3>
+          <button id="btn-copy-note" class="btn btn-primary">
+            <span>📋</span> Copy EHR Note
+          </button>
+        </div>
+        <textarea id="note-output" class="ehr-textarea" readonly></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Name</h3>
+        <p id="drawerDrugClass">Class</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggling
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Starting Dose Helper Logic
+    const clinicalScenario = document.getElementById('clinicalScenario');
+    const t4Elevation = document.getElementById('t4Elevation');
+    const t4ElevationGroup = document.getElementById('t4ElevationGroup');
+    const atdValue = document.getElementById('atdValue');
+    const atdStartingRegimen = document.getElementById('atdStartingRegimen');
+    const safetyWarningBox = document.getElementById('safetyWarningBox');
+
+    function calculateStartingDose() {
+      const scenario = clinicalScenario.value;
+      const elevation = t4Elevation.value;
+
+      let drug = 'Methimazole (Tapazole)';
+      let regimen = '';
+      let warning = '⚠️ Baseline monitoring required: Obtain Free T4, Total T3, TSH, liver function tests (LFTs), and complete blood count (CBC) before starting antithyroid drug therapy.';
+
+      if (scenario === 'storm') {
+        t4ElevationGroup.style.display = 'none';
+        drug = 'Propylthiouracil (PTU)';
+        regimen = '200 mg PO every 4 hours';
+        warning = '🚨 EMERGENCY THYROID STORM: Administer loading dose of PTU (500–1000 mg PO/NG), followed by 250 mg every 4 hours. Pair with Propranolol (60-80mg Q4-6h), Hydrocortisone (100mg IV Q8h), and Potassium Iodide (SSKI 5 drops Q6h, given 1 hour AFTER PTU). ICU admission mandatory.';
+      } else if (scenario === 'preg1st') {
+        t4ElevationGroup.style.display = 'none';
+        drug = 'Propylthiouracil (PTU)';
+        regimen = '50 – 150 mg PO divided TID';
+        warning = '⚠️ PREGNANCY (1ST TRIMESTER): PTU is preferred due to Methimazole-associated embryopathy (aplasia cutis, choanal atresia). Check Free T4 monthly; maintain at the upper limit of normal using the lowest effective dose.';
+      } else {
+        t4ElevationGroup.style.display = 'flex';
+        drug = 'Methimazole (Tapazole)';
+        
+        if (scenario === 'pregLate') {
+          warning = '⚠️ PREGNANCY (2ND/3RD TRIMESTER): Switch patient from PTU to Methimazole at week 13 to avoid PTU-induced severe hepatotoxicity. Maintain Free T4 at the upper limit of normal.';
+        }
+
+        if (elevation === 'mild') {
+          regimen = '5 – 10 mg PO once daily';
+        } else if (elevation === 'moderate') {
+          regimen = '10 – 20 mg PO once daily';
+        } else if (elevation === 'severe') {
+          regimen = '30 – 40 mg PO once daily';
+        }
+      }
+
+      atdValue.textContent = drug;
+      atdStartingRegimen.textContent = regimen;
+      safetyWarningBox.textContent = warning;
+      updateEHRNote();
+    }
+
+    [clinicalScenario, t4Elevation].forEach(el => {
+      el.addEventListener('change', calculateStartingDose);
+    });
+
+    // Filtering & Table Logic
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      scenario: new Set(),
+      safety: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isScenario = ['scenario-graves', 'scenario-nodule', 'scenario-symptoms', 'scenario-pregnancy'].includes(filterType);
+        const filterSet = isScenario ? activeFilters.scenario : activeFilters.safety;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchScenario = true;
+        let matchSafety = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.scenario.size > 0) {
+          matchScenario = false;
+          activeFilters.scenario.forEach(filter => {
+            if (filter === 'scenario-graves' && ['methimazole', 'ptu', 'propranolol', 'atenolol', 'rai', 'surgery'].includes(rowId)) matchScenario = true;
+            if (filter === 'scenario-nodule' && ['methimazole', 'propranolol', 'atenolol', 'rai', 'surgery'].includes(rowId)) matchScenario = true;
+            if (filter === 'scenario-symptoms' && ['propranolol', 'atenolol'].includes(rowId)) matchScenario = true;
+            if (filter === 'scenario-pregnancy' && ['ptu', 'methimazole'].includes(rowId)) matchScenario = true; // PTU 1st trim, Methimazole late
+          });
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'therapy-definitive' && ['rai', 'surgery'].includes(rowId) === false) matchSafety = false;
+            if (filter === 'safety-low-liver' && ['ptu'].includes(rowId)) matchSafety = false; // PTU has black box for liver failure
+            if (filter === 'safety-low-cost' && ['rai', 'surgery'].includes(rowId)) matchSafety = false;
+          });
+        }
+
+        if (matchSearch && matchScenario && matchSafety) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+      updateEHRNote();
+    }
+
+    // Monographs Database
+    const drugDetails = {
+      methimazole: {
+        name: 'Methimazole (Tapazole / Generic)',
+        classDesc: 'Thionamide Antithyroid Drug (ATD).',
+        sections: [
+          {
+            title: 'Clinical Place & Guidelines Consensus',
+            content: `<ul>
+              <li><strong>First-Line antithyroid drug:</strong> Highly preferred over PTU for almost all non-pregnant adults and children with hyperthyroidism (Graves' or toxic nodular disease) due to superior efficacy, lower hepatotoxicity risk, and once-daily dosing which improves patient compliance.</li>
+              <li><strong>Mechanism:</strong> Inhibits the enzyme thyroid peroxidase (TPO), blocking the iodination of tyrosine residues on thyroglobulin, thereby inhibiting T3 and T4 synthesis.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing, Titration & Duration',
+            content: `<ul>
+              <li><strong>Starting Dose:</strong> Ranges from 5 mg to 30 mg PO once daily based on severity (Free T4 elevation).
+                <ul>
+                  <li>Mild elevation (&lt;1.5x ULN): 5–10 mg QD.</li>
+                  <li>Moderate elevation (1.5–2.0x ULN): 10–20 mg QD.</li>
+                  <li>Severe elevation (&gt;2.0x ULN): 30–40 mg QD.</li>
+                </ul>
+              </li>
+              <li><strong>Titration:</strong> Monitor Free T4 and Total T3 in 4–6 weeks. Adjust the dose downward to maintenance levels (typically 5–15 mg daily) as thyroid hormone levels normalize.</li>
+              <li><strong>Duration of Therapy for Graves\':</strong> Maintain therapy for <strong>12 to 18 months</strong>. Evaluate TRAb (thyrotropin receptor antibodies) level before discontinuation; if antibodies are undetectable, the drug can be stopped with a ~50% chance of long-term remission.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings, Side Effects & Agranulocytosis protocol',
+            content: `<ul>
+              <li><strong>Agranulocytosis:</strong> Rare (0.1–0.5%) but life-threatening. Manifests as severe neutropenia (ANC &lt; 500). **Advise all patients to report fever, chills, sore throat, or mouth sores immediately**. Stop the drug immediately and check an urgent CBC with differential. Do not restart if confirmed.</li>
+              <li><strong>Hepatotoxicity:</strong> Typically cholestatic. Monitor LFTs at baseline and if symptoms of liver injury occur (jaundice, dark urine, pruritus, abdominal pain).</li>
+              <li><strong>Teratogenicity:</strong> Avoid in the first trimester of pregnancy due to embryopathy risk (aplasia cutis, choanal atresia). Switch from PTU to Methimazole at the start of the 2nd trimester (week 13).</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. Generic lists: ~$10/month.</p>`
+          }
+        ]
+      },
+      ptu: {
+        name: 'Propylthiouracil (PTU)',
+        classDesc: 'Thionamide Antithyroid Drug (ATD).',
+        sections: [
+          {
+            title: 'Clinical Place & Indications',
+            content: `<ul>
+              <li><strong>Pregnancy (1st Trimester):</strong> Preferred drug of choice for Graves' disease during preconception and the first trimester of pregnancy due to a lower risk of severe fetal malformations compared to Methimazole.</li>
+              <li><strong>Thyroid Storm:</strong> Preferred because PTU has a unique extra-thyroidal effect: **it inhibits the peripheral conversion of T4 to active T3** by blocking 5\'-deiodinase.</li>
+              <li><strong>Second-line otherwise:</strong> Generally avoided due to liver safety concerns and the requirement of multiple daily doses.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Administration',
+            content: `<ul>
+              <li><strong>Starting Dose (Standard):</strong> 50 mg to 150 mg PO every 8 hours (TID).</li>
+              <li><strong>Thyroid Storm Dosing:</strong> 200 mg PO every 4 hours (or 500-1000 mg load, then 250 mg Q4H).</li>
+              <li><strong>Transition:</strong> Switch to Methimazole at the start of the second trimester of pregnancy (week 13) to avoid cumulative hepatotoxicity.</li>
+            </ul>`
+          },
+          {
+            title: 'FDA Boxed Warning & Hepatotoxicity',
+            content: `<ul>
+              <li><strong>Boxed Warning (Severe Hepatic Failure):</strong> PTU carries an FDA black box warning for **severe, potentially fatal liver injury and acute liver failure**. PTU-induced liver failure can progress rapidly and require liver transplantation.</li>
+              <li><strong>Agranulocytosis:</strong> Same risk as Methimazole (0.1–0.5%). Warn patient regarding fever, pharyngitis, stop drug immediately and check CBC.</li>
+            </ul>`
+          },
+          {
+            title: 'ATA Guidelines Reference & Cost',
+            content: `
+              <div class="citation-item">
+                <strong>ATA Hyperthyroidism Guidelines (2016):</strong> Outlines thionamide selections, agranulocytosis safety counselling, and pregnancy transition schedules.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/27521067" target="_blank">Thyroid 2016;26(10):1343-1421</a>
+              </div>
+              <p><strong>Cost:</strong> Generic cost is low-moderate (~$20-$30/month).</p>`
+          }
+        ]
+      },
+      propranolol: {
+        name: 'Propranolol',
+        classDesc: 'Non-Selective Beta-Adrenergic Blocker.',
+        sections: [
+          {
+            title: 'Clinical Place & Symptom Control',
+            content: `<ul>
+              <li><strong>Immediate Symptom Management:</strong> Initiated immediately upon diagnosis of hyperthyroidism to control adrenergic symptoms (tachycardia &gt;90 bpm, palpitations, tremors, anxiety, heat intolerance) while waiting for antithyroid medications or radioactive iodine to take effect.</li>
+              <li><strong>T4-to-T3 Inhibition:</strong> At high doses (&gt;160 mg/day), propranolol uniquely inhibits 5\'-deiodinase, blocking the peripheral conversion of T4 to T3. Highly useful in thyroid storm.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Contraindications',
+            content: `<ul>
+              <li><strong>Dosing:</strong> 10 mg to 40 mg PO three to four times daily (TID/QID).</li>
+              <li><strong>Thyroid Storm:</strong> 60 mg to 80 mg PO every 4 to 6 hours.</li>
+              <li><strong>Contraindications:</strong> Moderate-to-severe bronchospastic asthma or COPD (non-selective beta blockade blocks bronchodilation), severe bradycardia, decompensated heart failure (unless hyperthyroid-induced).</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. ~$4 per month.</p>`
+          }
+        ]
+      },
+      atenolol: {
+        name: 'Atenolol',
+        classDesc: 'Cardioselective Beta-1 Adrenergic Blocker.',
+        sections: [
+          {
+            title: 'Clinical Place & Compliance',
+            content: `<ul>
+              <li><strong>Cardioselective Advantage:</strong> Blocks beta-1 receptors selectively, reducing cardiotoxicity risk and adrenergic symptoms. Safer in patients with mild asthma/reactive airway disease.</li>
+              <li><strong>Compliance Benefit:</strong> Longer half-life allows for **once-daily dosing** (QD), which is highly preferred by outpatients compared to propranolol\'s multi-daily dosing.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Start at 25 mg to 50 mg PO once daily (QD). Can titrate up to 100 mg once daily if heart rate remains elevated (&gt;90 bpm).</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. ~$4 per month.</p>`
+          }
+        ]
+      },
+      rai: {
+        name: 'Radioactive Iodine (RAI - I-131)',
+        classDesc: 'Radioactive Iodine Isotope Therapy (Ablative).',
+        sections: [
+          {
+            title: 'Indication & Mechanism',
+            content: `<ul>
+              <li><strong>Definitive Therapy:</strong> Standard definitive treatment for Graves' disease, toxic multinodular goiter, and toxic adenoma.</li>
+              <li><strong>Mechanism:</strong> Taken up selectively by follicular cells, emitting beta-particles that destroy thyroid tissue over 6–18 weeks.</li>
+            </ul>`
+          },
+          {
+            title: 'Contraindications & Safety Precautions',
+            content: `<ul>
+              <li><strong>Absolute Contraindications:</strong> **Pregnancy, breastfeeding, planning pregnancy within 6 months**, and moderate-to-severe Graves' ophthalmopathy (RAI can worsen eye disease; if used, administer with concurrent prednisone prophylaxis).</li>
+              <li><strong>Radiation Precautions:</strong> Patients must avoid close contact with children/pregnant women for 3-7 days, sleep in separate beds, and flush toilets twice.</li>
+              <li><strong>Outcome:</strong> Inevitably results in permanent hypothyroidism (typically within 3-6 months), requiring lifelong Levothyroxine replacement.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Moderate to high. Single outpatient procedure costs $1,500 - $3,000, but eliminates drug costs.</p>`
+          }
+        ]
+      },
+      surgery: {
+        name: 'Total Thyroidectomy',
+        classDesc: 'Surgical Resection.',
+        sections: [
+          {
+            title: 'Indications & Placement',
+            content: `<ul>
+              <li><strong>Definitive Therapy:</strong> Indicated for Graves' disease or multinodular goiter, especially in cases of:
+                <ul>
+                  <li>Large goiter causing obstructive symptoms (dysphagia, stridor).</li>
+                  <li>Moderate-to-severe active Graves' ophthalmopathy.</li>
+                  <li>Suspected or confirmed co-existing thyroid malignancy.</li>
+                  <li>Patient preference or contraindications to thionamides/RAI.</li>
+                </ul>
+              </li>
+            </ul>`
+          },
+          {
+            title: 'Pre-operative Preparation',
+            content: `<ul>
+              <li><strong>Euthyroid target:</strong> Patients should be made euthyroid using Methimazole prior to surgery.</li>
+              <li><strong>Lugol\'s Solution:</strong> Administer potassium iodide (Lugol\'s solution, 5-7 drops TID) for 10 days pre-operatively to decrease thyroid vascularity and blood loss.</li>
+            </ul>`
+          },
+          {
+            title: 'Surgical Risks & Post-op',
+            content: `<ul>
+              <li><strong>Risks:</strong> Recurrent laryngeal nerve injury (vocal cord paralysis), hypoparathyroidism (hypocalcemia; check calcium post-op), bleeding.</li>
+              <li><strong>Post-operative Dosing:</strong> Permanent hypothyroidism occurs immediately. Start Levothyroxine at standard weight-based replacement (1.6 mcg/kg/day) the morning after surgery.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> High. Inpatient surgical procedure costs $10,000 - $20,000.</p>`
+          }
+        ]
+      }
+    };
+
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+
+    // EHR Note Generator
+    function updateEHRNote() {
+      const scenarioText = clinicalScenario.options[clinicalScenario.selectedIndex].text;
+      const elevationText = t4Elevation.options[t4Elevation.selectedIndex].text;
+      const drug = atdValue.textContent;
+      const regimen = atdStartingRegimen.textContent;
+
+      const note = `HYPERTHYROIDISM POINT-OF-CARE CLINICAL NOTE
+--------------------------------------------------
+CLINICAL WORKUP:
+- Patient Scenario Selected: ${scenarioText}
+- Free T4 Elevation: ${elevationText}
+
+SUGGESTED TREATMENT PLAN:
+- Suggested Antithyroid Drug (ATD): ${drug}
+- Suggested Starting Regimen: ${regimen}
+
+SAFETY COUNSELLING & MONITORING:
+- COUNSELLED PATIENT ON AGRANULOCYTOSIS RISK: Instructed patient to stop thionamide immediately and seek an urgent CBC with diff if they develop fever, chills, sore throat, or mouth ulcers.
+- COUNSELLED PATIENT ON HEPATOTOXICITY SIGNS: Instructed to report jaundice, dark urine, or abdominal pain. PTU has an FDA Boxed Warning.
+- Pregnancy transition plan reviewed (if applicable): PTU in 1st trimester, switch to Methimazole in 2nd trimester.
+- Monitoring: obtain baseline LFTs, CBC, Free T4, T3, TSH. Repeat Free T4/Total T3 in 4-6 weeks to guide titration.`;
+
+      document.getElementById('note-output').textContent = note;
+    }
+
+    const btnCopyNote = document.getElementById('btn-copy-note');
+    btnCopyNote.addEventListener('click', () => {
+      const noteOutput = document.getElementById('note-output');
+      navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+        alert('Hyperthyroidism Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Initial load
+    calculateStartingDose();
+  </script>
+</body>
+</html>
