@@ -509,6 +509,48 @@
       border: 1px solid var(--accent-primary);
     }
 
+    /* Info card layout */
+    .info-card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .info-card-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .info-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .info-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    .info-card ul {
+      padding-left: 1.2rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .info-card ul li {
+      margin-bottom: 0.5rem;
+    }
+
     /* EHR Section */
     .ehr-section {
       background-color: var(--bg-secondary);
@@ -793,7 +835,7 @@
     <div class="main-content">
       <div class="title-area">
         <h2>Eczema & Dry Skin Prescribing Matrix</h2>
-        <p>Interactive tool to select, titrate, and monitor treatments for xerosis and atopic dermatitis. Triage by body site sensitivity and review steroid-free options.</p>
+        <p>Interactive tool to select, titrate, and monitor treatments for xerosis and atopic dermatitis. Triage by body site sensitivity, review steroid potencies, and choose optimal barrier moisturizers.</p>
       </div>
 
       <div class="clinical-alert">
@@ -805,14 +847,14 @@
         <div class="search-row">
           <div class="search-box">
             <span class="search-icon">🔍</span>
-            <input type="text" id="drugSearch" class="search-input" placeholder="Search treatments (e.g. Hydrocortisone, Tacrolimus, CeraVe)...">
+            <input type="text" id="drugSearch" class="search-input" placeholder="Search therapies (e.g. Hydrocortisone, Tacrolimus, Urea, AmLactin, CeraVe)...">
           </div>
         </div>
         
         <div class="filter-section">
           <div class="filter-label">Drug Class & Steroid Status</div>
           <div class="filter-group">
-            <button class="filter-btn" data-filter="class-moisturizer">Moisturizers / Barrier Repair</button>
+            <button class="filter-btn" data-filter="class-moisturizer">Moisturizers / Barrier Repair (OTC/Rx)</button>
             <button class="filter-btn" data-filter="class-steroid">Topical Corticosteroids (TCS)</button>
             <button class="filter-btn" data-filter="class-nonsteroid">Steroid-Free Prescription</button>
             <button class="filter-btn" data-filter="class-systemic">Advanced Systemic / Biologic</button>
@@ -829,43 +871,22 @@
         </div>
       </div>
 
-      <!-- Matrix Table -->
+      <!-- Table 1: Eczema Flares & Inflammation -->
+      <h3 style="margin-bottom: 0.75rem; font-family: var(--font-heading); font-size: 1.25rem;">Atopic Dermatitis & Eczema Flare Management</h3>
       <div class="table-container">
         <table id="matrixTable">
           <thead>
             <tr>
-              <th>Medication / Treatment</th>
-              <th>Class & Potency</th>
+              <th>Active Medication</th>
+              <th>Class / Potency</th>
               <th>Dosing & Application</th>
               <th>Typical Duration</th>
-              <th>Primary Clinical Warning / Side Effect</th>
+              <th>Primary Warning / Side Effect</th>
               <th>Est. Cost</th>
             </tr>
           </thead>
           <tbody>
-            <tr data-id="ointment" data-keywords="ointment emollient vaseline aquaphor moisturizer barrier repair dry skin safe face low cost pediatric infant">
-              <td class="drug-name-col">
-                Ointment Emollients
-                <span class="drug-class-label">Petrolatum-based barrier ointment (Aquaphor/Vaseline)</span>
-              </td>
-              <td><span class="badge badge-success">OTC Moisturizer</span></td>
-              <td>Apply liberally twice daily (BID) or as needed (ideally within 3 min post-bath)</td>
-              <td>Indefinite / Chronic maintenance</td>
-              <td><span class="badge badge-neutral">Follicular Occlusion</span>, greasy feel</td>
-              <td><span class="badge badge-benefit">$ (Low - OTC)</span></td>
-            </tr>
-            <tr data-id="cream" data-keywords="cream emollient cerave cetaphil moisturizer barrier repair dry skin safe face low cost pediatric infant">
-              <td class="drug-name-col">
-                Cream Emollients
-                <span class="drug-class-label">Ceramide/lipid-containing cream (CeraVe/Cetaphil)</span>
-              </td>
-              <td><span class="badge badge-success">OTC Moisturizer</span></td>
-              <td>Apply liberally twice daily (BID) or as needed</td>
-              <td>Indefinite / Chronic maintenance</td>
-              <td><span class="badge badge-neutral">Lower Barrier Action</span> than ointments</td>
-              <td><span class="badge badge-benefit">$ (Low - OTC)</span></td>
-            </tr>
-            <tr data-id="low_steroid" data-keywords="low steroid hydrocortisone 2.5 desonide 0.05 class 6 class 7 tcs safe face low cost pediatric infant">
+            <tr data-id="low_steroid" data-keywords="low potency steroid hydrocortisone 2.5 desonide 0.05 class 6 class 7 tcs safe face low cost pediatric infant">
               <td class="drug-name-col">
                 Low Potency TCS
                 <span class="drug-class-label">Topical Corticosteroid (Class VI–VII)</span>
@@ -876,7 +897,7 @@
               <td><span class="badge badge-warning">Atrophy if misused</span> long-term (&gt;4 weeks)</td>
               <td><span class="badge badge-benefit">$ (Low generic)</span></td>
             </tr>
-            <tr data-id="med_steroid" data-keywords="medium steroid triamcinolone 0.1 fluticasone class 4 class 5 tcs low cost pediatric infant">
+            <tr data-id="med_steroid" data-keywords="medium potency steroid triamcinolone 0.1 fluticasone class 4 class 5 tcs low cost pediatric infant">
               <td class="drug-name-col">
                 Medium Potency TCS
                 <span class="drug-class-label">Topical Corticosteroid (Class IV–V)</span>
@@ -887,7 +908,7 @@
               <td><span class="badge badge-warning">Skin Thinning / Striae</span> on thin skin areas</td>
               <td><span class="badge badge-benefit">$ (Low generic)</span></td>
             </tr>
-            <tr data-id="high_steroid" data-keywords="high steroid clobetasol 0.05 halobetasol class 1 class 2 tcs low cost">
+            <tr data-id="high_steroid" data-keywords="high potency steroid clobetasol 0.05 halobetasol class 1 class 2 tcs low cost">
               <td class="drug-name-col">
                 Super Potency TCS
                 <span class="drug-class-label">Topical Corticosteroid (Class I)</span>
@@ -898,9 +919,9 @@
               <td><span class="badge badge-risk">HPA Axis Suppression</span>, rapid skin thinning</td>
               <td><span class="badge badge-benefit">$–$$ (Low-Mod generic)</span></td>
             </tr>
-            <tr data-id="tci" data-keywords="tacrolimus protopic pimecrolimus elidel tci nonsteroid safe face pediatric infant">
+            <tr data-id="tci" data-keywords="tacrolimus protopic pimecrolimus elidel tci calcineurin inhibitor nonsteroid safe face pediatric infant">
               <td class="drug-name-col">
-                Tacrolimus (Protopic 0.1%)
+                Tacrolimus (Protopic 0.1% / 0.03%)
                 <span class="drug-class-label">Topical Calcineurin Inhibitor (TCI) (Steroid-Free)</span>
               </td>
               <td><span class="badge badge-success">Steroid-Free Rx (TCI)</span></td>
@@ -944,6 +965,123 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <!-- Table 2: Xerosis & Dry Skin Barrier Repair -->
+      <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-family: var(--font-heading); font-size: 1.25rem;">Xerosis & Dry Skin Barrier Therapies</h3>
+      <div class="table-container">
+        <table id="xerosisTable">
+          <thead>
+            <tr>
+              <th>Active Ingredient</th>
+              <th>Class & Type</th>
+              <th>OTC Brand Examples</th>
+              <th>Concentration</th>
+              <th>Typical Dosing</th>
+              <th>Primary Safety Caution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="ammonium_lactate" data-keywords="ammonium lactate 12 lac-hydrin rx prescription dry skin xerosis safe face low cost">
+              <td class="drug-name-col">
+                Ammonium Lactate 12%
+                <span class="drug-class-label">Lac-Hydrin (Lotion/Cream)</span>
+              </td>
+              <td><span class="badge badge-info">Prescription (Rx)</span></td>
+              <td>Generic, Lac-Hydrin</td>
+              <td>12% (neutralized)</td>
+              <td>Apply to affected areas and rub in, <strong>twice daily</strong></td>
+              <td><span class="badge badge-warning">Transient Stinging / Sun Sensitivity</span> on abraded skin</td>
+            </tr>
+            <tr data-id="urea_rx" data-keywords="urea 40 uramaxin keralac keratolytic rx prescription palms soles heels thick skin">
+              <td class="drug-name-col">
+                Urea 40%
+                <span class="drug-class-label">Uramaxin, Keralac (Cream/Ointment)</span>
+              </td>
+              <td><span class="badge badge-info">Prescription (Rx)</span></td>
+              <td>Generic, Uramaxin, Keralac</td>
+              <td>&ge;40% (high concentration)</td>
+              <td>Apply <strong>once or twice daily</strong> to thick hyperkeratotic areas</td>
+              <td><span class="badge badge-warning">Strong Keratolytic</span> (Avoid thin skin/folds)</td>
+            </tr>
+            <tr data-id="urea_otc" data-keywords="urea eucerin roughness relief cerave sa urea excipial gold bond humectant low cost pediatric infant">
+              <td class="drug-name-col">
+                Urea (OTC)
+                <span class="drug-class-label">Humectant / Mild Keratolytic</span>
+              </td>
+              <td><span class="badge badge-success">Over-the-Counter (OTC)</span></td>
+              <td>Eucerin Roughness Relief, CeraVe SA + Urea, Excipial</td>
+              <td>5–10% (moisturizer); 20% (mild keratolytic)</td>
+              <td>Apply <strong>once to twice daily</strong></td>
+              <td>Mild stinging on broken skin</td>
+            </tr>
+            <tr data-id="lactic_acid_otc" data-keywords="lactic acid amlactin rapid relief lactic acid otc safe face low cost pediatric infant">
+              <td class="drug-name-col">
+                Lactic Acid (OTC)
+                <span class="drug-class-label">Alpha-Hydroxy Acid Humectant</span>
+              </td>
+              <td><span class="badge badge-success">Over-the-Counter (OTC)</span></td>
+              <td>AmLactin Daily, AmLactin Rapid Relief</td>
+              <td>12% lactic acid</td>
+              <td>Apply <strong>once to twice daily</strong></td>
+              <td><span class="badge badge-warning">Avoid broken skin</span> (causes stinging/burning)</td>
+            </tr>
+            <tr data-id="glycerol_otc" data-keywords="glycerol glycerin eucerin original neutrogena aquaphor humectant low cost pediatric infant safe face">
+              <td class="drug-name-col">
+                Glycerol (Glycerin)
+                <span class="drug-class-label">Physiological Humectant / Moisturizer</span>
+              </td>
+              <td><span class="badge badge-success">Over-the-Counter (OTC)</span></td>
+              <td>Eucerin Original Healing, Neutrogena Norwegian Formula, Aquaphor</td>
+              <td>5–20% (varies)</td>
+              <td>Apply <strong>liberally as needed</strong>, especially after bathing</td>
+              <td>Generally extremely well tolerated</td>
+            </tr>
+            <tr data-id="ceramides_otc" data-keywords="ceramides cerave sa lipid barrier repair dry skin safe face low cost pediatric infant">
+              <td class="drug-name-col">
+                Ceramides
+                <span class="drug-class-label">Physiological Barrier Lipid replacement</span>
+              </td>
+              <td><span class="badge badge-success">Over-the-Counter (OTC)</span></td>
+              <td>CeraVe Moisturizing Cream, CeraVe SA Cream</td>
+              <td>Ceramides 1, 3, 6-II</td>
+              <td>Apply <strong>once to twice daily</strong></td>
+              <td>Very low adverse effect profile</td>
+            </tr>
+            <tr data-id="petrolatum_otc" data-keywords="petrolatum vaseline aquaphor cerave healing ointment occlusive barrier low cost pediatric infant safe face">
+              <td class="drug-name-col">
+                Petrolatum
+                <span class="drug-class-label">White Petrolatum Occlusive Ointment</span>
+              </td>
+              <td><span class="badge badge-success">Over-the-Counter (OTC)</span></td>
+              <td>Vaseline, Aquaphor, CeraVe Healing Ointment</td>
+              <td>Up to 100% (Vaseline)</td>
+              <td>Apply <strong>as needed</strong>; best as "soak and seal" post-bath</td>
+              <td>Greasy feel, risk of occlusive folliculitis</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Prescribing Considerations cards -->
+      <div class="info-card-grid">
+        <div class="info-card">
+          <h4>Key Prescribing Considerations</h4>
+          <ul>
+            <li><strong>Urea Concentrations:</strong> Urea &le;10% acts as a humectant/moisturizer. Urea &gt;10% adds mild keratolytic properties. Urea &ge;40% is strongly keratolytic and reserved for severe hyperkeratotic plaques (e.g., heels, palms) and is Rx-only.</li>
+            <li><strong>AmLactin vs. Rx Ammonium Lactate:</strong> AmLactin (12% lactic acid) is the OTC equivalent of prescription ammonium lactate 12%. The active ingredient is identical, but the OTC version is marketed as a cosmetic moisturizer.</li>
+            <li><strong>Stepwise Triage:</strong> For moderate xerosis, a urea 10% cream or AmLactin BID is a reasonable first step. For severe scaling/hyperkeratosis, prescribe ammonium lactate 12% or urea 20–40%.</li>
+            <li><strong>Combination Synergy:</strong> Products combining humectants (e.g., urea, glycerol) with occlusives (petrolatum) or barrier lipids (ceramides) offer additive clinical benefits.</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h4>Application & Safety Counseling</h4>
+          <ul>
+            <li><strong>Timing:</strong> Emollients should be applied to clean, slightly damp skin when possible (e.g., immediately after bathing) to trap moisture.</li>
+            <li><strong>Broken Skin Warning:</strong> Lactic acid and urea-containing products may cause transient stinging/burning on broken, fissured, or inflamed skin. Avoid applying to active open wounds.</li>
+            <li><strong>Sun Safety:</strong> Alpha-hydroxy acids (lactic acid/ammonium lactate) increase sun sensitivity. Counsel patients to minimize sun exposure and apply sunscreen on treated areas.</li>
+          </ul>
+        </div>
       </div>
 
       <!-- EHR Section -->
@@ -1027,17 +1165,15 @@
 
       if (severity === 'mild') {
         recomClass = 'Non-Pharmacological / OTC Barrier Repair';
-        agent = 'Emollient Ointment (Vaseline/Aquaphor) or Cream (CeraVe) BID';
+        agent = 'Emollient Cream (CeraVe) BID or Urea 10% cream';
         duration = 'Chronic daily maintenance';
         showWarning = false;
       } else if (site === 'face') {
-        // Face/eyelids/folds are ALWAYS low potency regardless of severity/age
         recomClass = 'Class 6–7 (Low Potency)';
         agent = age === 'pediatric' ? 'Desonide 0.05% cream BID' : 'Hydrocortisone 2.5% cream BID';
         duration = 'Limit to 1–2 weeks maximum';
         showWarning = true;
       } else if (age === 'pediatric') {
-        // Kids on body: prefer low-to-medium
         if (severity === 'severe') {
           recomClass = 'Class 4–5 (Medium Potency)';
           agent = 'Triamcinolone acetonide 0.025% ointment BID';
@@ -1049,7 +1185,6 @@
         }
         showWarning = false;
       } else {
-        // Adults on body/extremities
         if (severity === 'severe' || site === 'palms') {
           recomClass = 'Class 1–2 (Super/High Potency)';
           agent = 'Clobetasol propionate 0.05% ointment BID';
@@ -1077,7 +1212,7 @@
     // Filtering & Table Logic
     const searchInput = document.getElementById('drugSearch');
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr, #xerosisTable tbody tr');
 
     const activeFilters = {
       search: '',
@@ -1123,7 +1258,7 @@
         if (activeFilters.scenario.size > 0) {
           matchScenario = false;
           activeFilters.scenario.forEach(filter => {
-            if (filter === 'class-moisturizer' && ['ointment', 'cream'].includes(rowId)) matchScenario = true;
+            if (filter === 'class-moisturizer' && ['ointment', 'cream', 'ammonium_lactate', 'urea_rx', 'urea_otc', 'lactic_acid_otc', 'glycerol_otc', 'ceramides_otc', 'petrolatum_otc'].includes(rowId)) matchScenario = true;
             if (filter === 'class-steroid' && ['low_steroid', 'med_steroid', 'high_steroid'].includes(rowId)) matchScenario = true;
             if (filter === 'class-nonsteroid' && ['tci', 'crisaborole', 'ruxolitinib'].includes(rowId)) matchScenario = true;
             if (filter === 'class-systemic' && rowId === 'dupilumab') matchScenario = true;
@@ -1132,9 +1267,9 @@
 
         if (activeFilters.safety.size > 0) {
           activeFilters.safety.forEach(filter => {
-            if (filter === 'safety-face' && ['med_steroid', 'high_steroid'].includes(rowId)) matchSafety = false; // Medium/high steroids are unsafe for face
+            if (filter === 'safety-face' && ['med_steroid', 'high_steroid', 'urea_rx'].includes(rowId)) matchSafety = false;
             if (filter === 'safety-low-cost' && ['tci', 'crisaborole', 'ruxolitinib', 'dupilumab'].includes(rowId)) matchSafety = false;
-            if (filter === 'safety-pediatric' && ['high_steroid', 'ruxolitinib'].includes(rowId)) matchSafety = false; // Clobetasol and Opzelura have age limits
+            if (filter === 'safety-pediatric' && ['high_steroid', 'ruxolitinib', 'urea_rx'].includes(rowId)) matchSafety = false;
           });
         }
 
@@ -1149,54 +1284,6 @@
 
     // Monographs Database
     const drugDetails = {
-      ointment: {
-        name: 'Ointment Emollients (Vaseline / Aquaphor)',
-        classDesc: 'Heavy Petrolatum-Based Barrier Occlusives.',
-        sections: [
-          {
-            title: 'Clinical Place & Efficacy',
-            content: `<ul>
-              <li><strong>Cornerstone of Eczema Care:</strong> Essential barrier repair. Strongly recommended by the AAD guidelines for daily maintenance.</li>
-              <li><strong>Mechanism:</strong> Creates an occlusive layer over the stratum corneum, trapping water in the skin and preventing transepidermal water loss (TEWL).</li>
-              <li><strong>Best Practice:</strong> Apply liberally within <strong>3 minutes of bathing</strong> ("soak and smear" method) while skin is damp to trap maximum moisture.</li>
-            </ul>`
-          },
-          {
-            title: 'Adverse Effects & Tolerability',
-            content: `<ul>
-              <li><strong>Folliculitis:</strong> Can block hair follicles, causing occlusive folliculitis (especially in hot weather).</li>
-              <li><strong>Tolerability:</strong> Greasy formulation can soil clothing, leading to poor daytime compliance. Advise patients to apply heavier ointments at bedtime.</li>
-            </ul>`
-          },
-          {
-            title: 'Cost',
-            content: `<p><strong>Cost:</strong> Very low. Over-the-counter jars cost $5–$15.</p>`
-          }
-        ]
-      },
-      cream: {
-        name: 'Cream Emollients (CeraVe / Cetaphil)',
-        classDesc: 'Ceramide/Lipid-Enriched Emollient Creams.',
-        sections: [
-          {
-            title: 'Clinical Place & Efficacy',
-            content: `<ul>
-              <li><strong>Daily Maintenance:</strong> Excellent for daytime application due to cosmetic elegance (rapidly absorbed, non-greasy).</li>
-              <li><strong>Barrier Repair:</strong> Ceramide-enriched creams mimic natural skin lipids, accelerating barrier repair.</li>
-            </ul>`
-          },
-          {
-            title: 'Formulation Warnings',
-            content: `<ul>
-              <li><strong>Preservatives:</strong> Creams contain water, meaning they require preservatives/alcohol, which can cause a temporary stinging sensation on cracked skin. If skin is severely cracked, default to ointments.</li>
-            </ul>`
-          },
-          {
-            title: 'Cost',
-            content: `<p><strong>Cost:</strong> Low. OTC bottles cost $10–$20.</p>`
-          }
-        ]
-      },
       low_steroid: {
         name: 'Low Potency TCS (Hydrocortisone 2.5% / Desonide 0.05%)',
         classDesc: 'Topical Corticosteroid (Class VI–VII).',
@@ -1242,7 +1329,7 @@
             title: 'Dosing & Duration',
             content: `<ul>
               <li><strong>Dosing:</strong> Apply a thin layer BID to active lesions.</li>
-              <li><strong>Duration:</strong> Limit to 2–3 weeks. Once clear, transition back to daily moisturizing maintenance or topical calcineurin inhibitors.</li>
+              <li><strong>Duration:</strong> Limit to 2–3 weeks (Avoid on face and skin folds).</li>
             </ul>`
           },
           {
@@ -1402,6 +1489,155 @@
               <p><strong>Cost:</strong> Extremely high. Costs ~$3,500 to $4,000 per month. Requires commercial specialty pharmacy and prior authorization.</p>`
           }
         ]
+      },
+      
+      // New Xerosis and moisturizers database
+      ammonium_lactate: {
+        name: 'Ammonium Lactate 12% (Lac-Hydrin / Generic)',
+        classDesc: 'Prescription Humectant & Alpha-Hydroxy Acid.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<p><strong>Prescription Hydration:</strong> FDA-approved for the treatment of xerosis (dry skin) and ichthyosis vulgaris. Acts as a potent humectant.</p>
+            <ul>
+              <li><strong>Mechanism:</strong> Lactic acid is an alpha-hydroxy acid that hydrates the skin, increases water-holding capacity, and decreases stratum corneum cell cohesion to reduce flaking.</li>
+              <li><strong>Vehicle:</strong> Available as a 12% lotion or 12% cream.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Patient Counseling',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Apply to the affected areas and rub in thoroughly **twice daily (BID)**.</li>
+              <li><strong>Transient Stinging:</strong> Counsel patients that application may cause transient stinging, burning, or redness, particularly on abraded, cracked, or fissured skin.</li>
+              <li><strong>Sun Sensitivity:</strong> Minimizes sun exposure on treated areas and use sunscreen, as alpha-hydroxy acids increase skin vulnerability to UV radiation.</li>
+            </ul>`
+          },
+          {
+            title: 'Citations (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>Ammonium Lactate FDA label:</strong> Approved prescribing guidelines for xerosis.
+                <span class="citation-link">FDA Approved Labeling 2025</span>
+              </div>
+            `
+          }
+        ]
+      },
+      urea_rx: {
+        name: 'Urea 40% (Uramaxin / Keralac / Generic)',
+        classDesc: 'High-Potency Prescription Keratolytic.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<p><strong>Rx-Strength Keratolytic:</strong> Indicated for hyperkeratotic skin conditions, such as thickened dry skin on heels, elbows, and palms, or severe scaling plaques.</p>
+            <ul>
+              <li><strong>Mechanism:</strong> At high concentrations (&ge;40%), urea acts as a powerful keratolytic, breaking down hydrogen bonds in keratin to soften and desquamate thick skin plates.</li>
+              <li><strong>Dosing:</strong> Apply once or twice daily (QD/BID) to the affected hyperkeratotic areas.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings & Safe Use',
+            content: `<ul>
+              <li><strong>Thin Skin Caution:</strong> **Avoid thin skin areas** (face, groin, skin folds) as it will cause severe irritation and chemical desquamation.</li>
+              <li><strong>Wash Hands:</strong> Wash hands thoroughly after application to prevent accidental eye contact.</li>
+            </ul>`
+          },
+          {
+            title: 'Citations (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>Topical Urea in Skincare Review:</strong> Summarizes concentration-dependent actions of urea (humectant at low dose, keratolytic at high dose).
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/30378113" target="_blank">Dermatol Ther 2018;31(6):e12690</a>
+              </div>
+            `
+          }
+        ]
+      },
+      urea_otc: {
+        name: 'Urea OTC (Eucerin Roughness Relief / CeraVe SA + Urea)',
+        classDesc: 'Over-the-Counter Humectant / Keratolytic.',
+        sections: [
+          {
+            title: 'Efficacy by Concentration',
+            content: `<ul>
+              <li><strong>Humectant (&le;10%):</strong> Gold standard humectant. Increases water absorption into the stratum corneum. Acts as a physiological moisturizer (part of the skin's Natural Moisturizing Factor [NMF]).</li>
+              <li><strong>Mild Keratolytic (20%):</strong> Thins the scaling layer and reduces roughness in dry aging skin or mild keratosis pilaris.</li>
+              <li><strong>Common Brands:</strong> Eucerin Roughness Relief (10%), CeraVe SA + Urea (10%), Excipial (10%), Gold Bond Ultimate Rough & Bumpy (urea + AHA).</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Tolerability',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Apply once or twice daily to dry skin.</li>
+              <li><strong>Tolerability:</strong> Generally very safe. Can cause mild transient stinging on broken skin.</li>
+            </ul>`
+          },
+          {
+            title: 'Citations (Open Evidence)',
+            content: `
+              <div class="citation-item">
+                <strong>Aging Skin Study (2026):</strong> Randomized clinical trial showing 10% urea lotion significantly improves hydration and barrier function in xerosis of aging skin.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/40002139" target="_blank">Skin Pharmacol Physiol 2026;39(1):8-14</a>
+              </div>
+            `
+          }
+        ]
+      },
+      lactic_acid_otc: {
+        name: 'Lactic Acid 12% (AmLactin)',
+        classDesc: 'OTC Alpha-Hydroxy Acid Emollient.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>OTC Equivalent of Rx:</strong> AmLactin (12% neutralized lactic acid) is the OTC equivalent of prescription ammonium lactate 12%. The active chemical is the same, but it is marketed as a cosmetic moisturizer.</li>
+              <li><strong>Dosing:</strong> Apply once or twice daily.</li>
+              <li><strong>Warnings:</strong> Do not apply to broken or highly inflamed skin due to stinging risk. Use sun protection.</li>
+            </ul>`
+          }
+        ]
+      },
+      glycerol_otc: {
+        name: 'Glycerol / Glycerin (Eucerin / Neutrogena)',
+        classDesc: 'Physiological Humectant.',
+        sections: [
+          {
+            title: 'Efficacy & Hydration Mechanism',
+            content: `<ul>
+              <li><strong>Physiological Humectant:</strong> Glycerin is a key component of skin hydration. It penetrates the aquaporin-3 channels to hydrate the deep layers of the stratum corneum.</li>
+              <li><strong>Efficacy:</strong> Highly effective basic emollient. Stabilizes the lipid bilayer.</li>
+              <li><strong>Dosing:</strong> Apply liberally as needed, especially within 3 minutes after bathing.</li>
+            </ul>`
+          }
+        ]
+      },
+      ceramides_otc: {
+        name: 'Ceramides (CeraVe)',
+        classDesc: 'Physiological Barrier Lipids.',
+        sections: [
+          {
+            title: 'Efficacy in Atopic Dermatitis',
+            content: `<ul>
+              <li><strong>Barrier Repair:</strong> Eczema skin is deficient in ceramides, which act as the "mortar" holding skin cells together. Products containing Ceramides 1, 3, and 6-II help rebuild this intercellular lipid barrier.</li>
+              <li><strong>Dosing:</strong> Apply once or twice daily.</li>
+            </ul>`
+          }
+        ]
+      },
+      petrolatum_otc: {
+        name: 'Petrolatum (Vaseline / Aquaphor)',
+        classDesc: 'Occlusive Emollient.',
+        sections: [
+          {
+            title: 'Efficacy & Occlusion',
+            content: `<ul>
+              <li><strong>Gold Standard Occlusive:</strong> White petrolatum is the most effective occlusive agent known, blocking up to 98% of trans-epidermal water loss.</li>
+              <li><strong>Aquaphor:</strong> Pairs petrolatum with glycerin and lanolin (caution: lanolin allergy) for combined humectant/occlusive action.</li>
+              <li><strong>"Soak and Seal" Method:</strong> Best applied immediately after bathing to lock in moisture.</li>
+              <li><strong>Warning:</strong> Greasy, can cause occlusive folliculitis on acne-prone skin.</li>
+            </ul>`
+          }
+        ]
       }
     };
 
@@ -1411,6 +1647,8 @@
     const drawerDrugName = document.getElementById('drawerDrugName');
     const drawerDrugClass = document.getElementById('drawerDrugClass');
     const drawerContent = document.getElementById('drawerContent');
+
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr, #xerosisTable tbody tr');
 
     tableRows.forEach(row => {
       row.addEventListener('click', () => {
@@ -1476,6 +1714,8 @@ TREATMENT DECISIONS & POTENCY HELPER:
 
 CLINICAL RECOMMENDATIONS & EDUCATION:
 - Emphasized daily barrier repair: apply petrolatum-based ointment (Aquaphor/Vaseline) or ceramide cream (CeraVe) BID, ideally within 3 min post-bathing.
+- Discussed OTC vs Rx moisturizers: recommended twice daily application of 10% Urea cream or Lactic Acid 12% (AmLactin) for moderate dry skin/scaling.
+- Prescribed Ammonium Lactate 12% BID or Urea 40% (hyperkeratotic heels/palms) if indicated.
 - Instructed on Fingertip Unit (FTU) application method to prevent under/overdosing.
 - Counselled patient on skin atrophy risk: warned against using medium/high-potency steroids on thin skin (face, folds).
 - Intermittent maintenance / steroid-free options (TCIs, Crisaborole, JAK inhibitors) discussed for frequent relapsers to spare steroid exposure.`;
