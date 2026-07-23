@@ -190,6 +190,13 @@ const INITIAL_TOOLS = [
         url: "./hyperthyroidism/",
         category: "Endocrinology",
         description: "Interactive antithyroid drug starting dose selector, clinical scenario filters (pregnancy, storm), beta-blocker dosing, and agranulocytosis safety monitoring protocols."
+    },
+    {
+        id: "eczema-dry-skin",
+        title: "Eczema & Dry Skin Prescribing Matrix",
+        url: "./eczema-dry-skin/",
+        category: "Dermatology",
+        description: "Interactive topical steroid potency selector, non-steroidal topical monographs (TCIs, Crisaborole, JAK inhibitors), systemic biologics, and skin barrier repair guidelines."
     }
 ];
 

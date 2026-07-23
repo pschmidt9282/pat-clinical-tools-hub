@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eczema & Dry Skin Prescribing Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Interactive clinical decision support tool for atopic dermatitis and dry skin, featuring a topical corticosteroid potency helper and medication monographs.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(222, 47%, 11%);
+      --bg-secondary: hsl(223, 47%, 16%);
+      --bg-card: hsl(223, 47%, 20%);
+      --border-color: hsl(223, 30%, 25%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(215, 20%, 75%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(325, 85%, 65%); /* Dermatology Pink */
+      --accent-secondary: hsl(290, 70%, 60%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(325, 85%, 65%, 0.1);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(210, 20%, 98%);
+      --bg-secondary: hsl(210, 15%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(210, 15%, 88%);
+      --text-primary: hsl(222, 47%, 11%);
+      --text-secondary: hsl(215, 25%, 35%);
+      --text-muted: hsl(215, 15%, 55%);
+      --accent-primary: hsl(325, 85%, 55%);
+      --accent-secondary: hsl(290, 70%, 50%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(325, 85%, 55%, 0.05);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(222, 47, 11, 0.08);
+      --shadow-lg: 0 16px 40px rgba(222, 47, 11, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .container {
+        grid-template-columns: 340px 1fr;
+      }
+      .main-content {
+        grid-column: 2;
+      }
+      .sidebar-content {
+        grid-column: 1;
+        grid-row: 1 / 3;
+      }
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 1.5rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-danger);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--accent-danger);
+    }
+
+    /* Sidebar Panels */
+    .sidebar-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .select-field {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-field:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .calc-result {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .calc-result-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .calc-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      font-family: var(--font-heading);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .calc-warning {
+      color: var(--accent-warning);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .search-box {
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .filter-section {
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 1.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.highlighted {
+      background-color: var(--accent-bg-glow);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .drug-name-col {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .drug-class-label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .badge-benefit {
+      background-color: hsla(145, 80%, 45%, 0.15);
+      color: var(--accent-success);
+      border: 1px solid var(--accent-success);
+    }
+
+    .badge-neutral {
+      background-color: hsla(215, 15%, 55%, 0.15);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-risk {
+      background-color: hsla(355, 90%, 60%, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid var(--accent-danger);
+    }
+
+    .badge-warning {
+      background-color: hsla(38, 95%, 55%, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid var(--accent-warning);
+    }
+
+    .badge-info {
+      background-color: hsla(210, 100%, 65%, 0.15);
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+    }
+
+    /* EHR Section */
+    .ehr-section {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ehr-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .ehr-header h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+    }
+
+    .ehr-textarea {
+      width: 100%;
+      height: 150px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: var(--text-primary);
+      font-family: monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    /* Detail Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 998;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -550px;
+      width: 100%;
+      max-width: 550px;
+      height: 100%;
+      background-color: var(--bg-secondary);
+      border-left: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+      z-index: 999;
+      padding: 2rem;
+      overflow-y: auto;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .drawer-title-area h3 {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .drawer-title-area p {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .drawer-close {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-close:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-danger);
+      color: var(--accent-danger);
+    }
+
+    .drawer-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .drawer-section-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.25rem;
+    }
+
+    .drawer-list {
+      padding-left: 1.2rem;
+    }
+
+    .drawer-list li {
+      margin-bottom: 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    .citation-item {
+      padding: 0.6rem;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .citation-link {
+      color: var(--accent-primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: block;
+      margin-top: 0.25rem;
+    }
+
+    .citation-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .drawer {
+        max-width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">OE</div>
+        <div class="brand-text">
+          <h1>Clinical Decision Matrix Portal</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Sidebar: Potency Selector -->
+    <div class="sidebar-content">
+      <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+      
+      <div class="sidebar-panel">
+        <div class="panel-title">
+          <span>🧴</span> TCS Potency Selector
+        </div>
+        
+        <div class="form-group">
+          <label for="bodySite">Target Body Site</label>
+          <select id="bodySite" class="select-field">
+            <option value="face" selected>Face / Eyelids / Neck / Skin Folds</option>
+            <option value="trunk">Trunk / Arms / Legs</option>
+            <option value="palms">Palms / Soles / Thick Plaques</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="patientAge">Patient Age Range</label>
+          <select id="patientAge" class="select-field">
+            <option value="adult" selected>Adult</option>
+            <option value="pediatric">Infant / Child (&lt;12 years)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="flareSeverity">Flare Severity</label>
+          <select id="flareSeverity" class="select-field">
+            <option value="mild" selected>Mild / Dry Skin (Barrier Repair)</option>
+            <option value="moderate">Moderate Flare (Erythema / Pruritus)</option>
+            <option value="severe">Severe Flare (Thickening / Lichenified)</option>
+          </select>
+        </div>
+        
+        <div class="calc-result">
+          <div class="calc-result-title">Recommended Potency</div>
+          <div id="potencyClass" class="calc-value">Class 6–7 (Low Potency)</div>
+          
+          <div class="calc-result-title">Suggested First-Line Agent</div>
+          <div id="suggestedAgent" style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+            Hydrocortisone 2.5% cream
+          </div>
+
+          <div class="calc-result-title">Max Safe Duration</div>
+          <div id="maxDurationText" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-success); margin-bottom: 0.5rem;">
+            Limit to 1–2 weeks
+          </div>
+          
+          <div class="calc-result-title">Standard Application Unit</div>
+          <div style="font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);">
+            Use the <strong>Fingertip Unit (FTU)</strong>: 1 FTU (~0.5g) covers the area of 2 adult hands.
+          </div>
+          
+          <div id="potencyWarning" class="calc-warning" style="display: none;">
+            ⚠️ Risk: Thin skin areas are highly susceptible to steroid-induced skin atrophy.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="title-area">
+        <h2>Eczema & Dry Skin Prescribing Matrix</h2>
+        <p>Interactive tool to select, titrate, and monitor treatments for xerosis and atopic dermatitis. Triage by body site sensitivity and review steroid-free options.</p>
+      </div>
+
+      <div class="clinical-alert">
+        <strong>CRITICAL SAFETY WARNING (SKIN ATROPHY):</strong> Chronic, unsupervised use of high-potency topical corticosteroids (TCS) leads to skin thinning (atrophy), striae, telangiectasias, and systemic HPA axis suppression. Restrict Class 1 steroids (e.g. Clobetasol) to &lt;2 consecutive weeks, and avoid high potency altogether on the face, eyelids, and skin folds.
+      </div>
+
+      <!-- Filters Section -->
+      <div class="filter-panel">
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="drugSearch" class="search-input" placeholder="Search treatments (e.g. Hydrocortisone, Tacrolimus, CeraVe)...">
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">Drug Class & Steroid Status</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="class-moisturizer">Moisturizers / Barrier Repair</button>
+            <button class="filter-btn" data-filter="class-steroid">Topical Corticosteroids (TCS)</button>
+            <button class="filter-btn" data-filter="class-nonsteroid">Steroid-Free Prescription</button>
+            <button class="filter-btn" data-filter="class-systemic">Advanced Systemic / Biologic</button>
+          </div>
+        </div>
+        
+        <div class="filter-section">
+          <div class="filter-label">PRACTICE CONSIDERATIONS</div>
+          <div class="filter-group">
+            <button class="filter-btn" data-filter="safety-face">Safe for Face / Skin Folds</button>
+            <button class="filter-btn" data-filter="safety-low-cost">Low Cost / Generic</button>
+            <button class="filter-btn" data-filter="safety-pediatric">Approved for Infants (&lt;2 yrs)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matrix Table -->
+      <div class="table-container">
+        <table id="matrixTable">
+          <thead>
+            <tr>
+              <th>Medication / Treatment</th>
+              <th>Class & Potency</th>
+              <th>Dosing & Application</th>
+              <th>Typical Duration</th>
+              <th>Primary Clinical Warning / Side Effect</th>
+              <th>Est. Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="ointment" data-keywords="ointment emollient vaseline aquaphor moisturizer barrier repair dry skin safe face low cost pediatric infant">
+              <td class="drug-name-col">
+                Ointment Emollients
+                <span class="drug-class-label">Petrolatum-based barrier ointment (Aquaphor/Vaseline)</span>
+              </td>
+              <td><span class="badge badge-success">OTC Moisturizer</span></td>
+              <td>Apply liberally twice daily (BID) or as needed (ideally within 3 min post-bath)</td>
+              <td>Indefinite / Chronic maintenance</td>
+              <td><span class="badge badge-neutral">Follicular Occlusion</span>, greasy feel</td>
+              <td><span class="badge badge-benefit">$ (Low - OTC)</span></td>
+            </tr>
+            <tr data-id="cream" data-keywords="cream emollient cerave cetaphil moisturizer barrier repair dry skin safe face low cost pediatric infant">
+              <td class="drug-name-col">
+                Cream Emollients
+                <span class="drug-class-label">Ceramide/lipid-containing cream (CeraVe/Cetaphil)</span>
+              </td>
+              <td><span class="badge badge-success">OTC Moisturizer</span></td>
+              <td>Apply liberally twice daily (BID) or as needed</td>
+              <td>Indefinite / Chronic maintenance</td>
+              <td><span class="badge badge-neutral">Lower Barrier Action</span> than ointments</td>
+              <td><span class="badge badge-benefit">$ (Low - OTC)</span></td>
+            </tr>
+            <tr data-id="low_steroid" data-keywords="low steroid hydrocortisone 2.5 desonide 0.05 class 6 class 7 tcs safe face low cost pediatric infant">
+              <td class="drug-name-col">
+                Low Potency TCS
+                <span class="drug-class-label">Topical Corticosteroid (Class VI–VII)</span>
+              </td>
+              <td><span class="badge badge-info">Mild Rx Steroid</span></td>
+              <td>Apply thin layer to active lesions BID</td>
+              <td>1–2 weeks for flare control (Face/Folds safe)</td>
+              <td><span class="badge badge-warning">Atrophy if misused</span> long-term (&gt;4 weeks)</td>
+              <td><span class="badge badge-benefit">$ (Low generic)</span></td>
+            </tr>
+            <tr data-id="med_steroid" data-keywords="medium steroid triamcinolone 0.1 fluticasone class 4 class 5 tcs low cost pediatric infant">
+              <td class="drug-name-col">
+                Medium Potency TCS
+                <span class="drug-class-label">Topical Corticosteroid (Class IV–V)</span>
+              </td>
+              <td><span class="badge badge-info">Moderate Rx Steroid</span></td>
+              <td>Apply thin layer to active lesions QD or BID</td>
+              <td>1–3 weeks (Avoid on face and skin folds)</td>
+              <td><span class="badge badge-warning">Skin Thinning / Striae</span> on thin skin areas</td>
+              <td><span class="badge badge-benefit">$ (Low generic)</span></td>
+            </tr>
+            <tr data-id="high_steroid" data-keywords="high steroid clobetasol 0.05 halobetasol class 1 class 2 tcs low cost">
+              <td class="drug-name-col">
+                Super Potency TCS
+                <span class="drug-class-label">Topical Corticosteroid (Class I)</span>
+              </td>
+              <td><span class="badge badge-risk">Ultra Rx Steroid</span></td>
+              <td>Apply thin layer to thick lesions BID (Palms/Soles/Trunk)</td>
+              <td>Max 2 consecutive weeks; strictly limit volume (&lt;50g/wk)</td>
+              <td><span class="badge badge-risk">HPA Axis Suppression</span>, rapid skin thinning</td>
+              <td><span class="badge badge-benefit">$–$$ (Low-Mod generic)</span></td>
+            </tr>
+            <tr data-id="tci" data-keywords="tacrolimus protopic pimecrolimus elidel tci nonsteroid safe face pediatric infant">
+              <td class="drug-name-col">
+                Tacrolimus (Protopic 0.1%)
+                <span class="drug-class-label">Topical Calcineurin Inhibitor (TCI) (Steroid-Free)</span>
+              </td>
+              <td><span class="badge badge-success">Steroid-Free Rx (TCI)</span></td>
+              <td>Apply thin layer to active lesions BID</td>
+              <td>Short-term flare or twice-weekly proactive maintenance</td>
+              <td><span class="badge badge-warning">Local Burning / Stinging</span>, FDA cancer boxed warning</td>
+              <td><span class="badge badge-warning">$$ (Moderate generic)</span></td>
+            </tr>
+            <tr data-id="crisaborole" data-keywords="crisaborole eucrisa pde4 inhibitor nonsteroid safe face pediatric infant">
+              <td class="drug-name-col">
+                Crisaborole (Eucrisa 2%)
+                <span class="drug-class-label">Topical PDE4 Inhibitor (Steroid-Free)</span>
+              </td>
+              <td><span class="badge badge-success">Steroid-Free Rx (PDE4)</span></td>
+              <td>Apply thin layer to lesions BID (Approved down to 3 months)</td>
+              <td>Intermittent or chronic maintenance</td>
+              <td><span class="badge badge-warning">Severe Application Pain</span> / burning (10-15%)</td>
+              <td><span class="badge badge-risk">$$$ (High brand-only)</span></td>
+            </tr>
+            <tr data-id="ruxolitinib" data-keywords="ruxolitinib opzelura jak inhibitor nonsteroid safe face">
+              <td class="drug-name-col">
+                Ruxolitinib (Opzelura 1.5%)
+                <span class="drug-class-label">Topical JAK Inhibitor (Steroid-Free)</span>
+              </td>
+              <td><span class="badge badge-success">Steroid-Free Rx (JAKi)</span></td>
+              <td>Apply thin layer BID to active lesions (Max 20% BSA)</td>
+              <td>Until clear; avoid continuous chronic use</td>
+              <td><span class="badge badge-risk">JAK class boxed warnings</span> (Infections, thrombosis)</td>
+              <td><span class="badge badge-risk">$$$$ (Extremely High)</span></td>
+            </tr>
+            <tr data-id="dupilumab" data-keywords="dupilumab dupixent systemic biologic il-4 il-13 injection pediatric infant">
+              <td class="drug-name-col">
+                Dupilumab (Dupixent)
+                <span class="drug-class-label">Monoclonal Antibody (IL-4/IL-13 Receptor Antagonist)</span>
+              </td>
+              <td><span class="badge badge-warning">Advanced Systemic Biologic</span></td>
+              <td>600 mg SC load, then 300 mg subcutaneous every 2 weeks</td>
+              <td>Chronic / Long-term control of severe AD</td>
+              <td><span class="badge badge-warning">Conjunctivitis / Keratitis</span>, injection site pain</td>
+              <td><span class="badge badge-risk">$$$$ (Extremely High)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EHR Section -->
+      <div class="ehr-section">
+        <div class="ehr-header">
+          <h3>Point-of-Care EHR Documentation Note</h3>
+          <button id="btn-copy-note" class="btn btn-primary">
+            <span>📋</span> Copy EHR Note
+          </button>
+        </div>
+        <textarea id="note-output" class="ehr-textarea" readonly></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  <div class="drawer" id="detailDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h3 id="drawerDrugName">Drug Name</h3>
+        <p id="drawerDrugClass">Class</p>
+      </div>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    
+    <div id="drawerContent">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggling
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Potency Selector Logic
+    const bodySiteSelect = document.getElementById('bodySite');
+    const patientAgeSelect = document.getElementById('patientAge');
+    const flareSeveritySelect = document.getElementById('flareSeverity');
+
+    const potencyClass = document.getElementById('potencyClass');
+    const suggestedAgent = document.getElementById('suggestedAgent');
+    const maxDurationText = document.getElementById('maxDurationText');
+    const potencyWarning = document.getElementById('potencyWarning');
+
+    function calculatePotency() {
+      const site = bodySiteSelect.value;
+      const age = patientAgeSelect.value;
+      const severity = flareSeveritySelect.value;
+
+      let recomClass = '';
+      let agent = '';
+      let duration = '';
+      let showWarning = false;
+
+      if (severity === 'mild') {
+        recomClass = 'Non-Pharmacological / OTC Barrier Repair';
+        agent = 'Emollient Ointment (Vaseline/Aquaphor) or Cream (CeraVe) BID';
+        duration = 'Chronic daily maintenance';
+        showWarning = false;
+      } else if (site === 'face') {
+        // Face/eyelids/folds are ALWAYS low potency regardless of severity/age
+        recomClass = 'Class 6–7 (Low Potency)';
+        agent = age === 'pediatric' ? 'Desonide 0.05% cream BID' : 'Hydrocortisone 2.5% cream BID';
+        duration = 'Limit to 1–2 weeks maximum';
+        showWarning = true;
+      } else if (age === 'pediatric') {
+        // Kids on body: prefer low-to-medium
+        if (severity === 'severe') {
+          recomClass = 'Class 4–5 (Medium Potency)';
+          agent = 'Triamcinolone acetonide 0.025% ointment BID';
+          duration = 'Limit to 1–2 weeks';
+        } else {
+          recomClass = 'Class 6–7 (Low Potency)';
+          agent = 'Hydrocortisone 2.5% cream BID';
+          duration = 'Limit to 2 weeks';
+        }
+        showWarning = false;
+      } else {
+        // Adults on body/extremities
+        if (severity === 'severe' || site === 'palms') {
+          recomClass = 'Class 1–2 (Super/High Potency)';
+          agent = 'Clobetasol propionate 0.05% ointment BID';
+          duration = 'Strictly < 2 weeks';
+          showWarning = false;
+        } else {
+          recomClass = 'Class 4–5 (Medium Potency)';
+          agent = 'Triamcinolone acetonide 0.1% cream or ointment BID';
+          duration = 'Limit to 2–3 weeks';
+          showWarning = false;
+        }
+      }
+
+      potencyClass.textContent = recomClass;
+      suggestedAgent.textContent = agent;
+      maxDurationText.textContent = duration;
+      potencyWarning.style.display = showWarning ? 'block' : 'none';
+      updateEHRNote();
+    }
+
+    [bodySiteSelect, patientAgeSelect, flareSeveritySelect].forEach(el => {
+      el.addEventListener('change', calculatePotency);
+    });
+
+    // Filtering & Table Logic
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      scenario: new Set(),
+      safety: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isScenario = ['class-moisturizer', 'class-steroid', 'class-nonsteroid', 'class-systemic'].includes(filterType);
+        const filterSet = isScenario ? activeFilters.scenario : activeFilters.safety;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchScenario = true;
+        let matchSafety = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.scenario.size > 0) {
+          matchScenario = false;
+          activeFilters.scenario.forEach(filter => {
+            if (filter === 'class-moisturizer' && ['ointment', 'cream'].includes(rowId)) matchScenario = true;
+            if (filter === 'class-steroid' && ['low_steroid', 'med_steroid', 'high_steroid'].includes(rowId)) matchScenario = true;
+            if (filter === 'class-nonsteroid' && ['tci', 'crisaborole', 'ruxolitinib'].includes(rowId)) matchScenario = true;
+            if (filter === 'class-systemic' && rowId === 'dupilumab') matchScenario = true;
+          });
+        }
+
+        if (activeFilters.safety.size > 0) {
+          activeFilters.safety.forEach(filter => {
+            if (filter === 'safety-face' && ['med_steroid', 'high_steroid'].includes(rowId)) matchSafety = false; // Medium/high steroids are unsafe for face
+            if (filter === 'safety-low-cost' && ['tci', 'crisaborole', 'ruxolitinib', 'dupilumab'].includes(rowId)) matchSafety = false;
+            if (filter === 'safety-pediatric' && ['high_steroid', 'ruxolitinib'].includes(rowId)) matchSafety = false; // Clobetasol and Opzelura have age limits
+          });
+        }
+
+        if (matchSearch && matchScenario && matchSafety) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+      updateEHRNote();
+    }
+
+    // Monographs Database
+    const drugDetails = {
+      ointment: {
+        name: 'Ointment Emollients (Vaseline / Aquaphor)',
+        classDesc: 'Heavy Petrolatum-Based Barrier Occlusives.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>Cornerstone of Eczema Care:</strong> Essential barrier repair. Strongly recommended by the AAD guidelines for daily maintenance.</li>
+              <li><strong>Mechanism:</strong> Creates an occlusive layer over the stratum corneum, trapping water in the skin and preventing transepidermal water loss (TEWL).</li>
+              <li><strong>Best Practice:</strong> Apply liberally within <strong>3 minutes of bathing</strong> ("soak and smear" method) while skin is damp to trap maximum moisture.</li>
+            </ul>`
+          },
+          {
+            title: 'Adverse Effects & Tolerability',
+            content: `<ul>
+              <li><strong>Folliculitis:</strong> Can block hair follicles, causing occlusive folliculitis (especially in hot weather).</li>
+              <li><strong>Tolerability:</strong> Greasy formulation can soil clothing, leading to poor daytime compliance. Advise patients to apply heavier ointments at bedtime.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. Over-the-counter jars cost $5–$15.</p>`
+          }
+        ]
+      },
+      cream: {
+        name: 'Cream Emollients (CeraVe / Cetaphil)',
+        classDesc: 'Ceramide/Lipid-Enriched Emollient Creams.',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>Daily Maintenance:</strong> Excellent for daytime application due to cosmetic elegance (rapidly absorbed, non-greasy).</li>
+              <li><strong>Barrier Repair:</strong> Ceramide-enriched creams mimic natural skin lipids, accelerating barrier repair.</li>
+            </ul>`
+          },
+          {
+            title: 'Formulation Warnings',
+            content: `<ul>
+              <li><strong>Preservatives:</strong> Creams contain water, meaning they require preservatives/alcohol, which can cause a temporary stinging sensation on cracked skin. If skin is severely cracked, default to ointments.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Low. OTC bottles cost $10–$20.</p>`
+          }
+        ]
+      },
+      low_steroid: {
+        name: 'Low Potency TCS (Hydrocortisone 2.5% / Desonide 0.05%)',
+        classDesc: 'Topical Corticosteroid (Class VI–VII).',
+        sections: [
+          {
+            title: 'Indication & Face/Fold Safety',
+            content: `<ul>
+              <li><strong>First-Line for Sensitive Skin:</strong> Preferred for mild-to-moderate flares on thin skin areas (face, neck, eyelids, axillae, groin) where high-potency steroids are contraindicated.</li>
+              <li><strong>Pediatric Use:</strong> Safest steroid class for infants and young children.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Administration',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Apply a thin layer to active flare lesions twice daily (BID).</li>
+              <li><strong>Duration:</strong> Limit to 1–2 weeks for active flares. Intermittent maintenance (e.g. twice weekly) can be considered for refractory patches.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings',
+            content: `<ul>
+              <li><strong>Skin Atrophy:</strong> Though Class VI/VII are low risk, continuous use for &gt;4–6 weeks on eyelids or face can still lead to skin thinning, telangiectasias, or perioral dermatitis.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. Generic tubes cost ~$5–$15.</p>`
+          }
+        ]
+      },
+      med_steroid: {
+        name: 'Medium Potency TCS (Triamcinolone acetonide 0.1%)',
+        classDesc: 'Topical Corticosteroid (Class IV–V).',
+        sections: [
+          {
+            title: 'Indication & Placement',
+            content: `<ul>
+              <li><strong>Body & Extremities:</strong> First-line choice for moderate flares on trunk, arms, and legs.</li>
+              <li><strong>Efficacy:</strong> Highly effective in clearing moderate eczema.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Duration',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Apply a thin layer BID to active lesions.</li>
+              <li><strong>Duration:</strong> Limit to 2–3 weeks. Once clear, transition back to daily moisturizing maintenance or topical calcineurin inhibitors.</li>
+            </ul>`
+          },
+          {
+            title: 'Critical Safety Warnings',
+            content: `<ul>
+              <li><strong>Face/Groin Exclusion:</strong> **DO NOT use on face, groin, or axillae** due to rapid development of skin thinning (atrophy) and stretch marks (striae).</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Very low. Generic 15g-80g tubes cost ~$5–$20.</p>`
+          }
+        ]
+      },
+      high_steroid: {
+        name: 'Super Potency TCS (Clobetasol propionate 0.05%)',
+        classDesc: 'Topical Corticosteroid (Class I).',
+        sections: [
+          {
+            title: 'Indication & Thick Plaque Management',
+            content: `<ul>
+              <li><strong>Palms, Soles, & Lichenified Plaques:</strong> Reserved for severe, hyperkeratotic, or refractory eczema on thick skin (palms and soles) or highly lichenified plaques on trunk/limbs.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Strict Restrictions',
+            content: `<ul>
+              <li><strong>Dosing:</strong> Apply BID to active lesions.</li>
+              <li><strong>Strict Limit:</strong> **Do NOT exceed 2 consecutive weeks of use**. Do NOT exceed 50g per week of cream/ointment.</li>
+              <li><strong>HPA Axis Suppression:</strong> Systemic absorption is significant; can suppress the adrenal gland (HPA axis) and cause Cushingoid symptoms.</li>
+              <li><strong>Eyelid Contraindication:</strong> Never apply near the eyes due to risk of glaucoma and cataracts.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Low to moderate generic (~$15–$35 per tube).</p>`
+          }
+        ]
+      },
+      tci: {
+        name: 'Tacrolimus (Protopic 0.1% / 0.03%)',
+        classDesc: 'Topical Calcineurin Inhibitor (TCI) (Steroid-Free).',
+        sections: [
+          {
+            title: 'Indication & Steroid-Sparing Action',
+            content: `<ul>
+              <li><strong>Sensitive Skin Areas:</strong> Recommended for face, eyelids, neck, and folds. Fully steroid-free, meaning **it does not cause skin atrophy, glaucoma, or cataracts**.</li>
+              <li><strong>Maintenance Therapy:</strong> Recommended for proactive maintenance (applied twice weekly to trouble spots that flare frequently).</li>
+              <li><strong>Age Limits:</strong> 0.03% ointment approved for age &ge;2 years. 0.1% ointment approved for age &ge;16 years.</li>
+            </ul>`
+          },
+          {
+            title: 'Application Side Effects',
+            content: `<ul>
+              <li><strong>Burning / Stinging:</strong> Common at application site (occurs in up to 30% of patients initially). Instruct patients that this **resolves after 3–5 days of continued use**. Storing ointment in the refrigerator can reduce burning.</li>
+            </ul>`
+          },
+          {
+            title: 'FDA Malignancy Boxed Warning',
+            content: `<ul>
+              <li><strong>Boxed Warning:</strong> Carries a warning regarding a theoretical risk of skin cancer and lymphoma. However, extensive registry data over 15+ years has shown **no evidence of increased cancer rates** compared to the general population.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Moderate generic. ~$30–$60 per tube.</p>`
+          }
+        ]
+      },
+      crisaborole: {
+        name: 'Crisaborole (Eucrisa 2%)',
+        classDesc: 'Topical Phosphodiesterase-4 (PDE4) Inhibitor (Steroid-Free).',
+        sections: [
+          {
+            title: 'Clinical Place',
+            content: `<ul>
+              <li><strong>Mild-to-Moderate Eczema:</strong> Approved for patients **&ge;3 months of age**. Safe for face and sensitive areas.</li>
+              <li><strong>Steroid-Free option:</strong> Avoids the safety concerns of corticosteroids.</li>
+            </ul>`
+          },
+          {
+            title: 'Adverse Effects',
+            content: `<ul>
+              <li><strong>Application Site Pain:</strong> Up to 15% of patients report intense burning or stinging upon application. This is a common reason for drug discontinuation.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> High. Brand-only medication; costs ~$600–$700 per tube without insurance coverage. Often requires prior authorization.</p>`
+          }
+        ]
+      },
+      ruxolitinib: {
+        name: 'Ruxolitinib (Opzelura 1.5%)',
+        classDesc: 'Topical Janus Kinase (JAK) Inhibitor (Steroid-Free).',
+        sections: [
+          {
+            title: 'Clinical Place & Efficacy',
+            content: `<ul>
+              <li><strong>Highly Effective Topical:</strong> Outstanding efficacy for mild-to-moderate atopic dermatitis in non-immunocompromised patients **&ge;12 years**. Clears itching and lesions rapidly.</li>
+              <li><strong>Administration:</strong> Apply thin layer BID. Limit application to **maximum 20% of Body Surface Area (BSA)**. Do not exceed 60g per week.</li>
+            </ul>`
+          },
+          {
+            title: 'Systemic Boxed Warnings (JAK Class Effects)',
+            content: `<ul>
+              <li><strong>Class Warnings:</strong> Though topical absorption is low, the FDA requires oral JAK inhibitor warnings on the label:
+                <ul>
+                  <li>Serious infections leading to hospitalization or death (TB, fungal).</li>
+                  <li>All-cause mortality.</li>
+                  <li>Malignancies (lymphoma, lung cancer).</li>
+                  <li>Major Adverse Cardiovascular Events (MACE - stroke, myocardial infarction).</li>
+                  <li>Thrombosis (DVT, PE).</li>
+                </ul>
+              </li>
+              <li><strong>Contraindication:</strong> Avoid in patients with active severe infections or a history of cardiovascular disease/clots.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost',
+            content: `<p><strong>Cost:</strong> Extremely high. Costs ~$2,000 per tube. Requires step-therapy and strict prior authorization.</p>`
+          }
+        ]
+      },
+      dupilumab: {
+        name: 'Dupilumab (Dupixent)',
+        classDesc: 'Interleukin-4 & Interleukin-13 Receptor Antagonist Biologic.',
+        sections: [
+          {
+            title: 'Indication & Clinical Place',
+            content: `<ul>
+              <li><strong>Moderate-to-Severe Atopic Dermatitis:</strong> Indicated for patients whose disease is not adequately controlled with topical prescription therapies or when those therapies are not advisable. Approved down to **6 months of age**.</li>
+              <li><strong>Efficacy:</strong> Highly effective systemic therapy that treats the underlying type 2 inflammatory pathway.</li>
+            </ul>`
+          },
+          {
+            title: 'Dosing & Administration',
+            content: `<ul>
+              <li><strong>Adult Dosing:</strong> Initial loading dose of **600 mg** (two 300 mg subcutaneous injections), followed by **300 mg subcutaneous injection every 2 weeks**.</li>
+              <li><strong>Self-Administration:</strong> Patients are trained to inject subcutaneously in the thigh or abdomen.</li>
+            </ul>`
+          },
+          {
+            title: 'Warnings & Adverse Effects',
+            content: `<ul>
+              <li><strong>Ocular Side Effects:</strong> Uniquely associated with **conjunctivitis, dry eyes, blepharitis, and keratitis** (occurs in ~10-20% of eczema clinical trial patients). Advise patient to report eye symptoms. Treat with lubricant drops or refer to ophthalmology.</li>
+              <li><strong>Other Effects:</strong> Injection site reactions, facial/neck redness.</li>
+            </ul>`
+          },
+          {
+            title: 'Cost & Trials',
+            content: `
+              <div class="citation-item">
+                <strong>SOLO-1 & SOLO-2 Trials:</strong> Dupilumab monotherapy significantly improved signs and symptoms of atopic dermatitis, cleared lesions, and reduced anxiety/depression in adults.
+                <a class="citation-link" href="https://pubmed.ncbi.nlm.nih.gov/27690085" target="_blank">N Engl J Med 2016;375:2335-2348</a>
+              </div>
+              <p><strong>Cost:</strong> Extremely high. Costs ~$3,500 to $4,000 per month. Requires commercial specialty pharmacy and prior authorization.</p>`
+          }
+        ]
+      }
+    };
+
+    const drawer = document.getElementById('detailDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerDrugName = document.getElementById('drawerDrugName');
+    const drawerDrugClass = document.getElementById('drawerDrugClass');
+    const drawerContent = document.getElementById('drawerContent');
+
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const drugId = row.getAttribute('data-id');
+        const data = drugDetails[drugId];
+        
+        if (data) {
+          tableRows.forEach(r => r.classList.remove('highlighted'));
+          row.classList.add('highlighted');
+
+          drawerDrugName.textContent = data.name;
+          drawerDrugClass.textContent = data.classDesc;
+          
+          let htmlContent = '';
+          data.sections.forEach(sec => {
+            htmlContent += `
+              <div class="drawer-section">
+                <h4 class="drawer-section-title">${sec.title}</h4>
+                <div>${sec.content}</div>
+              </div>
+            `;
+          });
+          drawerContent.innerHTML = htmlContent;
+
+          drawer.classList.add('active');
+          drawerOverlay.classList.add('active');
+        }
+      });
+    });
+
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+
+    function closeDrawer() {
+      drawer.classList.remove('active');
+      drawerOverlay.classList.remove('active');
+      tableRows.forEach(r => r.classList.remove('highlighted'));
+    }
+
+    // EHR Note Generator
+    function updateEHRNote() {
+      const siteText = bodySiteSelect.options[bodySiteSelect.selectedIndex].text;
+      const ageText = patientAgeSelect.options[patientAgeSelect.selectedIndex].text;
+      const severityText = flareSeveritySelect.options[flareSeveritySelect.selectedIndex].text;
+      const potencyText = potencyClass.textContent;
+      const agentText = suggestedAgent.textContent;
+      const durationText = maxDurationText.textContent;
+
+      const note = `ECZEMA & DRY SKIN POINT-OF-CARE CLINICAL NOTE
+--------------------------------------------------
+PATIENT CLINICAL PRESENTATION:
+- Age Range: ${ageText}
+- Target Skin Location: ${siteText}
+- Flare Severity: ${severityText}
+
+TREATMENT DECISIONS & POTENCY HELPER:
+- Suggested Potency Class: ${potencyText}
+- First-Line Agent Suggested: ${agentText}
+- Max Recommended Duration Limit: ${durationText}
+
+CLINICAL RECOMMENDATIONS & EDUCATION:
+- Emphasized daily barrier repair: apply petrolatum-based ointment (Aquaphor/Vaseline) or ceramide cream (CeraVe) BID, ideally within 3 min post-bathing.
+- Instructed on Fingertip Unit (FTU) application method to prevent under/overdosing.
+- Counselled patient on skin atrophy risk: warned against using medium/high-potency steroids on thin skin (face, folds).
+- Intermittent maintenance / steroid-free options (TCIs, Crisaborole, JAK inhibitors) discussed for frequent relapsers to spare steroid exposure.`;
+
+      document.getElementById('note-output').textContent = note;
+    }
+
+    const btnCopyNote = document.getElementById('btn-copy-note');
+    btnCopyNote.addEventListener('click', () => {
+      const noteOutput = document.getElementById('note-output');
+      navigator.clipboard.writeText(noteOutput.textContent).then(() => {
+        alert('Eczema & Dry Skin Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Initial load
+    calculatePotency();
+  </script>
+</body>
+</html>
