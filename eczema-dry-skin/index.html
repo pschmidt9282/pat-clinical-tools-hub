@@ -1648,8 +1648,6 @@
     const drawerDrugClass = document.getElementById('drawerDrugClass');
     const drawerContent = document.getElementById('drawerContent');
 
-    const tableRows = document.querySelectorAll('#matrixTable tbody tr, #xerosisTable tbody tr');
-
     tableRows.forEach(row => {
       row.addEventListener('click', () => {
         const drugId = row.getAttribute('data-id');
