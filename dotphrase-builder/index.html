@@ -838,12 +838,22 @@
             <div id="mdm-risk" class="mdm-badge-val low">Low</div>
           </div>
         </div>
-        <div class="mdm-final">
+        <div class="mdm-final" style="margin-bottom:8px;">
           <span class="mdm-final-title">Recommended CPT Code:</span>
           <span id="mdm-cpt" class="mdm-final-code">Est: 99213 / New: 99203</span>
         </div>
+        <!-- Problem Complexity override -->
+        <div style="margin-bottom: 8px;">
+          <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:2px;">Auditor Complexity Override:</label>
+          <select id="audit-problem-complexity" class="inline-select" style="margin:0; width:100%; height:26px; font-size:0.75rem;" onchange="compileNote()">
+            <option value="auto">Auto-detect based on checked options</option>
+            <option value="3">Low (1 stable chronic / 1 acute uncomplicated)</option>
+            <option value="4">Moderate (2+ stable chronic / 1 acute worsening / systemic)</option>
+            <option value="5">High (severe acute/chronic threat to life/organ)</option>
+          </select>
+        </div>
         <!-- Audit Checklist / Indicators (external review, independent historian) -->
-        <div style="display:flex; gap:12px; margin-top:8px; font-size:0.7rem; color:var(--text-muted);">
+        <div style="display:flex; gap:12px; font-size:0.7rem; color:var(--text-muted); border-top:1px solid var(--border-color); padding-top:6px;">
           <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
             <input type="checkbox" id="audit-external-records" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Review Ext. Records (+1 Data)
           </label>
@@ -1104,35 +1114,75 @@
       const lowerItem = item.toLowerCase();
       const lowerDx = dxName.toLowerCase();
       
-      // Vertigo specific duration override
+      // Vertigo duration override
       if (lowerDx.includes('vertigo') && lowerItem.includes('duration') && lowerItem.includes('seconds')) {
-        return `<span class="item-text">duration (<input type="number" class="inline-number" value="10" style="width:50px;" data-key="num" onchange="compileNote()"> <select class="inline-select" data-key="unit" onchange="compileNote()"><option value="seconds">seconds</option><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select>)</span>`;
+        return `<span class="item-text">duration (<input type="number" class="inline-number" value="10" style="width:50px;" onchange="compileNote()"> <select class="inline-select" onchange="compileNote()"><option value="seconds">seconds</option><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select>)</span>`;
       }
       
-      // Cough specific duration override
+      // Cough duration override
       if (lowerDx.includes('cough') && lowerItem.includes('duration') && type === 'hx') {
-        return `<span class="item-text">Duration: <input type="number" class="inline-number" value="2" style="width:50px;" data-key="num" onchange="compileNote()"> <select class="inline-select" data-key="unit" onchange="compileNote()"><option value="weeks">weeks</option><option value="days">days</option><option value="months">months</option></select></span>`;
+        return `<span class="item-text">Duration: <input type="number" class="inline-number" value="2" style="width:50px;" onchange="compileNote()"> <select class="inline-select" onchange="compileNote()"><option value="weeks">weeks</option><option value="days">days</option><option value="months">months</option></select></span>`;
+      }
+
+      // Sputum character color/consistency override
+      if (lowerItem.includes('sputum character')) {
+        return `<span class="item-text">sputum character (color: <input type="text" class="inline-input" placeholder="e.g. green" style="width:75px;" onchange="compileNote()">, consistency: <input type="text" class="inline-input" placeholder="e.g. thick" style="width:75px;" onchange="compileNote()">)</span>`;
+      }
+
+      // General joints involved
+      if (lowerItem.includes('joints involved') || lowerItem.includes('joint involved')) {
+        return `<span class="item-text">joints involved (<input type="text" class="inline-input" placeholder="e.g. right knee" style="width:100px;" onchange="compileNote()">)</span>`;
+      }
+
+      // General blood pressure
+      if (lowerItem.includes('blood pressure') || lowerItem.includes('bp ')) {
+        return `<span class="item-text">blood pressure (<input type="text" class="inline-input" placeholder="e.g. 120/80" style="width:80px;" onchange="compileNote()">)</span>`;
+      }
+
+      // General heart rate
+      if (lowerItem.includes('heart rate') || lowerItem.includes('hr ')) {
+        return `<span class="item-text">heart rate (<input type="number" class="inline-number" placeholder="72" style="width:60px;" onchange="compileNote()"> bpm)</span>`;
+      }
+
+      // General temperature / fever
+      if (lowerItem.includes('fever') && (lowerItem.includes('temp') || lowerItem.includes('associated'))) {
+        return `<span class="item-text">fever (<input type="text" class="inline-input" placeholder="e.g. 101.4 F" style="width:80px;" onchange="compileNote()">)</span>`;
+      }
+
+      // General severity (mild/mod/severe or 1-10)
+      if (lowerItem.includes('severity')) {
+        return `<span class="item-text">severity (<select class="inline-select" onchange="compileNote()"><option>mild</option><option>moderate</option><option>severe</option><option>1/10</option><option>2/10</option><option>3/10</option><option>4/10</option><option>5/10</option><option>6/10</option><option>7/10</option><option>8/10</option><option>9/10</option><option>10/10</option></select>)</span>`;
+      }
+
+      // General pack-years
+      if (lowerItem.includes('pack-years')) {
+        return `<span class="item-text">pack-years (<input type="number" class="inline-number" value="20" style="width:50px;" onchange="compileNote()">)</span>`;
+      }
+
+      // General weight
+      if (lowerItem.includes('weight')) {
+        return `<span class="item-text">weight (<input type="number" class="inline-number" placeholder="70" style="width:60px;" onchange="compileNote()"> kg)</span>`;
       }
       
       // General keywords replacements
       if (lowerItem.includes('duration')) {
         const parts = item.split(/duration/i);
-        return `<span class="item-text">${parts[0]}duration (<input type="text" class="inline-input" placeholder="e.g. 3 days" style="width:100px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+        return `<span class="item-text">${parts[0]}duration (<input type="text" class="inline-input" placeholder="e.g. 3 days" style="width:100px;" onchange="compileNote()">${parts[1] || ''})</span>`;
       }
 
       if (lowerItem.includes('onset')) {
         const parts = item.split(/onset/i);
-        return `<span class="item-text">${parts[0]}onset (<input type="text" class="inline-input" placeholder="e.g. sudden" style="width:80px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+        return `<span class="item-text">${parts[0]}onset (<input type="text" class="inline-input" placeholder="e.g. sudden" style="width:80px;" onchange="compileNote()">${parts[1] || ''})</span>`;
       }
 
       if (lowerItem.includes('frequency')) {
         const parts = item.split(/frequency/i);
-        return `<span class="item-text">${parts[0]}frequency (<input type="text" class="inline-input" placeholder="e.g. constant" style="width:100px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+        return `<span class="item-text">${parts[0]}frequency (<input type="text" class="inline-input" placeholder="e.g. constant" style="width:100px;" onchange="compileNote()">${parts[1] || ''})</span>`;
       }
 
       if (lowerItem.includes('size')) {
         const parts = item.split(/size/i);
-        return `<span class="item-text">${parts[0]}size (<input type="text" class="inline-input" placeholder="e.g. 5mm" style="width:60px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+        return `<span class="item-text">${parts[0]}size (<input type="text" class="inline-input" placeholder="e.g. 5mm" style="width:60px;" onchange="compileNote()">${parts[1] || ''})</span>`;
       }
 
       return `<span class="item-text">${item}</span>`;
@@ -1148,22 +1198,30 @@
         const label = cb.closest('.checkbox-label');
         const textSpan = label.querySelector('.item-text');
         
-        const textInput = textSpan.querySelector('.inline-input');
-        const numberInput = textSpan.querySelector('.inline-number');
-        const selectInput = textSpan.querySelector('.inline-select');
-        
+        const inputs = textSpan.querySelectorAll('input, select');
         let baseText = cb.value;
         
-        if (textInput) {
-          const val = textInput.value || textInput.placeholder || "";
-          baseText = baseText.replace(/duration|onset|frequency|size/i, val);
-        } else if (numberInput && selectInput) {
-          const num = numberInput.value || "";
-          const unit = selectInput.value || "";
-          if (baseText.toLowerCase().includes('duration') && baseText.toLowerCase().includes('seconds')) {
-            baseText = `duration (${num} ${unit})`;
-          } else if (baseText.toLowerCase().includes('duration')) {
-            baseText = `duration: ${num} ${unit}`;
+        if (inputs.length > 0) {
+          const numberInput = textSpan.querySelector('.inline-number');
+          const selectInput = textSpan.querySelector('.inline-select');
+          
+          if (numberInput && selectInput && baseText.toLowerCase().includes('duration') && baseText.toLowerCase().includes('seconds')) {
+            baseText = `duration (${numberInput.value} ${selectInput.value})`;
+          } else if (numberInput && selectInput && baseText.toLowerCase().includes('duration')) {
+            baseText = `duration: ${numberInput.value} ${selectInput.value}`;
+          } else {
+            // Sputum character custom parse
+            if (baseText.toLowerCase().includes('sputum character')) {
+              const colorVal = textSpan.querySelectorAll('input')[0].value || "green";
+              const consistencyVal = textSpan.querySelectorAll('input')[1].value || "thick";
+              baseText = `sputum character (color: ${colorVal}, consistency: ${consistencyVal})`;
+            } else {
+              // General replacement
+              inputs.forEach(input => {
+                const val = input.value || input.placeholder || "";
+                baseText = baseText.replace(/duration|onset|frequency|size|joints involved|joint involved|blood pressure|bp|heart rate|hr|fever|temp|severity|pack-years|weight/i, val);
+              });
+            }
           }
         }
         
@@ -1404,8 +1462,14 @@
     function calculateMDM(hxList, workupList, rxList, edList) {
       // 1. Problem Complexity
       let complexity = 3; // Low (Level 3)
-      if (edList.length > 0) complexity = 5; // High (Level 5)
-      else if (hxList.length > 0) complexity = 4; // Moderate (Level 4)
+      const complexityOverride = document.getElementById('audit-problem-complexity') ? document.getElementById('audit-problem-complexity').value : 'auto';
+      
+      if (complexityOverride === 'auto') {
+        if (edList.length > 0) complexity = 5; // High (Level 5)
+        else if (hxList.length > 0) complexity = 4; // Moderate (Level 4)
+      } else {
+        complexity = parseInt(complexityOverride);
+      }
 
       // 2. Data Reviewed (test count + external review + independent historian)
       let testCount = workupList.filter(x => {
