@@ -135,7 +135,7 @@
         grid-column: 1 / -1;
         position: sticky;
         bottom: 20px;
-        z-index: 100;
+        z-index: 90;
       }
     }
 
@@ -246,6 +246,19 @@
       padding-left: 6px;
     }
 
+    .dx-item-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+
+    .dx-item-wrapper .dx-item {
+      flex: 1;
+      min-width: 0;
+    }
+
     .dx-item {
       display: block;
       width: 100%;
@@ -274,6 +287,30 @@
       color: var(--text-main);
       font-weight: 600;
       padding-left: 5px;
+    }
+
+    /* Favorites Stars styling */
+    .star-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 6px;
+      border-radius: 4px;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .star-btn:hover {
+      background: var(--bg-card-hover);
+      color: #eab308;
+    }
+
+    .star-btn.active {
+      color: #eab308 !important;
     }
 
     /* Middle Panel: Checklists */
@@ -364,9 +401,26 @@
       background: var(--bg-card-hover);
     }
 
-    .checkbox-label input {
+    .checkbox-label input[type="checkbox"] {
       margin-top: 4px;
       accent-color: var(--accent-pink);
+    }
+
+    /* Inline Context Inputs */
+    .inline-input, .inline-select, .inline-number {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin: 0 4px;
+      outline: none;
+      transition: border-color 0.15s;
+      vertical-align: middle;
+    }
+    .inline-input:focus, .inline-select:focus, .inline-number:focus {
+      border-color: var(--accent-pink);
     }
 
     /* Differential specific styling */
@@ -406,7 +460,7 @@
       font-weight: 600;
     }
 
-    /* Right Panel: Live Note & Copy */
+    /* Right Panel: Live Note & Auditor */
     .right-panel {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -427,6 +481,72 @@
       gap: 8px;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 8px;
+    }
+
+    /* MDM Auditor Card styling */
+    .mdm-auditor-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .mdm-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mdm-badge {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      padding: 6px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .mdm-badge-title {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .mdm-badge-val {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 2px;
+    }
+
+    .mdm-badge-val.low { color: #38bdf8; }
+    .mdm-badge-val.mod { color: #c084fc; }
+    .mdm-badge-val.high { color: #f472b6; }
+
+    .mdm-final {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, rgba(236, 72, 153, 0.08), rgba(168, 85, 247, 0.08));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    .mdm-final-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .mdm-final-code {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #e9d5ff;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .note-output {
@@ -484,6 +604,139 @@
       font-size: 3rem;
       margin-bottom: 16px;
       color: var(--border-color);
+    }
+
+    /* Calculators Drawer Styling */
+    .btn-float-calc {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent-purple);
+      color: var(--text-main);
+      border: none;
+      border-radius: 50px;
+      padding: 12px 24px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+      transition: all 0.2s;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-float-calc:hover {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.65);
+      transform: translateY(-2px);
+    }
+
+    .calc-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 400px;
+      height: 100vh;
+      background: rgba(19, 27, 46, 0.95);
+      backdrop-filter: blur(10px);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+      z-index: 1000;
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .calc-drawer.open {
+      right: 0;
+    }
+
+    .calc-drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .calc-drawer-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .calc-select {
+      width: 100%;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .calc-body {
+      flex: 1;
+    }
+
+    .calc-card {
+      background: #0b111e;
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+    }
+
+    .calc-input-group {
+      margin-bottom: 12px;
+    }
+
+    .calc-input-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      cursor: pointer;
+    }
+
+    .calc-input-label input {
+      accent-color: var(--accent-purple);
+    }
+
+    .calc-result-box {
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px dashed rgba(168, 85, 247, 0.4);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      margin-top: 16px;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #e9d5ff;
+      font-weight: 600;
+    }
+
+    .btn-insert-calc {
+      background: var(--accent-purple);
+      color: var(--text-main);
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 12px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .btn-insert-calc:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
@@ -564,15 +817,200 @@
       </div>
     </main>
 
-    <!-- Right Panel: Live Note compiler -->
+    <!-- Right Panel: Live Note & Auditor -->
     <aside class="right-panel">
-      <h3><i class="fa-solid fa-code"></i> Live EHR Chart Note</h3>
+      <!-- E/M Auditor Card -->
+      <div class="mdm-auditor-card">
+        <h4 style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--accent-purple); margin-bottom:10px; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-chart-line"></i> E/M MDM Level Auditor
+        </h4>
+        <div class="mdm-grid">
+          <div class="mdm-badge">
+            <div class="mdm-badge-title">Problems</div>
+            <div id="mdm-problems" class="mdm-badge-val low">Low</div>
+          </div>
+          <div class="mdm-badge">
+            <div class="mdm-badge-title">Data</div>
+            <div id="mdm-data" class="mdm-badge-val low">Minimal</div>
+          </div>
+          <div class="mdm-badge">
+            <div class="mdm-badge-title">Risk</div>
+            <div id="mdm-risk" class="mdm-badge-val low">Low</div>
+          </div>
+        </div>
+        <div class="mdm-final">
+          <span class="mdm-final-title">Recommended CPT Code:</span>
+          <span id="mdm-cpt" class="mdm-final-code">Est: 99213 / New: 99203</span>
+        </div>
+        <!-- Audit Checklist / Indicators (external review, independent historian) -->
+        <div style="display:flex; gap:12px; margin-top:8px; font-size:0.7rem; color:var(--text-muted);">
+          <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="checkbox" id="audit-external-records" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Review Ext. Records (+1 Data)
+          </label>
+          <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="checkbox" id="audit-historian" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Independent Historian (+1 Data)
+          </label>
+        </div>
+      </div>
+
+      <h3><i class="fa-solid fa-code"></i> Live EHR Note</h3>
       <textarea class="note-output" id="note-text-box" placeholder="Select options to compile chart note..."></textarea>
       <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; margin-top:-8px;"><i class="fa-solid fa-pen"></i> You can edit this note directly before copying.</div>
       <button class="btn-copy" onclick="copyChartNote()"><i class="fa-regular fa-copy"></i> Copy Note to Clipboard</button>
     </aside>
 
   </div>
+
+  <!-- Calculators Drawer -->
+  <div id="calc-drawer" class="calc-drawer">
+    <div class="calc-drawer-header">
+      <h3 style="display:flex; align-items:center; gap:8px; color:var(--accent-purple);">
+        <i class="fa-solid fa-calculator"></i> Clinical Calculators
+      </h3>
+      <button class="calc-drawer-close" onclick="toggleCalculatorsDrawer()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <select class="calc-select" id="calc-selector" onchange="selectCalculator(this.value)">
+      <option value="centor">Centor Score (Strep Pharyngitis)</option>
+      <option value="wells">Wells Criteria (DVT Probability)</option>
+      <option value="ascvd">ASCVD 10-Yr Cardiovascular Risk</option>
+      <option value="chads">CHADS2-VASc Stroke Risk</option>
+      <option value="gfr">Cockcroft-Gault Creatinine Clearance</option>
+    </select>
+    
+    <div class="calc-body">
+      <!-- Centor Score -->
+      <div id="calc-panel-centor" class="calc-panel">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Determines probability of Group A Strep in patients with acute pharyngitis.</p>
+        <div class="calc-card">
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="centor-check" value="1" onchange="runCentor()"> Tonsillar Exudate (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="centor-check" value="1" onchange="runCentor()"> Tender Ant. Cervical Adenopathy (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="centor-check" value="1" onchange="runCentor()"> History of Fever (>100.4°F) (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="centor-check" value="1" onchange="runCentor()"> Absence of Cough (+1)</label></div>
+          <div class="calc-input-group" style="border-top:1px solid var(--border-color); padding-top:8px; margin-top:8px;">
+            <span style="font-size:0.85rem; color:#cbd5e1; display:block; margin-bottom:4px;">Age Category:</span>
+            <label class="calc-input-label" style="margin-bottom:4px;"><input type="radio" name="centor-age" value="1" checked onchange="runCentor()"> Age 3-14 (+1)</label>
+            <label class="calc-input-label" style="margin-bottom:4px;"><input type="radio" name="centor-age" value="0" onchange="runCentor()"> Age 15-44 (0)</label>
+            <label class="calc-input-label"><input type="radio" name="centor-age" value="-1" onchange="runCentor()"> Age 45+ (-1)</label>
+          </div>
+        </div>
+        <div class="calc-result-box" id="centor-result">Centor Score: 1 point (Low probability, no test/Tx)</div>
+        <button class="btn-insert-calc" onclick="insertCentor()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- Wells Criteria -->
+      <div id="calc-panel-wells" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Assesses the clinical pre-test probability of Deep Vein Thrombosis (DVT).</p>
+        <div class="calc-card">
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Active cancer (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Paralysis/immobilization (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Bedridden ≥3 days / major surgery within 12w (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Local tenderness along deep veins (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Entire leg swollen (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Calf swelling ≥3cm larger (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Pitting edema in symptomatic leg (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Collateral non-varicose veins (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Previously documented DVT (+1)</label></div>
+          <div class="calc-input-group" style="border-top:1px solid var(--border-color); padding-top:8px; margin-top:8px;"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="-2" onchange="runWells()"> Alt. diagnosis as likely as DVT (-2)</label></div>
+        </div>
+        <div class="calc-result-box" id="wells-result">Wells Score: 0 points (DVT Unlikely)</div>
+        <button class="btn-insert-calc" onclick="insertWells()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- ASCVD Risk -->
+      <div id="calc-panel-ascvd" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Estimates 10-year risk of atherosclerotic cardiovascular disease.</p>
+        <div class="calc-card">
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Age (40-79 years):</label>
+            <input type="number" id="ascvd-age" value="55" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Systolic BP (mmHg):</label>
+            <input type="number" id="ascvd-sbp" value="130" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Total Cholesterol (mg/dL):</label>
+            <input type="number" id="ascvd-tc" value="200" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">HDL Cholesterol (mg/dL):</label>
+            <input type="number" id="ascvd-hdl" value="50" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
+          </div>
+          <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+            <label class="calc-input-label"><input type="checkbox" id="ascvd-smoker" onchange="runASCVD()"> Smoker</label>
+            <label class="calc-input-label"><input type="checkbox" id="ascvd-dm" onchange="runASCVD()"> Diabetic</label>
+            <label class="calc-input-label"><input type="checkbox" id="ascvd-htn" onchange="runASCVD()"> Treated HTN</label>
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Sex & Race Grouping:</label>
+            <select id="ascvd-sex-race" class="calc-select" style="margin:0; height:32px;" onchange="runASCVD()">
+              <option value="white-male">White Male</option>
+              <option value="white-female">White Female</option>
+              <option value="black-male">Black Male</option>
+              <option value="black-female">Black Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result-box" id="ascvd-result">10-Year ASCVD Risk: 5.4% (Borderline/Intermediate Risk)</div>
+        <button class="btn-insert-calc" onclick="insertASCVD()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- CHADS2-VASc -->
+      <div id="calc-panel-chads" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Predicts stroke risk in patients with non-valvular atrial fibrillation.</p>
+        <div class="calc-card">
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="chads-check" value="1" onchange="runCHADS()"> Congestive Heart Failure (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="chads-check" value="1" onchange="runCHADS()"> Hypertension (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="chads-check" value="1" onchange="runCHADS()"> Diabetes Mellitus (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="chads-check" value="2" onchange="runCHADS()"> Stroke/TIA/Thromboembolism (+2)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="chads-check" value="1" onchange="runCHADS()"> Vascular Disease (prior MI, PAD) (+1)</label></div>
+          <div class="calc-input-group" style="border-top:1px solid var(--border-color); padding-top:8px; margin-top:8px;">
+            <span style="font-size:0.85rem; color:#cbd5e1; display:block; margin-bottom:4px;">Age Category:</span>
+            <label class="calc-input-label" style="margin-bottom:4px;"><input type="radio" name="chads-age" value="2" onchange="runCHADS()"> Age ≥75 (+2)</label>
+            <label class="calc-input-label" style="margin-bottom:4px;"><input type="radio" name="chads-age" value="1" onchange="runCHADS()"> Age 65-74 (+1)</label>
+            <label class="calc-input-label"><input type="radio" name="chads-age" value="0" checked onchange="runCHADS()"> Age &lt;65 (0)</label>
+          </div>
+          <div style="margin-top:8px; border-top:1px solid var(--border-color); padding-top:8px;">
+            <span style="font-size:0.85rem; color:#cbd5e1; display:block; margin-bottom:4px;">Sex Category:</span>
+            <label class="calc-input-label"><input type="checkbox" id="chads-female" value="1" onchange="runCHADS()"> Female (+1)</label>
+          </div>
+        </div>
+        <div class="calc-result-box" id="chads-result">CHA2DS2-VASc Score: 0 (Low risk, no anticoagulation)</div>
+        <button class="btn-insert-calc" onclick="insertCHADS()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- Cockcroft-Gault GFR -->
+      <div id="calc-panel-gfr" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Estimates creatinine clearance (CrCl) for renal drug dosing.</p>
+        <div class="calc-card">
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Age (years):</label>
+            <input type="number" id="gfr-age" value="65" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runGFR()">
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Weight (kg):</label>
+            <input type="number" id="gfr-weight" value="70" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runGFR()">
+          </div>
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Serum Creatinine (mg/dL):</label>
+            <input type="number" id="gfr-scr" value="1.0" step="0.1" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runGFR()">
+          </div>
+          <div style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:8px;">
+            <label class="calc-input-label"><input type="checkbox" id="gfr-female" onchange="runGFR()"> Patient is Female</label>
+          </div>
+        </div>
+        <div class="calc-result-box" id="gfr-result">Creatinine Clearance: 72.9 mL/min (Normal/Mild reduction)</div>
+        <button class="btn-insert-calc" onclick="insertGFR()">Insert Result into EHR Note</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Float Trigger Button -->
+  <button class="btn-float-calc" onclick="toggleCalculatorsDrawer()">
+    <i class="fa-solid fa-calculator"></i> Calculators
+  </button>
 
   <!-- Load Database and Application logic -->
   <script src="dotphrases-data.js"></script>
@@ -582,12 +1020,11 @@
     let selectedDx = null;
     let selectedDxCategory = '';
 
+    // Favorites State
+    let favorites = JSON.parse(localStorage.getItem('fav_diagnoses') || '[]');
+
     // State for interactive checkboxes
-    let checkedHx = [];
     let primaryDiff = '';
-    let checkedWorkup = [];
-    let checkedRx = [];
-    let checkedED = [];
     let includeFU = true;
 
     // Helper: Parse items separated by commas or periods, respecting conditionals ('if') and parentheses
@@ -642,6 +1079,100 @@
       return str.split('>').map(x => x.trim()).filter(x => x.length > 0);
     }
 
+    // Favorites toggle
+    function toggleFav(dxName, event) {
+      if (event) event.stopPropagation();
+      if (favorites.includes(dxName)) {
+        favorites = favorites.filter(x => x !== dxName);
+      } else {
+        favorites.push(dxName);
+      }
+      localStorage.setItem('fav_diagnoses', JSON.stringify(favorites));
+      
+      // Re-render lists & workspace header
+      renderDxList();
+      if (selectedDx && selectedDx.name === dxName) {
+        const star = document.getElementById('header-star');
+        if (star) {
+          star.classList.toggle('active', favorites.includes(dxName));
+        }
+      }
+    }
+
+    // Dynamic smart input text renderer
+    function renderItemTextWithInputs(type, item, dxName) {
+      const lowerItem = item.toLowerCase();
+      const lowerDx = dxName.toLowerCase();
+      
+      // Vertigo specific duration override
+      if (lowerDx.includes('vertigo') && lowerItem.includes('duration') && lowerItem.includes('seconds')) {
+        return `<span class="item-text">duration (<input type="number" class="inline-number" value="10" style="width:50px;" data-key="num" onchange="compileNote()"> <select class="inline-select" data-key="unit" onchange="compileNote()"><option value="seconds">seconds</option><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select>)</span>`;
+      }
+      
+      // Cough specific duration override
+      if (lowerDx.includes('cough') && lowerItem.includes('duration') && type === 'hx') {
+        return `<span class="item-text">Duration: <input type="number" class="inline-number" value="2" style="width:50px;" data-key="num" onchange="compileNote()"> <select class="inline-select" data-key="unit" onchange="compileNote()"><option value="weeks">weeks</option><option value="days">days</option><option value="months">months</option></select></span>`;
+      }
+      
+      // General keywords replacements
+      if (lowerItem.includes('duration')) {
+        const parts = item.split(/duration/i);
+        return `<span class="item-text">${parts[0]}duration (<input type="text" class="inline-input" placeholder="e.g. 3 days" style="width:100px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+      }
+
+      if (lowerItem.includes('onset')) {
+        const parts = item.split(/onset/i);
+        return `<span class="item-text">${parts[0]}onset (<input type="text" class="inline-input" placeholder="e.g. sudden" style="width:80px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+      }
+
+      if (lowerItem.includes('frequency')) {
+        const parts = item.split(/frequency/i);
+        return `<span class="item-text">${parts[0]}frequency (<input type="text" class="inline-input" placeholder="e.g. constant" style="width:100px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+      }
+
+      if (lowerItem.includes('size')) {
+        const parts = item.split(/size/i);
+        return `<span class="item-text">${parts[0]}size (<input type="text" class="inline-input" placeholder="e.g. 5mm" style="width:60px;" data-key="val" onchange="compileNote()">${parts[1] || ''})</span>`;
+      }
+
+      return `<span class="item-text">${item}</span>`;
+    }
+
+    // Dynamic state compiler pulling directly from DOM elements
+    function getCheckedItemsList(type) {
+      const selector = `#workspace-panel input[type="checkbox"][data-type="${type}"]:checked`;
+      const checkedBoxes = document.querySelectorAll(selector);
+      const items = [];
+      
+      checkedBoxes.forEach(cb => {
+        const label = cb.closest('.checkbox-label');
+        const textSpan = label.querySelector('.item-text');
+        
+        const textInput = textSpan.querySelector('.inline-input');
+        const numberInput = textSpan.querySelector('.inline-number');
+        const selectInput = textSpan.querySelector('.inline-select');
+        
+        let baseText = cb.value;
+        
+        if (textInput) {
+          const val = textInput.value || textInput.placeholder || "";
+          baseText = baseText.replace(/duration|onset|frequency|size/i, val);
+        } else if (numberInput && selectInput) {
+          const num = numberInput.value || "";
+          const unit = selectInput.value || "";
+          if (baseText.toLowerCase().includes('duration') && baseText.toLowerCase().includes('seconds')) {
+            baseText = `duration (${num} ${unit})`;
+          } else if (baseText.toLowerCase().includes('duration')) {
+            baseText = `duration: ${num} ${unit}`;
+          }
+        }
+        
+        items.push(baseText);
+      });
+      
+      return items;
+    }
+
     // Initialize list
     function renderDxList() {
       const container = document.getElementById('dx-list');
@@ -649,8 +1180,50 @@
 
       let matchesFound = false;
 
+      // 1. First Render Favorites if any match exists
+      if (favorites.length > 0) {
+        const favGroup = document.createElement('div');
+        favGroup.className = 'system-group';
+        favGroup.innerHTML = `<div class="system-title" style="color:#eab308; border-color:#eab308;"><i class="fa-solid fa-star"></i> Favorites</div>`;
+        let favMatches = 0;
+
+        for (const [system, list] of Object.entries(DOTPHRASES_DATA)) {
+          list.forEach(dx => {
+            if (favorites.includes(dx.name)) {
+              // Apply search query filter if typed
+              if (searchQuery !== '' && !dx.name.toLowerCase().includes(searchQuery.toLowerCase())) return;
+              
+              favMatches++;
+              matchesFound = true;
+              
+              const row = document.createElement('div');
+              row.className = 'dx-item-wrapper';
+              
+              const btn = document.createElement('button');
+              btn.className = 'dx-item';
+              if (selectedDx && selectedDx.name === dx.name) btn.classList.add('active');
+              btn.innerText = dx.name;
+              btn.onclick = () => selectDiagnosis(dx, system);
+              
+              const star = document.createElement('button');
+              star.className = 'star-btn active';
+              star.innerHTML = `<i class="fa-solid fa-star"></i>`;
+              star.onclick = (e) => toggleFav(dx.name, e);
+              
+              row.appendChild(btn);
+              row.appendChild(star);
+              favGroup.appendChild(row);
+            }
+          });
+        }
+        
+        if (favMatches > 0) {
+          container.appendChild(favGroup);
+        }
+      }
+
+      // 2. Standard Alphabetical/Group listings
       for (const [system, list] of Object.entries(DOTPHRASES_DATA)) {
-        // Filter diagnoses by letter and search query
         const filteredList = list.filter(dx => {
           const matchesLetter = activeLetter === 'All' || dx.name.toUpperCase().startsWith(activeLetter);
           const matchesSearch = searchQuery === '' || dx.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -664,15 +1237,26 @@
           group.innerHTML = `<div class="system-title">${system}</div>`;
 
           filteredList.forEach(dx => {
+            const isFav = favorites.includes(dx.name);
+            const row = document.createElement('div');
+            row.className = 'dx-item-wrapper';
+
             const btn = document.createElement('button');
             btn.className = 'dx-item';
             if (selectedDx && selectedDx.name === dx.name) {
               btn.classList.add('active');
             }
             btn.innerText = dx.name;
-            btn.title = dx.name;
             btn.onclick = () => selectDiagnosis(dx, system);
-            group.appendChild(btn);
+            
+            const star = document.createElement('button');
+            star.className = `star-btn ${isFav ? 'active' : ''}`;
+            star.innerHTML = `<i class="fa-solid fa-star"></i>`;
+            star.onclick = (e) => toggleFav(dx.name, e);
+
+            row.appendChild(btn);
+            row.appendChild(star);
+            group.appendChild(row);
           });
 
           container.appendChild(group);
@@ -701,12 +1285,8 @@
       selectedDxCategory = category;
 
       // Reset checked states
-      checkedHx = parseList(dx.hx);
       const diffList = parseDiff(dx.diff);
       primaryDiff = diffList[0] || '';
-      checkedWorkup = parseList(dx.workup);
-      checkedRx = parseList(dx.rx);
-      checkedED = parseList(dx.ed);
       includeFU = true;
 
       // Refresh list to show active item
@@ -726,10 +1306,14 @@
       const workupItems = parseList(selectedDx.workup);
       const rxItems = parseList(selectedDx.rx);
       const edItems = parseList(selectedDx.ed);
+      const isFav = favorites.includes(selectedDx.name);
 
       panel.innerHTML = `
         <div class="workspace-header">
-          <h2>${selectedDx.name}</h2>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>${selectedDx.name}</h2>
+            <button id="header-star" class="star-btn ${isFav ? 'active' : ''}" style="font-size:1.4rem; padding:8px;" onclick="toggleFav('${selectedDx.name.replace(/'/g, "\\'")}', event)"><i class="fa-solid fa-star"></i></button>
+          </div>
           <span class="workspace-category">${selectedDxCategory}</span>
         </div>
 
@@ -739,8 +1323,8 @@
           <div class="checkbox-grid">
             ${hxItems.map((item, idx) => `
               <label class="checkbox-label">
-                <input type="checkbox" checked onchange="toggleItem('hx', '${item.replace(/'/g, "\\'")}', this.checked)">
-                <span>${item}</span>
+                <input type="checkbox" checked data-type="hx" value="${item.replace(/"/g, '&quot;')}" onchange="compileNote()">
+                ${renderItemTextWithInputs('hx', item, selectedDx.name)}
               </label>
             `).join('')}
           </div>
@@ -765,8 +1349,8 @@
           <div class="checkbox-grid">
             ${workupItems.map((item, idx) => `
               <label class="checkbox-label">
-                <input type="checkbox" checked onchange="toggleItem('workup', '${item.replace(/'/g, "\\'")}', this.checked)">
-                <span>${item}</span>
+                <input type="checkbox" checked data-type="workup" value="${item.replace(/"/g, '&quot;')}" onchange="compileNote()">
+                ${renderItemTextWithInputs('workup', item, selectedDx.name)}
               </label>
             `).join('')}
           </div>
@@ -778,8 +1362,8 @@
           <div class="checkbox-grid">
             ${rxItems.map((item, idx) => `
               <label class="checkbox-label">
-                <input type="checkbox" checked onchange="toggleItem('rx', '${item.replace(/'/g, "\\'")}', this.checked)">
-                <span>${item}</span>
+                <input type="checkbox" checked data-type="rx" value="${item.replace(/"/g, '&quot;')}" onchange="compileNote()">
+                ${renderItemTextWithInputs('rx', item, selectedDx.name)}
               </label>
             `).join('')}
           </div>
@@ -800,30 +1384,13 @@
           <div class="checkbox-grid">
             ${edItems.map((item, idx) => `
               <label class="checkbox-label">
-                <input type="checkbox" checked onchange="toggleItem('ed', '${item.replace(/'/g, "\\'")}', this.checked)">
-                <span>${item}</span>
+                <input type="checkbox" checked data-type="ed" value="${item.replace(/"/g, '&quot;')}" onchange="compileNote()">
+                ${renderItemTextWithInputs('ed', item, selectedDx.name)}
               </label>
             `).join('')}
           </div>
         </div>
       `;
-    }
-
-    function toggleItem(type, item, isChecked) {
-      if (type === 'hx') {
-        if (isChecked) { if(!checkedHx.includes(item)) checkedHx.push(item); }
-        else { checkedHx = checkedHx.filter(x => x !== item); }
-      } else if (type === 'workup') {
-        if (isChecked) { if(!checkedWorkup.includes(item)) checkedWorkup.push(item); }
-        else { checkedWorkup = checkedWorkup.filter(x => x !== item); }
-      } else if (type === 'rx') {
-        if (isChecked) { if(!checkedRx.includes(item)) checkedRx.push(item); }
-        else { checkedRx = checkedRx.filter(x => x !== item); }
-      } else if (type === 'ed') {
-        if (isChecked) { if(!checkedED.includes(item)) checkedED.push(item); }
-        else { checkedED = checkedED.filter(x => x !== item); }
-      }
-      compileNote();
     }
 
     function selectPrimaryDiff(item, element) {
@@ -833,16 +1400,95 @@
       compileNote();
     }
 
+    // Live E/M MDM Level Auditor Rules Engine (CMS 2023 Guidelines)
+    function calculateMDM(hxList, workupList, rxList, edList) {
+      // 1. Problem Complexity
+      let complexity = 3; // Low (Level 3)
+      if (edList.length > 0) complexity = 5; // High (Level 5)
+      else if (hxList.length > 0) complexity = 4; // Moderate (Level 4)
+
+      // 2. Data Reviewed (test count + external review + independent historian)
+      let testCount = workupList.filter(x => {
+        const lower = x.toLowerCase();
+        return !lower.includes('clinical diagnosis') && !lower.includes('none routinely');
+      }).length;
+      
+      if (document.getElementById('audit-external-records') && document.getElementById('audit-external-records').checked) {
+        testCount++;
+      }
+      if (document.getElementById('audit-historian') && document.getElementById('audit-historian').checked) {
+        testCount++;
+      }
+
+      let data = 2; // Minimal (Level 2)
+      if (testCount >= 4) data = 5; // Extensive (Level 5)
+      else if (testCount >= 3) data = 4; // Moderate (Level 4)
+      else if (testCount >= 1) data = 3; // Limited (Level 3)
+
+      // 3. Complication Risk
+      let risk = 3; // Low (Level 3)
+      if (edList.length > 0) risk = 5; // High (Level 5: hospitalization/urgent transfer risk)
+      else if (rxList.length > 0) risk = 4; // Moderate (Level 4: prescription drug management)
+
+      // Calculate final CPT MDM Level (2 out of 3 components rule)
+      const sorted = [complexity, data, risk].sort((a, b) => a - b);
+      const finalLevel = sorted[1]; // Middle score
+
+      return { complexity, data, risk, final: finalLevel };
+    }
+
+    function updateMDMDisplay(mdm) {
+      const pBadge = document.getElementById('mdm-problems');
+      const dBadge = document.getElementById('mdm-data');
+      const rBadge = document.getElementById('mdm-risk');
+      const cptBadge = document.getElementById('mdm-cpt');
+
+      const levelsMap = {
+        2: { text: "Min", class: "low" },
+        3: { text: "Low", class: "low" },
+        4: { text: "Mod", class: "mod" },
+        5: { text: "High", class: "high" }
+      };
+
+      pBadge.innerText = levelsMap[mdm.complexity].text;
+      pBadge.className = `mdm-badge-val ${levelsMap[mdm.complexity].class}`;
+
+      dBadge.innerText = levelsMap[mdm.data].text;
+      dBadge.className = `mdm-badge-val ${levelsMap[mdm.data].class}`;
+
+      rBadge.innerText = levelsMap[mdm.risk].text;
+      rBadge.className = `mdm-badge-val ${levelsMap[mdm.risk].class}`;
+
+      const cptCodes = {
+        2: "Est: 99212 / New: 99202",
+        3: "Est: 99213 / New: 99203",
+        4: "Est: 99214 / New: 99204",
+        5: "Est: 99215 / New: 99205"
+      };
+
+      cptBadge.innerText = cptCodes[mdm.final];
+    }
+
     // Dynamic note generator applying highly billable E/M MDM phrasing upgrades
     function compileNote() {
       if (!selectedDx) return;
 
       const nameHeader = `**${selectedDx.name.toUpperCase()} ASSESSMENT & BATTLE PLAN**\n--------------------------------------------------`;
 
+      // Get DOM computed lists
+      const hxChecked = getCheckedItemsList('hx');
+      const workupChecked = getCheckedItemsList('workup');
+      const rxChecked = getCheckedItemsList('rx');
+      const edChecked = getCheckedItemsList('ed');
+
+      // Update MDM auditor
+      const mdm = calculateMDM(hxChecked, workupChecked, rxChecked, edChecked);
+      updateMDMDisplay(mdm);
+
       // 1. History / Subjective MDM upgrade (Problem Complexity)
       let hxPart = '';
-      if (checkedHx.length > 0) {
-        hxPart = `- **Clinical Presentation**: Moderate-complexity presentation of suspected ${selectedDx.name} with risk of acute progression, characterized by: ${checkedHx.join(', ')}.`;
+      if (hxChecked.length > 0) {
+        hxPart = `- **Clinical Presentation**: Moderate-complexity presentation of suspected ${selectedDx.name} with risk of acute progression, characterized by: ${hxChecked.join(', ')}.`;
       } else {
         hxPart = `- **Clinical Presentation**: Clinical presentation of suspected ${selectedDx.name} evaluated at moderate severity.`;
       }
@@ -859,17 +1505,16 @@
 
       // 3. Work-up
       let workupPart = '';
-      if (checkedWorkup.length > 0) {
-        // Find if there are any actual testing/imaging studies checked (excluding clinical diagnosis or none routinely)
-        const hasActualTests = checkedWorkup.some(x => {
+      if (workupChecked.length > 0) {
+        const hasActualTests = workupChecked.some(x => {
           const lower = x.toLowerCase();
           return !lower.includes('clinical diagnosis') && !lower.includes('none routinely');
         });
         
         if (hasActualTests) {
-          workupPart = `- **Diagnostics & Work-up**: Ordered/reviewed: ${checkedWorkup.join('; ')} to assist in diagnostic verification and guide treatment decisions.`;
+          workupPart = `- **Diagnostics & Work-up**: Ordered/reviewed: ${workupChecked.join('; ')} to assist in diagnostic verification and guide treatment decisions.`;
         } else {
-          workupPart = `- **Diagnostics & Work-up**: ${checkedWorkup.join('; ')}. No acute laboratory or imaging tests indicated at this visit.`;
+          workupPart = `- **Diagnostics & Work-up**: ${workupChecked.join('; ')}. No acute laboratory or imaging tests indicated at this visit.`;
         }
       } else {
         workupPart = `- **Diagnostics & Work-up**: Managed clinically; no immediate diagnostic laboratory or imaging tests indicated at this visit.`;
@@ -877,9 +1522,9 @@
 
       // 4. Rx / Plan (Moderate Risk: Prescription drug management)
       let rxPart = '';
-      if (checkedRx.length > 0) {
+      if (rxChecked.length > 0) {
         // Systemic drug check (e.g. antibiotics or oral antivirals/antifungals)
-        const hasSystemic = checkedRx.some(x => {
+        const hasSystemic = rxChecked.some(x => {
           const lower = x.toLowerCase();
           return (lower.includes('mg') || lower.includes('mcg') || lower.includes('tab') || lower.includes('capsule')) && 
                  (lower.includes('bid') || lower.includes('qd') || lower.includes('tid') || lower.includes('q8h') || lower.includes('daily') || lower.includes('weekly')) && 
@@ -893,13 +1538,13 @@
 
         // Format each selected med on a new line starting with a dash, adding grammatical joining
         let rxLines = "";
-        if (checkedRx.length === 1) {
-          rxLines = `  -${checkedRx[0]}`;
+        if (rxChecked.length === 1) {
+          rxLines = `  -${rxChecked[0]}`;
         } else {
-          const formatted = checkedRx.map((item, idx) => {
-            if (idx === checkedRx.length - 1) {
+          const formatted = rxChecked.map((item, idx) => {
+            if (idx === rxChecked.length - 1) {
               return `  -${item}`;
-            } else if (idx === checkedRx.length - 2) {
+            } else if (idx === rxChecked.length - 2) {
               return `  -${item} and`;
             } else {
               return `  -${item},`;
@@ -922,8 +1567,8 @@
 
       // 6. ED Flags / Safety Netting (High Risk: Triage / Return Precautions)
       let edPart = '';
-      if (checkedED.length > 0) {
-        edPart = `- **Triage & Safety Netting**: Patient evaluated for signs of systemic toxicity, sepsis, and anatomical red flags. Instructed on strict emergency department return precautions for rapid expansion, fevers, or systemic compromise related to: ${checkedED.join(', ')}.`;
+      if (edChecked.length > 0) {
+        edPart = `- **Triage & Safety Netting**: Patient evaluated for signs of systemic toxicity, sepsis, and anatomical red flags. Instructed on strict emergency department return precautions for rapid expansion, fevers, or systemic compromise related to: ${edChecked.join(', ')}.`;
       } else {
         edPart = `- **Triage & Safety Netting**: Safety netting completed. Patient educated on standard clinical warning parameters and instructed on strict ED precautions if systemic red flags develop.`;
       }
@@ -942,6 +1587,188 @@
       navigator.clipboard.writeText(box.value).then(() => {
         alert("Highly billable EHR note copied to clipboard!");
       });
+    }
+
+    // Calculators Drawer logic
+    function toggleCalculatorsDrawer() {
+      document.getElementById('calc-drawer').classList.toggle('open');
+    }
+
+    function selectCalculator(val) {
+      document.querySelectorAll('.calc-panel').forEach(panel => panel.style.display = 'none');
+      document.getElementById(`calc-panel-${val}`).style.display = 'block';
+    }
+
+    function insertCalculatorResult(text) {
+      const box = document.getElementById('note-text-box');
+      if (box) {
+        box.value += `\n\n${text}`;
+        box.scrollTop = box.scrollHeight;
+      }
+    }
+
+    // Calculator Actions: Centor
+    function runCentor() {
+      let score = 0;
+      document.querySelectorAll('.centor-check:checked').forEach(cb => score += parseInt(cb.value));
+      const ageVal = parseInt(document.querySelector('input[name="centor-age"]:checked').value);
+      score += ageVal;
+
+      let guidance = "Low probability (<10%), no testing or antibiotic therapy indicated.";
+      if (score >= 4) guidance = "High probability (50%), consider empiric antibiotics or rapid Strep test.";
+      else if (score >= 2) guidance = "Intermediate probability (15-30%), rapid Strep test indicated.";
+
+      document.getElementById('centor-result').innerText = `Centor Score: ${score} point${score !== 1 ? 's' : ''} (${guidance})`;
+    }
+
+    function insertCentor() {
+      let score = 0;
+      let criteria = [];
+      document.querySelectorAll('.centor-check:checked').forEach(cb => {
+        score += parseInt(cb.value);
+        criteria.push(cb.closest('label').innerText.trim());
+      });
+      const ageEl = document.querySelector('input[name="centor-age"]:checked');
+      score += parseInt(ageEl.value);
+      criteria.push("Age factor: " + ageEl.closest('label').innerText.trim());
+
+      const noteText = `[Centor Score Strep Assessment]\nScore: ${score} points\nCriteria Met: ${criteria.join(', ')}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: Wells
+    function runWells() {
+      let score = 0;
+      document.querySelectorAll('.wells-check:checked').forEach(cb => score += parseInt(cb.value));
+
+      let prob = "Low probability (score ≤0)";
+      if (score >= 3) prob = "High probability (score ≥3)";
+      else if (score >= 1) prob = "Moderate probability (score 1-2)";
+
+      document.getElementById('wells-result').innerText = `Wells Score: ${score} point${score !== 1 ? 's' : ''} (${prob})`;
+    }
+
+    function insertWells() {
+      let score = 0;
+      let criteria = [];
+      document.querySelectorAll('.wells-check:checked').forEach(cb => {
+        score += parseInt(cb.value);
+        criteria.push(cb.closest('label').innerText.trim());
+      });
+
+      const noteText = `[Wells Criteria DVT Assessment]\nScore: ${score} points\nCriteria Met: ${criteria.join(', ')}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: ASCVD
+    function runASCVD() {
+      const age = parseFloat(document.getElementById('ascvd-age').value) || 55;
+      const sbp = parseFloat(document.getElementById('ascvd-sbp').value) || 130;
+      const tc = parseFloat(document.getElementById('ascvd-tc').value) || 200;
+      const hdl = parseFloat(document.getElementById('ascvd-hdl').value) || 50;
+      const smoker = document.getElementById('ascvd-smoker').checked;
+      const dm = document.getElementById('ascvd-dm').checked;
+      const htn = document.getElementById('ascvd-htn').checked;
+      const sexRace = document.getElementById('ascvd-sex-race').value;
+      
+      let lnAge = Math.log(age), lnTC = Math.log(tc), lnHdl = Math.log(hdl), lnSbp = Math.log(sbp);
+      
+      let sum = 0, mean = 0, baseline = 0;
+      
+      if (sexRace === 'white-female') {
+        sum = -29.799 * lnAge + 4.884 * Math.pow(lnAge, 2) + 13.540 * lnTC - 3.114 * lnAge * lnTC - 13.578 * lnHdl + 3.149 * lnAge * lnHdl + (htn ? 2.019 * lnSbp : 1.957 * lnSbp) + (smoker ? 7.574 : 0) - (smoker ? 1.665 * lnAge : 0) + (dm ? 0.661 : 0);
+        mean = -29.18; baseline = 0.9665;
+      } else if (sexRace === 'black-female') {
+        sum = 17.114 * lnAge + 0.94 * lnTC - 18.92 * lnHdl + 4.475 * lnAge * lnHdl + (htn ? 29.291 * lnSbp : 27.82 * lnSbp) - (htn ? 6.432 * lnAge * lnSbp : 6.087 * lnAge * lnSbp) + (smoker ? 0.691 : 0) + (dm ? 0.874 : 0);
+        mean = 86.61; baseline = 0.9533;
+      } else if (sexRace === 'white-male') {
+        sum = 12.344 * lnAge + 11.853 * lnTC - 2.664 * lnAge * lnTC - 7.99 * lnHdl + 1.769 * lnAge * lnHdl + (htn ? 1.916 * lnSbp : 1.764 * lnSbp) + (smoker ? 7.837 : 0) - (smoker ? 1.795 * lnAge : 0) + (dm ? 0.658 : 0);
+        mean = 61.18; baseline = 0.9144;
+      } else { // black male
+        sum = 2.469 * lnAge + 0.302 * lnTC - 0.307 * lnHdl + (htn ? 1.916 * lnSbp : 1.809 * lnSbp) + (smoker ? 0.549 : 0) + (dm ? 0.645 : 0);
+        mean = 19.54; baseline = 0.8954;
+      }
+      
+      let risk = 1 - Math.pow(baseline, Math.exp(sum - mean));
+      let pct = (risk * 100).toFixed(1);
+      if (pct < 0) pct = 0.1;
+      
+      let category = "Low Risk (<5%)";
+      if (pct >= 20) category = "High Risk (≥20%)";
+      else if (pct >= 7.5) category = "Intermediate Risk (7.5% to 19.9%)";
+      else if (pct >= 5) category = "Borderline Risk (5% to 7.4%)";
+      
+      document.getElementById('ascvd-result').innerText = `10-Year ASCVD Risk: ${pct}% (${category})`;
+    }
+
+    function insertASCVD() {
+      const res = document.getElementById('ascvd-result').innerText;
+      const noteText = `[ASCVD Risk Calculator]\n${res}\nParameters: Age ${document.getElementById('ascvd-age').value}, SBP ${document.getElementById('ascvd-sbp').value}, TC ${document.getElementById('ascvd-tc').value}, HDL ${document.getElementById('ascvd-hdl').value}, Smoker: ${document.getElementById('ascvd-smoker').checked}, Diabetic: ${document.getElementById('ascvd-dm').checked}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: CHADS
+    function runCHADS() {
+      let score = 0;
+      document.querySelectorAll('.chads-check:checked').forEach(cb => score += parseInt(cb.value));
+      const ageVal = parseInt(document.querySelector('input[name="chads-age"]:checked').value);
+      score += ageVal;
+      if (document.getElementById('chads-female').checked) score += 1;
+
+      let guidance = "Low stroke risk; anticoagulation generally not recommended.";
+      if (score >= 2) guidance = "Moderate-high stroke risk; oral anticoagulation recommended.";
+      else if (score === 1) guidance = "Low-moderate stroke risk; consider oral anticoagulation.";
+
+      document.getElementById('chads-result').innerText = `CHA2DS2-VASc Score: ${score} (${guidance})`;
+    }
+
+    function insertCHADS() {
+      let score = 0;
+      let criteria = [];
+      document.querySelectorAll('.chads-check:checked').forEach(cb => {
+        score += parseInt(cb.value);
+        criteria.push(cb.closest('label').innerText.trim());
+      });
+      const ageEl = document.querySelector('input[name="chads-age"]:checked');
+      score += parseInt(ageEl.value);
+      criteria.push("Age bracket: " + ageEl.closest('label').innerText.trim());
+      if (document.getElementById('chads-female').checked) {
+        score += 1;
+        criteria.push("Sex: Female");
+      }
+
+      const noteText = `[CHA2DS2-VASc Stroke Risk Assessment]\nScore: ${score} points\nCriteria Met: ${criteria.join(', ')}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: GFR
+    function runGFR() {
+      const age = parseFloat(document.getElementById('gfr-age').value) || 65;
+      const weight = parseFloat(document.getElementById('gfr-weight').value) || 70;
+      const scr = parseFloat(document.getElementById('gfr-scr').value) || 1.0;
+      const female = document.getElementById('gfr-female').checked;
+
+      let crcl = ((140 - age) * weight) / (72 * scr);
+      if (female) crcl *= 0.85;
+
+      let stage = "Normal renal clearance";
+      if (crcl < 15) stage = "Kidney failure (CrCl < 15 mL/min)";
+      else if (crcl < 30) stage = "Severe renal reduction (CrCl 15-29 mL/min)";
+      else if (crcl < 60) stage = "Moderate renal reduction (CrCl 30-59 mL/min)";
+      else if (crcl < 90) stage = "Mild renal reduction (CrCl 60-89 mL/min)";
+
+      document.getElementById('gfr-result').innerText = `Creatinine Clearance: ${crcl.toFixed(1)} mL/min (${stage})`;
+    }
+
+    function insertGFR() {
+      const res = document.getElementById('gfr-result').innerText;
+      const noteText = `[Cockcroft-Gault Renal Dosing Calculator]\n${res}\nInputs: Age ${document.getElementById('gfr-age').value}y, Weight ${document.getElementById('gfr-weight').value}kg, Creatinine ${document.getElementById('gfr-scr').value} mg/dL, Female: ${document.getElementById('gfr-female').checked}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
     }
 
     // On Load
