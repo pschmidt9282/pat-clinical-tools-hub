@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive EHR Dotphrase Builder | E/M Billing Upgraded</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1e293b;
+      --border-color: #24334a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-pink: #ec4899;
+      --accent-purple: #a855f7;
+      --accent-cyan: #06b6d4;
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Back Button */
+    .back-nav {
+      margin-bottom: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #090d16;
+    }
+
+    /* Header */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #311042 50%, #4d052d 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 20px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ec4899, #a855f7, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title-group p {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .billing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(236, 72, 153, 0.12);
+      border: 1px solid rgba(236, 72, 153, 0.35);
+      color: #f472b6;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Content Layout */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr 380px;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    @media (max-width: 1200px) {
+      .app-layout {
+        grid-template-columns: 300px 1fr;
+      }
+      .right-panel {
+        grid-column: 1 / -1;
+        position: sticky;
+        bottom: 20px;
+        z-index: 100;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+      .right-panel {
+        position: static;
+      }
+    }
+
+    /* Left Sidebar: A-Z / Diagnoses list */
+    .sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 160px);
+      min-height: 500px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        height: 400px;
+      }
+    }
+
+    .alphabet-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      padding: 12px;
+      background: #090d16;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .letter-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 0;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .letter-btn:hover, .letter-btn.active {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #090d16;
+    }
+
+    .search-wrapper {
+      padding: 12px;
+      background: #0b111e;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      padding-left: 32px;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-pink);
+      outline: none;
+    }
+
+    .search-icon-inside {
+      position: absolute;
+      left: 22px;
+      top: 19px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .dx-list-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .system-group {
+      margin-bottom: 16px;
+    }
+
+    .system-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-pink);
+      margin-bottom: 6px;
+      border-left: 2px solid var(--accent-pink);
+      padding-left: 6px;
+    }
+
+    .dx-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      padding: 6px 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dx-item:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    .dx-item.active {
+      background: rgba(236, 72, 153, 0.1);
+      border-left: 3px solid var(--accent-pink);
+      color: var(--text-main);
+      font-weight: 600;
+      padding-left: 5px;
+    }
+
+    /* Middle Panel: Checklists */
+    .workspace {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      overflow-y: auto;
+      height: calc(100vh - 160px);
+      min-height: 500px;
+    }
+
+    @media (max-width: 850px) {
+      .workspace {
+        height: auto;
+      }
+    }
+
+    .workspace-header {
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .workspace-header h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+
+    .workspace-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .option-section {
+      margin-bottom: 20px;
+      background: #0b111e;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+
+    .option-section h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      cursor: pointer;
+      user-select: none;
+      padding: 6px 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+
+    .checkbox-label:hover {
+      border-color: var(--accent-pink);
+      background: var(--bg-card-hover);
+    }
+
+    .checkbox-label input {
+      margin-top: 4px;
+      accent-color: var(--accent-pink);
+    }
+
+    /* Differential specific styling */
+    .radio-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      cursor: pointer;
+      user-select: none;
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+
+    .radio-label:hover {
+      border-color: var(--accent-pink);
+      background: var(--bg-card-hover);
+    }
+
+    .radio-label input {
+      accent-color: var(--accent-pink);
+    }
+
+    .radio-label.primary-selected {
+      border-color: var(--accent-pink);
+      background: rgba(236, 72, 153, 0.08);
+      font-weight: 600;
+    }
+
+    /* Right Panel: Live Note & Copy */
+    .right-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 160px);
+      min-height: 500px;
+    }
+
+    .right-panel h3 {
+      font-size: 1rem;
+      color: #f8fafc;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .note-output {
+      flex: 1;
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #f8fafc;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+
+    .btn-copy {
+      background: var(--accent-pink);
+      border: none;
+      color: #090d16;
+      font-weight: 700;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-copy:hover {
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.55);
+      opacity: 0.95;
+    }
+
+    .empty-workspace {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 40px;
+    }
+
+    .empty-workspace i {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      color: var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Nav -->
+  <div class="back-nav">
+    <a href="../index.html" class="btn-back">
+      <i class="fa-solid fa-arrow-left"></i> Back to Hub
+    </a>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="header-banner">
+    <div class="header-title-group">
+      <h1><i class="fa-solid fa-file-invoice"></i> Interactive EHR Dotphrase Builder</h1>
+      <p>Select a diagnosis, toggle components, and compile highly billable E/M chart notes instantly</p>
+    </div>
+    <div class="billing-badge">
+      <i class="fa-solid fa-shield-halved"></i> level 4/5 MDM supported
+    </div>
+  </header>
+
+  <!-- Main App Layout -->
+  <div class="app-layout">
+    
+    <!-- Left Sidebar: Alphabet & Diagnoses List -->
+    <aside class="sidebar">
+      <!-- A-Z Selector -->
+      <div class="alphabet-grid">
+        <button class="letter-btn active" onclick="filterByLetter('All', this)">All</button>
+        <button class="letter-btn" onclick="filterByLetter('A', this)">A</button>
+        <button class="letter-btn" onclick="filterByLetter('B', this)">B</button>
+        <button class="letter-btn" onclick="filterByLetter('C', this)">C</button>
+        <button class="letter-btn" onclick="filterByLetter('D', this)">D</button>
+        <button class="letter-btn" onclick="filterByLetter('E', this)">E</button>
+        <button class="letter-btn" onclick="filterByLetter('F', this)">F</button>
+        <button class="letter-btn" onclick="filterByLetter('G', this)">G</button>
+        <button class="letter-btn" onclick="filterByLetter('H', this)">H</button>
+        <button class="letter-btn" onclick="filterByLetter('I', this)">I</button>
+        <button class="letter-btn" onclick="filterByLetter('J', this)">J</button>
+        <button class="letter-btn" onclick="filterByLetter('K', this)">K</button>
+        <button class="letter-btn" onclick="filterByLetter('L', this)">L</button>
+        <button class="letter-btn" onclick="filterByLetter('M', this)">M</button>
+        <button class="letter-btn" onclick="filterByLetter('N', this)">N</button>
+        <button class="letter-btn" onclick="filterByLetter('O', this)">O</button>
+        <button class="letter-btn" onclick="filterByLetter('P', this)">P</button>
+        <button class="letter-btn" onclick="filterByLetter('Q', this)">Q</button>
+        <button class="letter-btn" onclick="filterByLetter('R', this)">R</button>
+        <button class="letter-btn" onclick="filterByLetter('S', this)">S</button>
+        <button class="letter-btn" onclick="filterByLetter('T', this)">T</button>
+        <button class="letter-btn" onclick="filterByLetter('U', this)">U</button>
+        <button class="letter-btn" onclick="filterByLetter('V', this)">V</button>
+        <button class="letter-btn" onclick="filterByLetter('W', this)">W</button>
+        <button class="letter-btn" onclick="filterByLetter('X', this)">X</button>
+        <button class="letter-btn" onclick="filterByLetter('Y', this)">Y</button>
+        <button class="letter-btn" onclick="filterByLetter('Z', this)">Z</button>
+      </div>
+      
+      <!-- Search Input -->
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon-inside"></i>
+        <input type="text" id="search-bar" class="search-input" placeholder="Search diagnoses..." oninput="handleSearch()">
+      </div>
+
+      <!-- Diagnoses List -->
+      <div class="dx-list-container" id="dx-list">
+        <!-- Injected dynamically -->
+      </div>
+    </aside>
+
+    <!-- Middle Workspace: Checklist Options -->
+    <main class="workspace" id="workspace-panel">
+      <div class="empty-workspace">
+        <i class="fa-solid fa-folder-open"></i>
+        <h3>No Diagnosis Selected</h3>
+        <p>Choose an organ system or search for a diagnosis in the sidebar to begin building your clinical chart note.</p>
+      </div>
+    </main>
+
+    <!-- Right Panel: Live Note compiler -->
+    <aside class="right-panel">
+      <h3><i class="fa-solid fa-code"></i> Live EHR Chart Note</h3>
+      <div class="note-output" id="note-text-box">Select options to compile chart note...</div>
+      <button class="btn-copy" onclick="copyChartNote()"><i class="fa-regular fa-copy"></i> Copy Note to Clipboard</button>
+    </aside>
+
+  </div>
+
+  <!-- Load Database and Application logic -->
+  <script src="dotphrases-data.js"></script>
+  <script>
+    let activeLetter = 'All';
+    let searchQuery = '';
+    let selectedDx = null;
+    let selectedDxCategory = '';
+
+    // State for interactive checkboxes
+    let checkedHx = [];
+    let primaryDiff = '';
+    let checkedWorkup = [];
+    let checkedRx = [];
+    let checkedED = [];
+    let includeFU = true;
+
+    // Helper: Parse comma separated items, ignoring decimals
+    function parseList(str) {
+      if (!str) return [];
+      // Split by comma, or period not surrounded by digits (e.g. "0.4mg" is safe)
+      const raw = str.split(/(?<!\d)\.(?!\d)|,/g);
+      return raw.map(x => x.trim()).filter(x => x.length > 2);
+    }
+
+    // Helper: Parse differentials split by '>'
+    function parseDiff(str) {
+      if (!str) return [];
+      return str.split('>').map(x => x.trim()).filter(x => x.length > 0);
+    }
+
+    // Initialize list
+    function renderDxList() {
+      const container = document.getElementById('dx-list');
+      container.innerHTML = '';
+
+      let matchesFound = false;
+
+      for (const [system, list] of Object.entries(DOTPHRASES_DATA)) {
+        // Filter diagnoses by letter and search query
+        const filteredList = list.filter(dx => {
+          const matchesLetter = activeLetter === 'All' || dx.name.toUpperCase().startsWith(activeLetter);
+          const matchesSearch = searchQuery === '' || dx.name.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesLetter && matchesSearch;
+        });
+
+        if (filteredList.length > 0) {
+          matchesFound = true;
+          const group = document.createElement('div');
+          group.className = 'system-group';
+          group.innerHTML = `<div class="system-title">${system}</div>`;
+
+          filteredList.forEach(dx => {
+            const btn = document.createElement('button');
+            btn.className = 'dx-item';
+            if (selectedDx && selectedDx.name === dx.name) {
+              btn.classList.add('active');
+            }
+            btn.innerText = dx.name;
+            btn.title = dx.name;
+            btn.onclick = () => selectDiagnosis(dx, system);
+            group.appendChild(btn);
+          });
+
+          container.appendChild(group);
+        }
+      }
+
+      if (!matchesFound) {
+        container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding-top:20px;">No diagnoses found.</div>`;
+      }
+    }
+
+    function filterByLetter(letter, btn) {
+      activeLetter = letter;
+      document.querySelectorAll('.letter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderDxList();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('search-bar').value;
+      renderDxList();
+    }
+
+    function selectDiagnosis(dx, category) {
+      selectedDx = dx;
+      selectedDxCategory = category;
+
+      // Reset checked states
+      checkedHx = parseList(dx.hx);
+      const diffList = parseDiff(dx.diff);
+      primaryDiff = diffList[0] || '';
+      checkedWorkup = parseList(dx.workup);
+      checkedRx = parseList(dx.rx);
+      checkedED = parseList(dx.ed);
+      includeFU = true;
+
+      // Refresh list to show active item
+      renderDxList();
+      
+      // Render Workspace
+      renderWorkspace();
+      compileNote();
+    }
+
+    function renderWorkspace() {
+      const panel = document.getElementById('workspace-panel');
+      if (!selectedDx) return;
+
+      const hxItems = parseList(selectedDx.hx);
+      const diffItems = parseDiff(selectedDx.diff);
+      const workupItems = parseList(selectedDx.workup);
+      const rxItems = parseList(selectedDx.rx);
+      const edItems = parseList(selectedDx.ed);
+
+      panel.innerHTML = `
+        <div class="workspace-header">
+          <h2>${selectedDx.name}</h2>
+          <span class="workspace-category">${selectedDxCategory}</span>
+        </div>
+
+        <!-- Hx / Qual -->
+        <div class="option-section">
+          <h4><i class="fa-solid fa-history"></i> History / Subjective Characteristics</h4>
+          <div class="checkbox-grid">
+            ${hxItems.map((item, idx) => `
+              <label class="checkbox-label">
+                <input type="checkbox" checked onchange="toggleItem('hx', '${item.replace(/'/g, "\\'")}', this.checked)">
+                <span>${item}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Differential Triage -->
+        <div class="option-section">
+          <h4><i class="fa-solid fa-code-merge"></i> Differential Triage (Select Primary Diagnosis)</h4>
+          <div class="radio-grid">
+            ${diffItems.map((item, idx) => `
+              <label class="radio-label ${primaryDiff === item ? 'primary-selected' : ''}" onclick="selectPrimaryDiff('${item.replace(/'/g, "\\'")}', this)">
+                <input type="radio" name="primary-diff" ${primaryDiff === item ? 'checked' : ''}>
+                <span>${item} ${idx === 0 ? '<em style="font-size:0.75rem; color:var(--text-muted); font-weight:400;">(Default)</em>' : ''}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Work-up -->
+        <div class="option-section">
+          <h4><i class="fa-solid fa-stethoscope"></i> Diagnostic Work-Up & Testing</h4>
+          <div class="checkbox-grid">
+            ${workupItems.map((item, idx) => `
+              <label class="checkbox-label">
+                <input type="checkbox" checked onchange="toggleItem('workup', '${item.replace(/'/g, "\\'")}', this.checked)">
+                <span>${item}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Rx / Plan -->
+        <div class="option-section">
+          <h4><i class="fa-solid fa-prescription-bottle-medical"></i> Plan & Prescribing Management</h4>
+          <div class="checkbox-grid">
+            ${rxItems.map((item, idx) => `
+              <label class="checkbox-label">
+                <input type="checkbox" checked onchange="toggleItem('rx', '${item.replace(/'/g, "\\'")}', this.checked)">
+                <span>${item}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Follow-up -->
+        <div class="option-section">
+          <h4><i class="fa-solid fa-calendar-check"></i> Scheduled Follow-Up</h4>
+          <label class="checkbox-label">
+            <input type="checkbox" checked onchange="includeFU = this.checked; compileNote();">
+            <span>${selectedDx.fu}</span>
+          </label>
+        </div>
+
+        <!-- ED Red Flags -->
+        <div class="option-section" style="margin-bottom: 0;">
+          <h4><i class="fa-solid fa-triangle-exclamation" style="color:var(--accent-pink);"></i> Emergency Return Precautions</h4>
+          <div class="checkbox-grid">
+            ${edItems.map((item, idx) => `
+              <label class="checkbox-label">
+                <input type="checkbox" checked onchange="toggleItem('ed', '${item.replace(/'/g, "\\'")}', this.checked)">
+                <span>${item}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleItem(type, item, isChecked) {
+      if (type === 'hx') {
+        if (isChecked) { if(!checkedHx.includes(item)) checkedHx.push(item); }
+        else { checkedHx = checkedHx.filter(x => x !== item); }
+      } else if (type === 'workup') {
+        if (isChecked) { if(!checkedWorkup.includes(item)) checkedWorkup.push(item); }
+        else { checkedWorkup = checkedWorkup.filter(x => x !== item); }
+      } else if (type === 'rx') {
+        if (isChecked) { if(!checkedRx.includes(item)) checkedRx.push(item); }
+        else { checkedRx = checkedRx.filter(x => x !== item); }
+      } else if (type === 'ed') {
+        if (isChecked) { if(!checkedED.includes(item)) checkedED.push(item); }
+        else { checkedED = checkedED.filter(x => x !== item); }
+      }
+      compileNote();
+    }
+
+    function selectPrimaryDiff(item, element) {
+      primaryDiff = item;
+      document.querySelectorAll('.radio-label').forEach(label => label.classList.remove('primary-selected'));
+      element.classList.add('primary-selected');
+      compileNote();
+    }
+
+    // Dynamic note generator applying highly billable E/M MDM phrasing upgrades
+    function compileNote() {
+      if (!selectedDx) return;
+
+      const nameHeader = `**${selectedDx.name.toUpperCase()} ASSESSMENT & BATTLE PLAN**\n--------------------------------------------------`;
+
+      // 1. History / Subjective MDM upgrade (Problem Complexity)
+      let hxPart = '';
+      if (checkedHx.length > 0) {
+        hxPart = `- **Clinical Presentation**: Moderate-complexity presentation of suspected ${selectedDx.name} with risk of acute progression, characterized by: ${checkedHx.join(', ')}.`;
+      } else {
+        hxPart = `- **Clinical Presentation**: Clinical presentation of suspected ${selectedDx.name} evaluated at moderate severity.`;
+      }
+
+      // 2. Differential (Rearranged: primary item moves to front)
+      const defaultDiffs = parseDiff(selectedDx.diff);
+      let diffList = [];
+      if (primaryDiff) {
+        diffList = [primaryDiff, ...defaultDiffs.filter(x => x !== primaryDiff)];
+      } else {
+        diffList = defaultDiffs;
+      }
+      const diffPart = `- **Differential Triage**: ${diffList.join(' > ')}. Clinical assessment completed to rule out secondary etiology.`;
+
+      // 3. Work-up
+      let workupPart = '';
+      if (checkedWorkup.length > 0) {
+        workupPart = `- **Diagnostics & Work-up**: Ordered/reviewed: ${checkedWorkup.join(', ')} to analyze baseline severity and exclude secondary pathological changes.`;
+      } else {
+        workupPart = `- **Diagnostics & Work-up**: Managed clinically; no immediate diagnostic laboratory or imaging tests indicated at this visit.`;
+      }
+
+      // 4. Rx / Plan (Moderate Risk: Prescription drug management)
+      let rxPart = '';
+      if (checkedRx.length > 0) {
+        // Systemic drug check (e.g. antibiotics or oral antivirals/antifungals)
+        const hasSystemic = checkedRx.some(x => {
+          const lower = x.toLowerCase();
+          return lower.includes('mg') && (lower.includes('bid') || lower.includes('qd') || lower.includes('tid')) && 
+                 (lower.includes('doxycycline') || lower.includes('amoxicillin') || lower.includes('augmentin') || 
+                  lower.includes('bactrim') || lower.includes('valacyclovir') || lower.includes('prednisone') || 
+                  lower.includes('fluconazole') || lower.includes('terbinafine') || lower.includes('apo-') || lower.includes('cefdinir'));
+        });
+
+        if (hasSystemic) {
+          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (empiric oral systemic therapy: ${checkedRx.join(', ')}) targeting localized tissue inflammation, pending clinical response.`;
+        } else {
+          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (${checkedRx.join(', ')}) for target therapeutic control.`;
+        }
+      } else {
+        rxPart = `- **Plan & Management**: Conservative outpatient management and local supportive care; no active prescription drug therapy initiated today.`;
+      }
+
+      // 5. Follow-up
+      const fuPart = includeFU ? `- **Follow-up Plan**: ${selectedDx.fu}.` : '';
+
+      // 6. ED Flags / Safety Netting (High Risk: Triage / Return Precautions)
+      let edPart = '';
+      if (checkedED.length > 0) {
+        edPart = `- **Triage & Safety Netting**: Patient evaluated for signs of systemic toxicity, sepsis, and anatomical red flags. Instructed on strict emergency department return precautions for rapid expansion, fevers, or systemic compromise related to: ${checkedED.join(', ')}.`;
+      } else {
+        edPart = `- **Triage & Safety Netting**: Safety netting completed. Patient educated on standard clinical warning parameters and instructed on strict ED precautions if systemic red flags develop.`;
+      }
+
+      // Combine parts
+      const fullNote = [nameHeader, hxPart, diffPart, workupPart, rxPart, fuPart, edPart].filter(x => x !== '').join('\n');
+      document.getElementById('note-text-box').innerText = fullNote;
+    }
+
+    function copyChartNote() {
+      const box = document.getElementById('note-text-box');
+      if (!selectedDx) {
+        alert("Please select a diagnosis first.");
+        return;
+      }
+      navigator.clipboard.writeText(box.innerText).then(() => {
+        alert("Highly billable EHR note copied to clipboard!");
+      });
+    }
+
+    // On Load
+    renderDxList();
+  </script>
+</body>
+</html>
