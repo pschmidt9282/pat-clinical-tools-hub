@@ -594,8 +594,8 @@
     function parseList(str) {
       if (!str) return [];
       
-      // Split by periods first to get sentences, ignoring decimal dots
-      const sentences = str.split(/(?<!\d)\.(?!\d)/g).map(s => s.trim()).filter(s => s.length > 0);
+      // Split by periods first to get sentences, ignoring decimals and abbreviation periods
+      const sentences = str.split(/\.(?=\s*[A-Z]|$)/g).map(s => s.trim()).filter(s => s.length > 0);
       const result = [];
       
       sentences.forEach(sentence => {
