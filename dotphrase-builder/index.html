@@ -505,6 +505,44 @@
       padding: 6px;
       border-radius: 4px;
       text-align: center;
+      position: relative;
+      cursor: help;
+    }
+
+    .mdm-tooltip {
+      position: absolute;
+      bottom: 120%;
+      width: 290px;
+      background: #111827;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      text-align: left;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      z-index: 999;
+      font-size: 0.72rem;
+      line-height: 1.4;
+      color: #cbd5e1;
+      pointer-events: none;
+    }
+    
+    .mdm-badge:hover .mdm-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .mdm-badge:nth-child(1) .mdm-tooltip {
+      left: 0;
+    }
+    .mdm-badge:nth-child(2) .mdm-tooltip {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .mdm-badge:nth-child(3) .mdm-tooltip {
+      right: 0;
     }
 
     .mdm-badge-title {
@@ -828,14 +866,35 @@
           <div class="mdm-badge">
             <div class="mdm-badge-title">Problems</div>
             <div id="mdm-problems" class="mdm-badge-val low">Low</div>
+            <div class="mdm-tooltip">
+              <strong style="color:var(--accent-pink); display:block; margin-bottom:4px;">Complexity of Problems</strong>
+              <span style="display:block; margin-bottom:4px;"><strong>• Min (Lvl 2):</strong> 1 minor/self-limited issue.</span>
+              <span style="display:block; margin-bottom:4px;"><strong>• Low (Lvl 3):</strong> 1 stable chronic OR 1 uncomplicated acute illness.</span>
+              <span style="display:block; margin-bottom:4px;"><strong>• Mod (Lvl 4):</strong> 2+ stable chronic OR 1 chronic worsening OR 1 acute systemic illness.</span>
+              <span style="display:block;"><strong>• High (Lvl 5):</strong> Severe exacerbation of chronic disease OR acute illness threat to life/organ function.</span>
+            </div>
           </div>
           <div class="mdm-badge">
             <div class="mdm-badge-title">Data</div>
             <div id="mdm-data" class="mdm-badge-val low">Minimal</div>
+            <div class="mdm-tooltip">
+              <strong style="color:var(--accent-purple); display:block; margin-bottom:4px;">Data Reviewed & Analyzed</strong>
+              <span style="display:block; margin-bottom:4px;"><strong>• Min (Lvl 2):</strong> 0-1 tests ordered/reviewed.</span>
+              <span style="display:block; margin-bottom:4px;"><strong>• Low (Lvl 3):</strong> 2 unique tests, review of external records, or independent historian (any 1).</span>
+              <span style="display:block; margin-bottom:4px;"><strong>• Mod (Lvl 4):</strong> Meets 1 Category: Cat 1 (3 tests/records/historian), Cat 2 (independent interpretation), or Cat 3 (discussion).</span>
+              <span style="display:block;"><strong>• High (Lvl 5):</strong> Meets 2 of the Moderate categories.</span>
+            </div>
           </div>
           <div class="mdm-badge">
             <div class="mdm-badge-title">Risk</div>
             <div id="mdm-risk" class="mdm-badge-val low">Low</div>
+            <div class="mdm-tooltip">
+              <strong style="color:var(--accent-cyan); display:block; margin-bottom:4px;">Risk of Complications</strong>
+              <span style="display:block; margin-bottom:4px;"><strong>• Min (Lvl 2):</strong> Rest, OTC drugs, local dressing.</span>
+              <span style="display:block; margin-bottom:4px;"><strong>• Low (Lvl 3):</strong> Minor surgery without risk, physical therapy.</span>
+              <span style="display:block; margin-bottom:4px;"><strong>• Mod (Lvl 4):</strong> Rx drug management, decision on minor surgery with risk.</span>
+              <span style="display:block;"><strong>• High (Lvl 5):</strong> Decision for hospitalization, major surgery, or emergency care/de-escalation.</span>
+            </div>
           </div>
         </div>
         <div class="mdm-final" style="margin-bottom:8px;">
