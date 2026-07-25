@@ -1786,7 +1786,30 @@
       score += parseInt(ageEl.value);
       criteria.push("Age factor: " + ageEl.closest('label').innerText.trim());
 
-      const noteText = `[Centor Score Strep Assessment]\nScore: ${score} points\nCriteria Met: ${criteria.join(', ')}`;
+      let recommendation = "";
+      let plan = "";
+      if (score >= 4) {
+        recommendation = "High probability (~50-60%). Rapid Strep test (RADT) or empiric antibiotic therapy indicated.";
+        plan = "\nPlan (If RADT positive or choosing empiric treatment):\n" +
+               "  - First-line: Amoxicillin 1000mg PO daily (or 500mg PO BID) x 10 days\n" +
+               "  - Alternative: Penicillin V Potassium 500mg PO BID-TID x 10 days\n" +
+               "  - Penicillin Allergy (non-anaphylactic): Cephalexin 500mg PO BID x 10 days\n" +
+               "  - Penicillin Allergy (anaphylactic): Azithromycin 500mg PO Day 1, then 250mg PO daily x 4 days\n" +
+               "  - Symptom Control: Ibuprofen 400-600mg PO Q6H PRN pain/fever";
+      } else if (score >= 2) {
+        recommendation = "Intermediate probability (15-30%). Perform Rapid Strep test (RADT) and treat ONLY if positive.";
+        plan = "\nPlan:\n" +
+               "  - Order: Rapid Antigen Detection Test (RADT) for Group A Strep\n" +
+               "  - If positive, initiate Amoxicillin 1000mg PO daily x 10 days\n" +
+               "  - Supportive: warm saline gargles, hydration, lozenges";
+      } else {
+        recommendation = "Low probability (<10%). No Strep test or antibiotic treatment indicated (supportive care only).";
+        plan = "\nPlan:\n" +
+               "  - Supportive care for viral pharyngitis: hydration, warm liquids, throat lozenges\n" +
+               "  - Acetaminophen 325-650mg PO Q4-6H PRN or Ibuprofen 400mg PO Q6H PRN pain";
+      }
+
+      const noteText = `[Centor Score Strep Assessment]\nScore: ${score} points (${recommendation})\nCriteria Met: ${criteria.join(', ')}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
@@ -1811,7 +1834,29 @@
         criteria.push(cb.closest('label').innerText.trim());
       });
 
-      const noteText = `[Wells Criteria DVT Assessment]\nScore: ${score} points\nCriteria Met: ${criteria.join(', ')}`;
+      let prob = "";
+      let plan = "";
+      if (score >= 3) {
+        prob = "High probability (score ≥3; ~50% prevalence). DVT likely.";
+        plan = "\nPlan:\n" +
+               "  - Order: Urgent Complete Venous Compression Duplex Ultrasound of the symptomatic lower extremity\n" +
+               "  - If ultrasound is negative but clinical suspicion remains, repeat in 5-7 days or check D-dimer\n" +
+               "  - If DVT confirmed, initiate anticoagulation (e.g., Apixaban 10mg PO BID x7 days then 5mg PO BID, or Rivaroxaban 15mg PO BID x21 days then 20mg PO daily)";
+      } else if (score >= 1) {
+        prob = "Moderate probability (score 1-2; ~17% prevalence).";
+        plan = "\nPlan:\n" +
+               "  - Order: High-sensitivity D-dimer test OR Venous Duplex Ultrasound\n" +
+               "  - If D-dimer is negative, DVT is ruled out. If positive, proceed to compression ultrasound\n" +
+               "  - If DVT confirmed, initiate standard anticoagulation protocol";
+      } else {
+        prob = "Low probability (score ≤0; ~3% prevalence). DVT unlikely.";
+        plan = "\nPlan:\n" +
+               "  - Order: High-sensitivity D-dimer test\n" +
+               "  - If D-dimer is negative, DVT is safely ruled out (high NPV)\n" +
+               "  - If D-dimer is positive, reflex to Compression Duplex Ultrasound";
+      }
+
+      const noteText = `[Wells Criteria DVT Assessment]\nScore: ${score} points (${prob})\nCriteria Met: ${criteria.join(', ')}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
@@ -2025,7 +2070,54 @@
 
     function insertPREVENT() {
       const res = document.getElementById('prevent-result').innerText;
-      const noteText = `[AHA PREVENT Cardiovascular Risk Assessment]\n${res}\nParameters: Age ${document.getElementById('prevent-age').value}, Sex: ${document.getElementById('prevent-sex').value}, SBP ${document.getElementById('prevent-sbp').value} mmHg, eGFR ${document.getElementById('prevent-egfr').value}, TC ${document.getElementById('prevent-tc').value}, HDL ${document.getElementById('prevent-hdl').value}, BMI ${document.getElementById('prevent-bmi').value}, Smoker: ${document.getElementById('prevent-smoker').checked}, Diabetic: ${document.getElementById('prevent-dm').checked}, On BP Meds: ${document.getElementById('prevent-htn-meds').checked}, On Statin: ${document.getElementById('prevent-statin').checked}`;
+      const age = parseFloat(document.getElementById('prevent-age').value) || 55;
+      const sbp = parseFloat(document.getElementById('prevent-sbp').value) || 130;
+      const tc = parseFloat(document.getElementById('prevent-tc').value) || 200;
+      const hdl = parseFloat(document.getElementById('prevent-hdl').value) || 50;
+      const smoker = document.getElementById('prevent-smoker').checked;
+      const dm = document.getElementById('prevent-dm').checked;
+      const htn = document.getElementById('prevent-htn-meds').checked;
+      const statin = document.getElementById('prevent-statin').checked;
+      const egfr = parseFloat(document.getElementById('prevent-egfr').value) || 90;
+      const bmi = parseFloat(document.getElementById('prevent-bmi').value) || 25;
+      const timeHorizon = document.getElementById('prevent-time').value;
+
+      const pctMatch = res.match(/([\d.]+)%/);
+      const pct = pctMatch ? parseFloat(pctMatch[1]) : 0;
+
+      let rec = "";
+      let plan = "";
+      if (pct >= 20.0) {
+        rec = "High Risk (≥20%). Class I indication for High-Intensity Statin.";
+        plan = "\nPlan:\n" +
+               "  - Initiate High-Intensity Statin (Atorvastatin 40-80mg PO daily OR Rosuvastatin 20-40mg PO daily) to target ≥50% LDL-C reduction\n" +
+               "  - If LDL remains ≥70 mg/dL on maximum tolerated statin, consider adding Ezetimibe 10mg PO daily\n" +
+               "  - Counsel on ASCVD lifestyle risk reduction (DASH diet, 150 min/week exercise, smoking cessation)\n" +
+               "  - Recheck fasting lipid panel in 8-12 weeks";
+      } else if (pct >= 7.5) {
+        rec = "Intermediate Risk (7.5% to 19.9%). Class I indication for Statin.";
+        plan = "\nPlan:\n" +
+               "  - Initiate Moderate-Intensity Statin (Atorvastatin 10-20mg PO daily OR Rosuvastatin 5-10mg PO daily) to target 30-49% LDL-C reduction\n" +
+               "  - If diabetes is present, consider escalating to High-Intensity Statin\n" +
+               "  - Discuss risk enhancers: family history of premature ASCVD, CKD (eGFR <60), metabolic syndrome\n" +
+               "  - Recheck fasting lipid panel in 8-12 weeks";
+      } else if (pct >= 5.0) {
+        rec = "Borderline Risk (5% to 7.4%). Statin indicated if risk enhancers present.";
+        plan = "\nPlan:\n" +
+               "  - Discuss risk-benefit of statin therapy. If risk enhancers present (e.g., family Hx, CKD, LDL-C ≥160), initiate Moderate-Intensity Statin\n" +
+               "  - Emphasize lifestyle modification: weight management, dietary counseling, smoking cessation";
+      } else {
+        rec = "Low Risk (<5%). Statin therapy not routinely indicated for primary prevention.";
+        plan = "\nPlan:\n" +
+               "  - Emphasize cardiovascular lifestyle prevention (nutrition, exercise, avoidance of tobacco)\n" +
+               "  - No statin indicated unless LDL-C is severely elevated (≥190 mg/dL) or patient is diabetic";
+      }
+
+      if (dm && age >= 40 && age <= 75 && pct < 7.5) {
+        rec += " *Clinical Override: Diabetic patient aged 40-75 indicates at least Moderate-Intensity Statin regardless of PREVENT score.*";
+      }
+
+      const noteText = `[AHA PREVENT Cardiovascular Risk Assessment]\n${res}\nRecommendation: ${rec}\nParameters: Age ${age}, Sex: ${document.getElementById('prevent-sex').value}, SBP ${sbp} mmHg, eGFR ${egfr}, TC ${tc}, HDL ${hdl}, BMI ${bmi}, Smoker: ${smoker}, Diabetic: ${dm}, On BP Meds: ${htn}, On Statin: ${statin}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
@@ -2055,12 +2147,36 @@
       const ageEl = document.querySelector('input[name="chads-age"]:checked');
       score += parseInt(ageEl.value);
       criteria.push("Age bracket: " + ageEl.closest('label').innerText.trim());
-      if (document.getElementById('chads-female').checked) {
+      const isFemale = document.getElementById('chads-female').checked;
+      if (isFemale) {
         score += 1;
         criteria.push("Sex: Female");
       }
 
-      const noteText = `[CHA2DS2-VASc Stroke Risk Assessment]\nScore: ${score} points\nCriteria Met: ${criteria.join(', ')}`;
+      const adjustedScoreForDecision = isFemale ? (score - 1) : score;
+      let recommendation = "";
+      let plan = "";
+
+      if (adjustedScoreForDecision >= 2) {
+        recommendation = "High Stroke Risk (CHA2DS2-VASc ≥2 in males / ≥3 in females). Class I indication for Oral Anticoagulation (OAC).";
+        plan = "\nPlan:\n" +
+               "  - Initiate Oral Anticoagulation (DOAC preferred over Warfarin):\n" +
+               "    * Apixaban (Eliquis) 5mg PO BID (reduce to 2.5mg BID if meeting 2+ criteria: age ≥80, weight ≤60kg, creatinine ≥1.5 mg/dL)\n" +
+               "    * Rivaroxaban (Xarelto) 20mg PO daily with evening meal (reduce to 15mg daily if CrCl 15-50 mL/min)\n" +
+               "    * Dabigatran (Pradaxa) 150mg PO BID\n" +
+               "  - Counsel patient on bleeding risks, adherence, and medication interactions";
+      } else if (adjustedScoreForDecision === 1) {
+        recommendation = "Intermediate Stroke Risk (CHA2DS2-VASc 1 in males / 2 in females). Class IIb indication to consider Oral Anticoagulation.";
+        plan = "\nPlan:\n" +
+               "  - Discuss risk-benefit profile of anticoagulation vs. no therapy. Shared decision-making recommended\n" +
+               "  - If initiating therapy, DOAC (Apixaban or Rivaroxaban) is preferred over aspirin alone";
+      } else {
+        recommendation = "Low Stroke Risk (CHA2DS2-VASc 0 in males / 1 in females). Anticoagulation not recommended.";
+        plan = "\nPlan:\n" +
+               "  - No antithrombotic therapy indicated (Class III recommendation against anticoagulation/aspirin)";
+      }
+
+      const noteText = `[CHA2DS2-VASc Stroke Risk Assessment]\nScore: ${score} points\nRecommendation: ${recommendation}\nCriteria Met: ${criteria.join(', ')}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
@@ -2086,7 +2202,49 @@
 
     function insertGFR() {
       const res = document.getElementById('gfr-result').innerText;
-      const noteText = `[Cockcroft-Gault Renal Dosing Calculator]\n${res}\nInputs: Age ${document.getElementById('gfr-age').value}y, Weight ${document.getElementById('gfr-weight').value}kg, Creatinine ${document.getElementById('gfr-scr').value} mg/dL, Female: ${document.getElementById('gfr-female').checked}`;
+      const age = parseFloat(document.getElementById('gfr-age').value) || 65;
+      const weight = parseFloat(document.getElementById('gfr-weight').value) || 70;
+      const scr = parseFloat(document.getElementById('gfr-scr').value) || 1.0;
+      const female = document.getElementById('gfr-female').checked;
+
+      let crcl = ((140 - age) * weight) / (72 * scr);
+      if (female) crcl *= 0.85;
+
+      let staging = "";
+      let plan = "";
+      if (crcl < 15.0) {
+        staging = "Kidney Failure (CrCl < 15 mL/min). Stage 5 CKD.";
+        plan = "\nPlan:\n" +
+               "  - Avoid Metformin and SGLT2 inhibitors\n" +
+               "  - Avoid NSAIDs entirely (high risk of exacerbating uremia and fluid retention)\n" +
+               "  - Urgent nephrology consult indicated for renal replacement therapy planning\n" +
+               "  - Adjust all renally cleared drugs (gabapentin cap, beta-blocker check, antibiotics)";
+      } else if (crcl < 30.0) {
+        staging = "Severe Renal Reduction (CrCl 15-29 mL/min). Stage 4 CKD.";
+        plan = "\nPlan:\n" +
+               "  - Contraindicated: Metformin (avoid initiation; stop if eGFR/CrCl <30)\n" +
+               "  - Avoid NSAIDs; use alternative analgesics\n" +
+               "  - Adjust Gabapentin (max 300mg PO daily or QOD)\n" +
+               "  - Adjust DOAC dosing (Apixaban 2.5mg BID if meets other criteria; avoid Rivaroxaban if CrCl <15)";
+      } else if (crcl < 60.0) {
+        staging = "Moderate Renal Reduction (CrCl 30-59 mL/min). Stage 3 CKD.";
+        plan = "\nPlan:\n" +
+               "  - Metformin adjustment: Max dose 1000mg PO daily if CrCl 30-45; monitor renal panels Q3-6 months\n" +
+               "  - Rivaroxaban: Reduce dose to 15mg PO daily (with meal) for AF stroke prevention\n" +
+               "  - Avoid NSAIDs where possible; use with caution\n" +
+               "  - SGLT2 Inhibitors (Empagliflozin/Dapagliflozin) are safe and recommended for cardiorenal protection down to eGFR 20-25";
+      } else if (crcl < 90.0) {
+        staging = "Mild Renal Reduction (CrCl 60-89 mL/min). Stage 2 CKD.";
+        plan = "\nPlan:\n" +
+               "  - Standard dosing for most agents; monitor renal function annually\n" +
+               "  - Ensure adequate hydration and avoid prolonged NSAID overuse";
+      } else {
+        staging = "Normal renal clearance (CrCl ≥90 mL/min). Stage 1 CKD (if structural damage present).";
+        plan = "\nPlan:\n" +
+               "  - Standard drug dosing; routine age-appropriate metabolic panels";
+      }
+
+      const noteText = `[Cockcroft-Gault Renal Dosing Calculator]\n${res}\nRenal Stage: ${staging}\nInputs: Age ${age}y, Weight ${weight}kg, Creatinine ${scr} mg/dL, Female: ${female}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
