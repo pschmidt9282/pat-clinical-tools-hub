@@ -218,6 +218,13 @@ const INITIAL_TOOLS = [
         url: "./fungal-infections-matrix/",
         category: "Dermatology",
         description: "Interactive guide for superficial and mucosal mycoses by location and extent. Details topical vs. oral agents, Terbinafine LFT tracking, and drug interaction safety."
+    },
+    {
+        id: "adhd-matrix",
+        title: "ADHD Pharmacotherapy Matrix",
+        url: "./adhd-matrix/",
+        category: "Psychiatry",
+        description: "Comparative guide for first-line stimulants (methylphenidate/amphetamine) vs. second-line non-stimulant SNRIs and third-line alpha-2 agonists, detailing dosing and side-effects."
     }
 ];
 

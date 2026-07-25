@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADHD Pharmacotherapy Decision Matrix | Clinical Decision Support</title>
+  <meta name="description" content="Evidence-based interactive decision support matrix for ADHD pharmacotherapy. Details stimulant and non-stimulant classes, dosing schedules, CYP450 interactions, adverse profiles, and cost.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: hsl(255, 45%, 8%);
+      --bg-secondary: hsl(255, 40%, 12%);
+      --bg-card: hsl(255, 35%, 16%);
+      --border-color: hsl(255, 25%, 23%);
+      --text-primary: hsl(210, 40%, 98%);
+      --text-secondary: hsl(255, 15%, 75%);
+      --text-muted: hsl(255, 10%, 55%);
+      --accent-primary: hsl(270, 100%, 70%);
+      --accent-secondary: hsl(300, 100%, 65%);
+      --accent-success: hsl(145, 80%, 45%);
+      --accent-warning: hsl(38, 95%, 55%);
+      --accent-danger: hsl(355, 90%, 60%);
+      --accent-bg-glow: hsla(270, 100%, 70%, 0.12);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: hsl(255, 30%, 98%);
+      --bg-secondary: hsl(255, 25%, 94%);
+      --bg-card: hsl(0, 0%, 100%);
+      --border-color: hsl(255, 20%, 86%);
+      --text-primary: hsl(255, 50%, 12%);
+      --text-secondary: hsl(255, 20%, 35%);
+      --text-muted: hsl(255, 15%, 55%);
+      --accent-primary: hsl(265, 90%, 55%);
+      --accent-secondary: hsl(300, 80%, 45%);
+      --accent-success: hsl(145, 80%, 35%);
+      --accent-warning: hsl(38, 95%, 45%);
+      --accent-danger: hsl(355, 90%, 50%);
+      --accent-bg-glow: hsla(265, 90%, 55%, 0.06);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 30px rgba(78, 28, 142, 0.06);
+      --shadow-lg: 0 16px 40px rgba(78, 28, 142, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      line-height: 1.5;
+      transition: var(--transition-smooth);
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      transition: var(--transition-smooth);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--bg-card);
+      border-color: var(--accent-primary);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .back-link:hover {
+      color: var(--accent-secondary);
+      transform: translateX(-4px);
+    }
+
+    .title-area {
+      margin-bottom: 2rem;
+    }
+
+    .title-area h2 {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .title-area p {
+      color: var(--text-secondary);
+      max-width: 900px;
+    }
+
+    .clinical-alert {
+      background-color: var(--accent-bg-glow);
+      border-left: 4px solid var(--accent-primary);
+      padding: 1rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .clinical-alert strong {
+      color: var(--text-primary);
+    }
+
+    /* Filters System */
+    .filter-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-section {
+      margin-bottom: 1rem;
+    }
+
+    .filter-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .filter-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: var(--bg-primary);
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--accent-bg-glow);
+    }
+
+    .search-row {
+      display: flex;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: var(--transition-smooth);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-bg-glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    /* Main Grid Layout */
+    .matrix-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .matrix-layout {
+        grid-template-columns: 3fr 1fr;
+      }
+    }
+
+    /* Matrix Table */
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background-color: var(--bg-secondary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    tbody tr:hover {
+      background-color: var(--bg-secondary);
+    }
+
+    tbody tr.hidden {
+      display: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-tier1 { background-color: rgba(145, 80, 255, 0.15); color: hsl(265, 100%, 75%); border: 1px solid rgba(145, 80, 255, 0.3); }
+    .badge-tier2 { background-color: rgba(38, 195, 255, 0.15); color: hsl(195, 100%, 70%); border: 1px solid rgba(38, 195, 255, 0.3); }
+    .badge-tier3 { background-color: rgba(245, 158, 11, 0.15); color: hsl(38, 95%, 70%); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .badge-class-mfd { background-color: rgba(16, 185, 129, 0.1); color: hsl(145, 80%, 75%); border: 1px solid rgba(16, 185, 129, 0.2); }
+    .badge-class-amp { background-color: rgba(236, 72, 153, 0.1); color: hsl(330, 80%, 75%); border: 1px solid rgba(236, 72, 153, 0.2); }
+    .badge-class-snri { background-color: rgba(99, 102, 241, 0.1); color: hsl(230, 80%, 75%); border: 1px solid rgba(99, 102, 241, 0.2); }
+    .badge-class-alpha2 { background-color: rgba(251, 146, 60, 0.1); color: hsl(20, 80%, 75%); border: 1px solid rgba(251, 146, 60, 0.2); }
+
+    .cost-low { color: var(--accent-success); font-weight: 700; }
+    .cost-med { color: var(--accent-warning); font-weight: 700; }
+    .cost-high { color: var(--accent-danger); font-weight: 700; }
+
+    /* Right Sidebar: Dynamic Details & EHR builder */
+    .sidebar-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .detail-card, .note-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-smooth);
+    }
+
+    .detail-card h3, .note-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .detail-placeholder {
+      color: var(--text-muted);
+      text-align: center;
+      padding: 2rem 0;
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
+    .monograph-content {
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .monograph-header {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .monograph-section-title {
+      font-weight: 600;
+      color: var(--accent-secondary);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      margin-top: 0.5rem;
+    }
+
+    .monograph-bullet {
+      padding-left: 1.2rem;
+      position: relative;
+      margin-bottom: 0.4rem;
+    }
+
+    .monograph-bullet::before {
+      content: "•";
+      position: absolute;
+      left: 0.4rem;
+      color: var(--accent-primary);
+    }
+
+    /* EHR Note Writer Box */
+    .note-card textarea {
+      width: 100%;
+      height: 150px;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      resize: vertical;
+      margin-bottom: 1rem;
+      transition: var(--transition-smooth);
+    }
+
+    .note-card textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border: none;
+      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: var(--transition-smooth);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .checkbox-col {
+      width: 40px;
+      text-align: center;
+    }
+
+    .custom-check {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="../index.html" class="brand">
+        <div class="brand-logo">Rx</div>
+        <div class="brand-text">
+          <h1>Dr. Schmidt's Clinical Reference Hub</h1>
+          <p>Evidence-Based Decision Support</p>
+        </div>
+      </a>
+      
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggleBtn">
+          <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">← Back to Dashboard Hub</a>
+
+    <div class="title-area">
+      <h2>ADHD Pharmacotherapy Decision Matrix</h2>
+      <p>Interactive pharmacological guide for the management of Attention-Deficit/Hyperactivity Disorder. Compare first-line stimulants (methylphenidate vs. amphetamine formulations), second-line non-stimulant SNRIs, and third-line alpha-2 agonists. Tailor selections based on comorbidity risk, duration of coverage, and cost.</p>
+    </div>
+
+    <div class="clinical-alert">
+      <strong>Clinical Selection Guidance (AACE/AACAP/APSARD guidelines):</strong> Stimulants are first-line for moderate-to-severe ADHD. Cardiorespiratory risk must be evaluated prior to initiation. Non-stimulants (Atomoxetine, Viloxazine) or alpha-2 agonists are preferred if stimulants are contraindicated, poorly tolerated (severe anxiety, tics, insomnia), or when there is active substance use disorder.
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filter-panel">
+      <div class="search-row">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="drugSearch" class="search-input" placeholder="Search by drug name or class (e.g., Concerta, Atomoxetine, Vyvanse)...">
+        </div>
+      </div>
+      
+      <div class="filter-section">
+        <div class="filter-label">Drug Class</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="mfd">Methylphenidate Stimulant</button>
+          <button class="filter-btn" data-filter="amp">Amphetamine Stimulant</button>
+          <button class="filter-btn" data-filter="snri">Non-Stimulant SNRI</button>
+          <button class="filter-btn" data-filter="alpha2">Alpha-2 Adrenergic Agonist</button>
+        </div>
+      </div>
+
+      <div class="filter-section" style="margin-top: 1rem;">
+        <div class="filter-label">Preference Tier & Duration</div>
+        <div class="filter-group">
+          <button class="filter-btn" data-filter="tier-1">First-Line</button>
+          <button class="filter-btn" data-filter="tier-2">Second-Line</button>
+          <button class="filter-btn" data-filter="tier-3">Third-Line</button>
+          <button class="filter-btn" data-filter="xr">Extended-Release (8-16h)</button>
+          <button class="filter-btn" data-filter="ir">Short-Acting (3-5h)</button>
+          <button class="filter-btn" data-filter="low-cost">Low Cost (Generic)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matrix Layout Grid -->
+    <div class="matrix-layout">
+      <!-- Table Area -->
+      <div class="table-container">
+        <table id="matrixTable">
+          <thead>
+            <tr>
+              <th class="checkbox-col">Note</th>
+              <th>Drug Class & Key Agent</th>
+              <th>Choice Tier</th>
+              <th>Dosing (Start & Target)</th>
+              <th>Frequency & Duration</th>
+              <th>Key Adverse Events</th>
+              <th>Absolute Contraindications</th>
+              <th>Relative Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-id="concerta" data-keywords="Concerta methylphenidate xr oros stimulant first-line xr low-cost mfd">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="concerta" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-mfd">Methylphenidate Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Concerta (Methylphenidate XR)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">OROS Delivery System</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 18 mg QAM</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 36 - 54 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 72 mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">10 - 12 hours duration</div>
+              </td>
+              <td>Insomnia, appetite loss, headache, dry mouth, motor tics, irritability.</td>
+              <td>Glaucoma, motor tics/Tourette's, history of MAOI use within 14 days, severe cardiovascular anomalies.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$$</span></td>
+            </tr>
+
+            <tr data-id="vyvanse" data-keywords="Vyvanse lisdexamfetamine prodrug stimulant first-line xr amp">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="vyvanse" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-amp">Amphetamine Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Vyvanse (Lisdexamfetamine)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Lysine-Bound Prodrug</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 30 mg QAM</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 50 - 70 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 70 mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">12 - 14 hours duration</div>
+              </td>
+              <td>Decreased appetite, insomnia, dry mouth, anxiety, increased heart rate/BP.</td>
+              <td>MAOI use within 14 days, advanced arteriosclerosis, hyperthyroidism, moderate-to-severe hypertension.</td>
+              <td><span class="cost-med">$$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Short supply; Brand: $$$$</span></td>
+            </tr>
+
+            <tr data-id="adderall-xr" data-keywords="Adderall XR mixed amphetamine salts stimulant first-line xr low-cost amp">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="adderall-xr" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-amp">Amphetamine Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Adderall XR (Amphetamine Salts)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Dual-Pulse Release beads</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 10 - 20 mg QAM</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 20 - 40 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 40 mg daily (peds) / 60 mg</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">10 - 12 hours duration</div>
+              </td>
+              <td>Insomnia, weight loss, dry mouth, headache, palpitations, irritability.</td>
+              <td>Symptomatic cardiovascular disease, moderate-to-severe hypertension, hyperthyroidism, MAOI use within 14 days.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$</span></td>
+            </tr>
+
+            <tr data-id="focalin-xr" data-keywords="Focalin XR dexmethylphenidate stimulant first-line xr low-cost mfd">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="focalin-xr" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-mfd">Methylphenidate Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Focalin XR (Dexmethylphenidate)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Active d-isomer of MPH</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 5 mg QAM (peds) / 10 mg</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 10 - 20 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 30 mg (peds) / 40 mg</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">8 - 12 hours duration</div>
+              </td>
+              <td>Appetite suppression, headache, dry mouth, insomnia, rebound crash.</td>
+              <td>Glaucoma, motor tics, severe anxiety/agitation, MAOI use within 14 days.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$</span></td>
+            </tr>
+
+            <tr data-id="jornay-pm" data-keywords="Jornay PM delayed-release methylphenidate stimulant first-line xr mfd">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="jornay-pm" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-mfd">Methylphenidate Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Jornay PM (Methylphenidate XR)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Nighttime-dosed, DR-ER</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 20 mg QHS (8-9 PM)</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 40 - 60 mg QHS</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 100 mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily (QHS / evening)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">12 - 14 hours duration</div>
+              </td>
+              <td>Insomnia, headache, anxiety, decreased appetite, night sweats.</td>
+              <td>MAOI use within 14 days, severe structural cardiac anomalies, glaucoma.</td>
+              <td><span class="cost-high">$$$$ (Brand Only)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">No generic available</span></td>
+            </tr>
+
+            <tr data-id="daytrana" data-keywords="Daytrana transdermal patch methylphenidate stimulant first-line patch mfd">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="daytrana" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-mfd">Methylphenidate patch</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Daytrana (Transdermal Patch)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Skin Patch wear 9 hours</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 10 mg daily patch</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 15 - 30 mg daily patch</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 30 mg daily patch</div>
+              </td>
+              <td>
+                <div>Worn 9h daily (remove)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">11 - 12 hours duration</div>
+              </td>
+              <td>Skin erythema/irritation, chemical depigmentation (vitiligo), insomnia, weight loss.</td>
+              <td>Glaucoma, history of MAOIs, motor tics, active skin conditions at application sites.</td>
+              <td><span class="cost-high">$$$$ (Brand / Limited Generic)</span></td>
+            </tr>
+
+            <tr data-id="ritalin-la" data-keywords="Ritalin LA methylphenidate xr stimulant first-line xr low-cost mfd">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="ritalin-la" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-mfd">Methylphenidate Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Ritalin LA (Methylphenidate XR)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Dual-Release beads (50/50)</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 10 - 20 mg QAM</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 20 - 40 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 60 mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">6 - 8 hours duration</div>
+              </td>
+              <td>Appetite loss, insomnia, palpitations, dry mouth, emotional lability.</td>
+              <td>Glaucoma, motor tics, history of MAOI use within 14 days.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$</span></td>
+            </tr>
+
+            <tr data-id="ritalin-ir" data-keywords="Ritalin immediate release methylphenidate stimulant first-line ir low-cost mfd">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="ritalin-ir" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-mfd">Methylphenidate Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Ritalin / Methylphenidate IR</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Short-Acting Tablets</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line (Short)</span></td>
+              <td>
+                <div><strong>Start:</strong> 5 mg PO BID (Breakfast/Lunch)</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 10 - 20 mg BID-TID</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 60 mg daily</div>
+              </td>
+              <td>
+                <div>2 - 3 Times Daily (spaced 4h)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">3 - 5 hours duration</div>
+              </td>
+              <td>Pronounced crash/rebound, insomnia, irritability, appetite suppression.</td>
+              <td>MAOI use within 14 days, severe agitation, moderate-to-severe anxiety.</td>
+              <td><span class="cost-low">$ (Generic)</span></td>
+            </tr>
+
+            <tr data-id="adderall-ir" data-keywords="Adderall immediate release mixed amphetamine salts stimulant first-line ir low-cost amp">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="adderall-ir" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-amp">Amphetamine Stimulant</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Adderall / Amphetamine IR</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Short-Acting Tablets</div>
+              </td>
+              <td><span class="badge badge-tier1">First-Line (Short)</span></td>
+              <td>
+                <div><strong>Start:</strong> 5 - 10 mg QAM or BID</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 10 - 20 mg BID (spaced 4-6h)</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 40 mg (peds) / 60 mg daily</div>
+              </td>
+              <td>
+                <div>1 - 2 Times Daily</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">4 - 6 hours duration</div>
+              </td>
+              <td>Appetite suppression, irritability, severe stimulant rebound crash, insomnia.</td>
+              <td>Advanced cardiovascular disease, hyperthyroidism, MAOI use within 14 days.</td>
+              <td><span class="cost-low">$ (Generic)</span></td>
+            </tr>
+
+            <tr data-id="strattera" data-keywords="Strattera atomoxetine non-stimulant snri second-line xr low-cost snri">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="strattera" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-snri">Non-Stimulant SNRI</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Strattera (Atomoxetine)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Selective NE Reuptake Inhibitor</div>
+              </td>
+              <td><span class="badge badge-tier2">Second-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 40 mg PO daily</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 80 - 100 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 100 mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily or Split BID</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">24 hours continuous effect</div>
+              </td>
+              <td>Nausea/vomiting, fatigue, dry mouth, urinary hesitation, erectile dysfunction. <strong>BBW: Suicidal Ideation.</strong></td>
+              <td>Narrow-angle glaucoma, pheochromocytoma, history of MAOI use within 14 days, severe cardiovascular disorders.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$$</span></td>
+            </tr>
+
+            <tr data-id="qelbree" data-keywords="Qelbree viloxazine non-stimulant snri second-line xr snri">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="qelbree" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-snri">Non-Stimulant SNRI</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Qelbree (Viloxazine)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Selective NE Reuptake Inhibitor</div>
+              </td>
+              <td><span class="badge badge-tier2">Second-Line</span></td>
+              <td>
+                <div><strong>Start:</strong> 100-200 mg PO daily</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 200 - 400 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 400mg (peds) / 600mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">24 hours continuous effect</div>
+              </td>
+              <td>Somnolence, fatigue, headache, decreased appetite, insomnia. <strong>BBW: Suicidal Ideation.</strong></td>
+              <td>Co-administration with MAOIs within 14 days, co-administration with strong CYP1A2 substrates.</td>
+              <td><span class="cost-high">$$$$ (Brand Only)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">No generic available</span></td>
+            </tr>
+
+            <tr data-id="intuniv" data-keywords="Intuniv guanfacine er alpha-2 agonist third-line xr low-cost alpha2">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="intuniv" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-alpha2">Alpha-2 Agonist</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Intuniv (Guanfacine ER)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Centrally acting alpha-2a agonist</div>
+              </td>
+              <td><span class="badge badge-tier3">Third-Line / Adjunct</span></td>
+              <td>
+                <div><strong>Start:</strong> 1 mg daily (QHS/QAM)</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 2 - 4 mg daily</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 4 mg (peds) / 7 mg daily</div>
+              </td>
+              <td>
+                <div>Once Daily (QAM or QHS)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">24 hours continuous effect</div>
+              </td>
+              <td>Somnolence, sedation, bradycardia, hypotension, dry mouth, dizziness. Do NOT discontinue abruptly.</td>
+              <td>Hypersensitivity to guanfacine. Severe hypotension risk.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$$</span></td>
+            </tr>
+
+            <tr data-id="kapvay" data-keywords="Kapvay clonidine er alpha-2 agonist third-line xr low-cost alpha2">
+              <td class="checkbox-col"><input type="checkbox" class="custom-check" value="kapvay" onclick="event.stopPropagation(); updateNote();"></td>
+              <td>
+                <span class="badge badge-class-alpha2">Alpha-2 Agonist</span>
+                <div style="font-weight:700; font-size:1.05rem; margin-top:4px; color:var(--text-primary);">Kapvay (Clonidine ER)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Centrally acting alpha-2 agonist</div>
+              </td>
+              <td><span class="badge badge-tier3">Third-Line / Adjunct</span></td>
+              <td>
+                <div><strong>Start:</strong> 0.1 mg PO QHS</div>
+                <div style="font-size:0.8rem; margin-top:4px;"><strong>Target:</strong> 0.1 - 0.2 mg PO BID</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);"><strong>Max:</strong> 0.4 mg daily</div>
+              </td>
+              <td>
+                <div>Twice Daily (BID / split)</div>
+                <div style="font-size:0.8rem; color:var(--accent-secondary); font-weight:600; margin-top:4px;">12 - 24 hours duration</div>
+              </td>
+              <td>Severe somnolence, dry mouth, hypotension, bradycardia, fatigue. Do NOT discontinue abruptly.</td>
+              <td>Hypersensitivity to clonidine. Caution in coronary insufficiency, recent MI.</td>
+              <td><span class="cost-low">$ (Generic)</span><br><span style="font-size:0.7rem; color:var(--text-muted);">Brand: $$$</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sidebar Panel -->
+      <div class="sidebar-panel">
+        <!-- Monograph Display Card -->
+        <div class="detail-card">
+          <h3><span style="font-size:1rem;">📖</span> Drug Monograph</h3>
+          <div id="monograph-display">
+            <div class="detail-placeholder">Click any medication row in the table to display the evidence-based clinical monograph, pharmacology details, and pearls here.</div>
+          </div>
+        </div>
+
+        <!-- EHR Note Compiler Card -->
+        <div class="note-card">
+          <h3><span style="font-size:1rem;">📝</span> EHR Plan Compiler</h3>
+          <textarea id="ehr-note-output" readonly placeholder="Compiled prescription plan text will appear here as you select note checkboxes..."></textarea>
+          <button class="btn" onclick="copyNote()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+            </svg>
+            Copy EHR Note Plan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleText = document.getElementById('themeToggleText');
+    const htmlElement = document.documentElement;
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('adhd_matrix_theme', newTheme);
+      updateThemeUI(newTheme);
+    });
+
+    // Check Local Storage
+    const savedTheme = localStorage.getItem('adhd_matrix_theme') || 'dark';
+    htmlElement.setAttribute('data-theme', savedTheme);
+    updateThemeUI(savedTheme);
+
+    function updateThemeUI(theme) {
+      if (theme === 'light') {
+        themeToggleIcon.textContent = '🌙';
+        themeToggleText.textContent = 'Dark Mode';
+      } else {
+        themeToggleIcon.textContent = '☀️';
+        themeToggleText.textContent = 'Light Mode';
+      }
+    }
+
+    // Dynamic Monograph database
+    const drugMonographs = {
+      concerta: {
+        name: "Concerta (Methylphenidate XR)",
+        class: "Methylphenidate Stimulant (First-Line)",
+        mechanism: "Inhibits presynaptic reuptake of dopamine (DA) and norepinephrine (NE) in the prefrontal cortex.",
+        sequencing: "Mandatory first-line choice for children, adolescents, and adults. Well-suited for patients needing smooth 10-12h coverage with minimal peak-to-trough fluctuations.",
+        pearls: [
+          "Utilizes OROS (Osmotic Release Oral System) delivery technology: an outer drug layer dissolves quickly for initial release, then osmotic pressure pushes remaining drug through a laser-drilled hole.",
+          "OROS delivery prevents immediate peak dose side effects but can result in the non-dissolvable capsule shell appearing in the stool (counsel patient/parent to prevent unnecessary anxiety).",
+          "Significantly less abuse potential compared to immediate-release formulations due to slow release curve."
+        ]
+      },
+      vyvanse: {
+        name: "Vyvanse (Lisdexamfetamine)",
+        class: "Amphetamine Stimulant (First-Line)",
+        mechanism: "Prodrug of dextroamphetamine. Lysine bond is cleaved by red blood cells, slowly releasing active dextroamphetamine which stimulates presynaptic release of DA and NE.",
+        sequencing: "Excellent first-line choice, particularly when 12-14 hour extended coverage is required. Preferred in patients with history of mild stimulant rebound crash or when abuse potential is a clinical concern.",
+        pearls: [
+          "Requires enzymatic cleavage by red blood cells. Bypasses hepatic first-pass metabolism entirely, resulting in low abuse potential via intranasal or intravenous routes.",
+          "Extremely smooth titration curve and steady plasma levels, minimizing the severe appetite crashes and irritability common with mixed amphetamine salts.",
+          "Available as chewable tablets or capsules. Capsule contents can be completely dissolved in water or yogurt for patients unable to swallow pills."
+        ]
+      },
+      "adderall-xr": {
+        name: "Adderall XR (Mixed Amphetamine Salts)",
+        class: "Amphetamine Stimulant (First-Line)",
+        mechanism: "Promotes presynaptic release of DA and NE from vesicles into the synapse and inhibits their reuptake.",
+        sequencing: "Standard first-line option. Provides dual-pulse release (initial peak in 3-4 hours, second peak in 7-8 hours) equivalent to twice-daily dosing.",
+        pearls: [
+          "Formulated with mixed amphetamine salts (d-amphetamine and l-amphetamine in a 3:1 ratio).",
+          "L-amphetamine provides more peripheral adrenergic stimulation, which can result in more cardiovascular effects (palpitations, blood pressure spikes) and physical jitteriness compared to pure d-isomer (Vyvanse/Focalin).",
+          "XR capsules can be opened and beads sprinkled on applesauce for pediatric patients."
+        ]
+      },
+      "focalin-xr": {
+        name: "Focalin XR (Dexmethylphenidate)",
+        class: "Methylphenidate Stimulant (First-Line)",
+        mechanism: "Selective d-isomer of methylphenidate. Twice as potent as racemic methylphenidate, blocking DA and NE reuptake.",
+        sequencing: "First-line option. Indicated when racemic methylphenidate fails or causes excessive side effects (such as moodiness or motor tics).",
+        pearls: [
+          "Pure d-isomer formulation. Removes the l-isomer, which is pharmacologically inactive for ADHD but contributes to peripheral side effects (irritability, anxiety).",
+          "Patients often report a 'cleaner' effect with less physical anxiety and less severe rebound crash at the end of the day."
+        ]
+      },
+      "jornay-pm": {
+        name: "Jornay PM (Methylphenidate Delayed-Release XR)",
+        class: "Methylphenidate Stimulant (First-Line)",
+        mechanism: "Inhibits reuptake of DA and NE. Formulated with a delayed-release outer coat and an extended-release core.",
+        sequencing: "First-line choice specifically designed for patients with severe morning dysfunction (uncooperativeness, extreme hyperactivity, or refusal to get ready for school/work).",
+        pearls: [
+          "Dosed at night (usually between 8:00 PM and 9:30 PM). Delayed-release coating delays absorption for 10-12 hours, allowing the patient to wake up with therapeutic drug levels active in their system.",
+          "Eliminates the morning struggles of waiting for morning-dosed stimulants to kick in.",
+          "Do not dose in the morning, as it will cause daytime sleepiness and peak concentration during sleep."
+        ]
+      },
+      daytrana: {
+        name: "Daytrana (Methylphenidate Transdermal)",
+        class: "Methylphenidate Stimulant (First-Line)",
+        mechanism: "Blocks presynaptic reuptake of DA and NE. Delivered transdermally via a drug-in-adhesive matrix patch.",
+        sequencing: "First-line choice for children/adolescents who refuse oral medications, cannot swallow pills, or require highly flexible coverage duration.",
+        pearls: [
+          "Apply to hip area in the morning. Patch should be worn for a maximum of 9 hours, then removed. Onset is slow (approx. 2 hours), but drug levels persist for 2-3 hours after removal.",
+          "Enables custom duration: if early evening coverage is not desired, the patch can be peeled off early.",
+          "Warning: Chemical depigmentation (vitiligo-like skin lightening) can occur at application sites. Rotate sites daily."
+        ]
+      },
+      "ritalin-la": {
+        name: "Ritalin LA (Methylphenidate XR)",
+        class: "Methylphenidate Stimulant (First-Line)",
+        mechanism: "Inhibits DA and NE reuptake. Formulated with dual-release spheroidal beads (50% immediate release, 50% delayed release).",
+        sequencing: "First-line choice. Ideal for children who need coverage for the school day but do not need late afternoon or evening coverage.",
+        pearls: [
+          "Dual-release profile: mimics taking an immediate-release tablet at breakfast and a second dose 4 hours later.",
+          "Shorter duration (6-8h) than Concerta (10-12h), which can be advantageous if early evening insomnia is a prominent side effect."
+        ]
+      },
+      "ritalin-ir": {
+        name: "Ritalin / Methylphenidate IR",
+        class: "Methylphenidate Stimulant (First-Line / Short-Acting)",
+        mechanism: "Blocks DA and NE reuptake. Rapid absorption and clearance.",
+        sequencing: "First-line option. Useful as initial trial medication to establish dosing requirements, or as a late-afternoon 'booster' dose to cover homework hours for patients on XR agents.",
+        pearls: [
+          "Short half-life: requires multiple daily doses (BID or TID) if used as monotherapy.",
+          "Associated with a high rate of 'stimulant rebound' (abrupt return of hyperactive/irritable symptoms as drug wears off)."
+        ]
+      },
+      "adderall-ir": {
+        name: "Adderall / Mixed Amphetamine Salts IR",
+        class: "Amphetamine Stimulant (First-Line / Short-Acting)",
+        mechanism: "Stimulates presynaptic vesicle release and blocks reuptake of DA and NE.",
+        sequencing: "First-line option. Commonly used as a booster dose in the afternoon (e.g. 5-10mg around 3 PM) to extend morning-dosed Adderall XR or Vyvanse.",
+        pearls: [
+          "Rapid onset (30-60 minutes) but carries high risk of rebound irritability and peak side effects.",
+          "Highest abuse liability of all ADHD formulations; monitor closely."
+        ]
+      },
+      strattera: {
+        name: "Strattera (Atomoxetine)",
+        class: "Non-Stimulant SNRI (Second-Line)",
+        mechanism: "Selective inhibitor of the prefrontal norepinephrine transporter (NET). Because the prefrontal cortex lacks dopamine transporters, NET also reuptakes DA, so Strattera increases both NE and DA in the prefrontal cortex.",
+        sequencing: "Second-line monotherapy. Highly indicated if patient has active substance use disorder, severe comorbid anxiety/panic disorder, motor tics, or severe stimulant intolerance.",
+        pearls: [
+          "Non-controlled substance (no abuse potential).",
+          "Takes 4-6 weeks of continuous daily dosing to achieve full therapeutic effect. Counsel patient/parent that it does not work immediately.",
+          "Black Box Warning: Increased risk of suicidal ideation in children/adolescents (monitor mood, agitation, self-harm).",
+          "Nausea is extremely common initially. Dose with a heavy meal to improve GI tolerance."
+        ]
+      },
+      qelbree: {
+        name: "Qelbree (Viloxazine)",
+        class: "Non-Stimulant SNRI (Second-Line)",
+        mechanism: "Selective norepinephrine reuptake inhibitor. Also acts as a weak antagonist at 5-HT2B and agonist at 5-HT2C receptors.",
+        sequencing: "Second-line monotherapy. Indicated for patients who fail stimulants or Atomoxetine, or when a non-stimulant with slightly faster onset is desired.",
+        pearls: [
+          "Takes 1-2 weeks for initial response (faster than Strattera's 4-6 weeks).",
+          "Black Box Warning: Suicidal ideation in children/adolescents.",
+          "Contraindicated with strong CYP1A2 substrates. Viloxazine is a strong CYP1A2 inhibitor; taking it with duloxetine, theophylline, or tizanidine can cause severe toxicity."
+        ]
+      },
+      intuniv: {
+        name: "Intuniv (Guanfacine ER)",
+        class: "Alpha-2 Adrenergic Agonist (Third-Line / Adjunct)",
+        mechanism: "Selective alpha-2a adrenergic receptor agonist. Binds to post-synaptic receptors in the prefrontal cortex, strengthening prefrontal networks involved in working memory and behavioral inhibition.",
+        sequencing: "Third-line monotherapy, or adjunctive therapy combined with stimulants to manage oppositional defiant symptoms, severe hyperactivity, tics, or stimulant-induced insomnia.",
+        pearls: [
+          "Extremely effective for hyperactive-impulsive symptoms and emotional dysregulation; less effective for pure inattentive symptoms.",
+          "Causes significant somnolence and fatigue initially. Dosing at bedtime (QHS) helps manage sedation.",
+          "Warning: Do NOT discontinue abruptly. Rebound hypertension and tachycardia can occur. Taper down by 1mg every 3-7 days."
+        ]
+      },
+      kapvay: {
+        name: "Kapvay (Clonidine ER)",
+        class: "Alpha-2 Adrenergic Agonist (Third-Line / Adjunct)",
+        mechanism: "Non-selective alpha-2 adrenergic receptor agonist.",
+        sequencing: "Third-line monotherapy or adjunct to stimulants. Often preferred if sleep disruption is the primary clinical barrier, as it is more sedating than Guanfacine.",
+        pearls: [
+          "Dosed BID due to pharmacokinetic profile.",
+          "More sedating and causes more hypotension/bradycardia compared to selective alpha-2a agonists like Guanfacine.",
+          "Do not discontinue abruptly due to rebound hypertension risk."
+        ]
+      }
+    };
+
+    // Filter Logic
+    const searchInput = document.getElementById('drugSearch');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const tableRows = document.querySelectorAll('#matrixTable tbody tr');
+
+    const activeFilters = {
+      search: '',
+      class: new Set(),
+      meta: new Set()
+    };
+
+    searchInput.addEventListener('input', (e) => {
+      activeFilters.search = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterType = btn.getAttribute('data-filter');
+        btn.classList.toggle('active');
+
+        const isClass = ['mfd', 'amp', 'snri', 'alpha2'].includes(filterType);
+        const filterSet = isClass ? activeFilters.class : activeFilters.meta;
+
+        if (filterSet.has(filterType)) {
+          filterSet.delete(filterType);
+        } else {
+          filterSet.add(filterType);
+        }
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      tableRows.forEach(row => {
+        const rowId = row.getAttribute('data-id');
+        const keywords = row.getAttribute('data-keywords').toLowerCase();
+        
+        let matchSearch = true;
+        let matchClass = true;
+        let matchMeta = true;
+
+        if (activeFilters.search) {
+          matchSearch = keywords.includes(activeFilters.search);
+        }
+
+        if (activeFilters.class.size > 0) {
+          matchClass = false;
+          activeFilters.class.forEach(filter => {
+            if (keywords.includes(filter)) matchClass = true;
+          });
+        }
+
+        if (activeFilters.meta.size > 0) {
+          activeFilters.meta.forEach(filter => {
+            if (filter === 'tier-1' && !keywords.includes('first-line')) matchMeta = false;
+            if (filter === 'tier-2' && !keywords.includes('second-line')) matchMeta = false;
+            if (filter === 'tier-3' && !keywords.includes('third-line')) matchMeta = false;
+            if (filter === 'xr' && !keywords.includes('xr')) matchMeta = false;
+            if (filter === 'ir' && !keywords.includes('ir')) matchMeta = false;
+            if (filter === 'low-cost' && !keywords.includes('low-cost')) matchMeta = false;
+          });
+        }
+
+        if (matchSearch && matchClass && matchMeta) {
+          row.classList.remove('hidden');
+        } else {
+          row.classList.add('hidden');
+        }
+      });
+    }
+
+    // Row Click Monograph display
+    tableRows.forEach(row => {
+      row.addEventListener('click', () => {
+        // Highlight active row
+        tableRows.forEach(r => r.style.backgroundColor = '');
+        row.style.backgroundColor = 'var(--accent-bg-glow)';
+
+        const id = row.getAttribute('data-id');
+        const mono = drugMonographs[id];
+        if (mono) {
+          const pearlsHtml = mono.pearls.map(p => `<div class="monograph-bullet">${p}</div>`).join('');
+          document.getElementById('monograph-display').innerHTML = `
+            <div class="monograph-content">
+              <div class="monograph-header">${mono.name}</div>
+              <div style="font-size:0.75rem; color:var(--accent-primary); font-weight:600;">${mono.class}</div>
+              
+              <div class="monograph-section-title">Mechanism of Action</div>
+              <div>${mono.mechanism}</div>
+
+              <div class="monograph-section-title">Clinical Place & Sequencing</div>
+              <div>${mono.sequencing}</div>
+
+              <div class="monograph-section-title">Clinical Pearls</div>
+              <div>${pearlsHtml}</div>
+            </div>
+          `;
+        }
+      });
+    });
+
+    // EHR Note plan compiler
+    function updateNote() {
+      const selectedIds = Array.from(document.querySelectorAll('.custom-check:checked')).map(cb => cb.value);
+      const textOutput = document.getElementById('ehr-note-output');
+
+      if (selectedIds.length === 0) {
+        textOutput.value = "";
+        return;
+      }
+
+      let noteLines = selectedIds.map(id => {
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        const name = row.querySelector('td:nth-child(2) div:nth-child(2)').innerText;
+        const clsBadge = row.querySelector('td:nth-child(2) span').innerText;
+        const dose = row.querySelector('td:nth-child(4) div:nth-child(1)').innerText.replace('Start:', '').trim();
+        const target = row.querySelector('td:nth-child(4) div:nth-child(2)').innerText.replace('Target:', '').trim();
+        const duration = row.querySelector('td:nth-child(5) div:nth-child(2)').innerText.trim();
+        const sideEffects = row.querySelector('td:nth-child(6)').innerText;
+        const cost = row.querySelector('td:nth-child(8)').innerText.split('\n')[0];
+
+        // Format clinical plan
+        return `Initiated active ADHD pharmacological management with:\n` +
+               `  -${name} (${clsBadge})\n` +
+               `  -Dosing: Start ${dose} orally daily. Titrate to target range ${target} daily.\n` +
+               `  -Expected Coverage: ${duration}\n` +
+               `  -Counseling: Discussed common adverse events (${sideEffects}) and cardiorespiratory precautions.\n` +
+               `  -Acquisition: ${cost}. Plan to re-evaluate in 2-4 weeks to assess efficacy, heart rate/BP, and weight metrics.`;
+      });
+
+      textOutput.value = `[ADHD Pharmacotherapy Assessment and Plan]\n` + noteLines.join('\n\n');
+    }
+
+    function copyNote() {
+      const box = document.getElementById('ehr-note-output');
+      if (!box.value) {
+        alert("Please select at least one medication checkbox in the table first.");
+        return;
+      }
+      navigator.clipboard.writeText(box.value).then(() => {
+        alert("ADHD EHR Note Plan copied to clipboard!");
+      });
+    }
+  </script>
+</body>
+</html>
