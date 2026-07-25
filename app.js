@@ -197,6 +197,27 @@ const INITIAL_TOOLS = [
         url: "./eczema-dry-skin/",
         category: "Dermatology",
         description: "Interactive topical steroid potency selector, non-steroidal topical monographs (TCIs, Crisaborole, JAK inhibitors), systemic biologics, and skin barrier repair guidelines."
+    },
+    {
+        id: "ear-pain-matrix",
+        title: "Ear Infection & Otalgia Matrix",
+        url: "./ear-pain-matrix/",
+        category: "Primary Care",
+        description: "Differential diagnosis for primary vs. referred otalgia, pediatric AOM weight-based calculator, topical drops guide (AOE), and warnings on tympanic membrane perforation."
+    },
+    {
+        id: "kidney-stone-matrix",
+        title: "Kidney Stone Workup & Management",
+        url: "./kidney-stone-matrix/",
+        category: "Nephrology",
+        description: "Sequential diagnostic workup (low-dose CT vs. US), size-based medical expulsive therapy (Tamsulosin), and cause-specific prevention plans based on 24h urine metrics."
+    },
+    {
+        id: "fungal-infections-matrix",
+        title: "Fungal Infections Therapy Matrix",
+        url: "./fungal-infections-matrix/",
+        category: "Dermatology",
+        description: "Interactive guide for superficial and mucosal mycoses by location and extent. Details topical vs. oral agents, Terbinafine LFT tracking, and drug interaction safety."
     }
 ];
 

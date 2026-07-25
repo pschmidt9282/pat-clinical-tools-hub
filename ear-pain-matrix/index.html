@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ear Infection & Otalgia Prescribing & Triage Matrix | OpenEvidence Sourced</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1e293b;
+      --border-color: #24334a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-teal: #10b981;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-pink: #ec4899;
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Back Button Banner */
+    .back-nav {
+      margin-bottom: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #090d16;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #38bdf8, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title-group p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    .oe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(167, 139, 250, 0.15);
+      border: 1px solid rgba(167, 139, 250, 0.4);
+      color: #c084fc;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Algorithm Card */
+    .algorithm-card {
+      background: linear-gradient(135deg, #131b2e 0%, #090d16 100%);
+      border: 1px solid var(--accent-purple);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .algorithm-card h3 {
+      color: #c084fc;
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .step-box {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .step-box:hover {
+      border-color: #a78bfa;
+      background: rgba(167, 139, 250, 0.03);
+    }
+
+    .step-box.active-step {
+      border-color: #c084fc;
+      background: rgba(167, 139, 250, 0.08);
+      box-shadow: 0 0 12px rgba(167, 139, 250, 0.15);
+    }
+
+    .step-num {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #f472b6;
+      letter-spacing: 0.05em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .step-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin: 4px 0;
+    }
+
+    .step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Split Layout */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Diagnosis Info Sidebar */
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .sidebar-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      color: #cbd5e1;
+    }
+
+    .dx-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .dx-badge.primary {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .dx-badge.referred {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .dx-badge.emergency {
+      background: rgba(244, 63, 94, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(244, 63, 94, 0.4);
+    }
+
+    .dx-section {
+      margin-bottom: 16px;
+    }
+
+    .dx-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .dx-section-content {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+    }
+
+    .dx-section-content ul {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    .dx-section-content li {
+      margin-bottom: 4px;
+    }
+
+    /* Main Table Section */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .table-header-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1.5fr 2fr 0.6fr;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1.5fr 2fr 0.6fr;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 20px;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .table-row:hover {
+      background: var(--bg-card-hover);
+    }
+
+    @media (max-width: 768px) {
+      .table-header-row, .table-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 16px;
+      }
+      .table-header-row {
+        display: none;
+      }
+      .table-row {
+        border-bottom: 2px solid var(--border-color);
+      }
+    }
+
+    .drug-name {
+      font-weight: 700;
+      color: #f8fafc;
+      font-size: 0.95rem;
+    }
+
+    .drug-brand {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .drug-tier {
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .drug-tier.first {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+
+    .drug-tier.second {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+
+    .drug-tier.alt {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+    }
+
+    .drug-dosing {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+
+    .drug-pearls {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+    }
+
+    .drug-cost {
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .cost-low { color: #34d399; }
+    .cost-med { color: #fbbf24; }
+    .cost-high { color: #f87171; }
+
+    .btn-details {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-details:hover {
+      background: #c084fc;
+      border-color: #c084fc;
+      color: #090d16;
+    }
+
+    /* Calculator & Note Grid */
+    .tools-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .tools-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .panel h3 {
+      font-size: 1.1rem;
+      color: #c084fc;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-group input, .form-group select {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #c084fc;
+      outline: none;
+    }
+
+    .btn-calc {
+      background: #c084fc;
+      border: none;
+      color: #090d16;
+      padding: 10px 16px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .btn-calc:hover {
+      opacity: 0.9;
+    }
+
+    .calc-result-box {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(167, 139, 250, 0.06);
+      border: 1px dashed rgba(167, 139, 250, 0.4);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    /* EHR Note Area */
+    .note-textarea {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 100%;
+      height: 180px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      resize: none;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .note-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 650px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .warning-panel {
+      background: rgba(244, 63, 94, 0.08);
+      border-left: 4px solid var(--accent-rose);
+      color: #fda4af;
+      padding: 14px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back button -->
+  <div class="back-nav">
+    <a href="../index.html" class="btn-back">
+      <i class="fa-solid fa-arrow-left"></i> Back to Hub
+    </a>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="header-banner">
+    <div class="header-title-group">
+      <h1><i class="fa-solid fa-ear-deaf"></i> Ear Infection & Otalgia Matrix</h1>
+      <p>Interactive diagnosis & prescribing framework for Primary and Referred Otalgia</p>
+    </div>
+    <div class="oe-badge">
+      <i class="fa-solid fa-circle-check"></i> OpenEvidence Sourced
+    </div>
+  </header>
+
+  <!-- Step-by-Step Diagnostic Differential Picker -->
+  <section class="algorithm-card">
+    <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Diagnostic Differential Triage</h3>
+    <div class="step-grid">
+      <!-- AOM -->
+      <div class="step-box active-step" onclick="selectDx('aom', this)">
+        <div class="step-num"><span>Primary Otalgia</span> <i class="fa-solid fa-circle-info"></i></div>
+        <div class="step-title">Acute Otitis Media (AOM)</div>
+        <div class="step-desc">Bulging, erythematous TM, fluid, acute signs.</div>
+      </div>
+      <!-- AOE -->
+      <div class="step-box" onclick="selectDx('aoe', this)">
+        <div class="step-num"><span>Primary Otalgia</span> <i class="fa-solid fa-circle-info"></i></div>
+        <div class="step-title">Otitis Externa (AOE)</div>
+        <div class="step-desc">Swimmer's ear: canal edema, pain with pinna traction.</div>
+      </div>
+      <!-- OME -->
+      <div class="step-box" onclick="selectDx('ome', this)">
+        <div class="step-num"><span>Primary Otalgia</span> <i class="fa-solid fa-circle-info"></i></div>
+        <div class="step-title">Otitis Media + Effusion</div>
+        <div class="step-desc">Middle ear fluid without acute inflammation. Watch/wait.</div>
+      </div>
+      <!-- Ramsay Hunt -->
+      <div class="step-box" onclick="selectDx('rhs', this)">
+        <div class="step-num"><span>Referred/Vesicular</span> <i class="fa-solid fa-circle-info"></i></div>
+        <div class="step-title">Ramsay Hunt (HZO)</div>
+        <div class="step-desc">Vesicles in canal/concha + facial palsy. Needs early antivirals.</div>
+      </div>
+      <!-- Bullous Myringitis -->
+      <div class="step-box" onclick="selectDx('bm', this)">
+        <div class="step-num"><span>Primary Otalgia</span> <i class="fa-solid fa-circle-info"></i></div>
+        <div class="step-title">Bullous Myringitis</div>
+        <div class="step-desc">Rapid-onset severe pain with blisters/bullae on TM.</div>
+      </div>
+      <!-- MOE -->
+      <div class="step-box" onclick="selectDx('moe', this)">
+        <div class="step-num"><span style="color:var(--accent-rose);">Emergency</span> <i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="step-title">Malignant OE</div>
+        <div class="step-desc">Elderly diabetic, severe pain, granulation, cranial palsy.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Layout Grid -->
+  <div class="layout-grid">
+    <!-- Sidebar: Selected Diagnosis Detail -->
+    <aside class="sidebar-card" id="dx-sidebar">
+      <!-- Injected dynamically -->
+    </aside>
+
+    <!-- Main Table: Medication Matrix -->
+    <main class="table-container">
+      <div class="table-header-row">
+        <div>Medication & Tier</div>
+        <div>Class</div>
+        <div>Dosing & Duration</div>
+        <div>Primary Care Pearls / Interactions</div>
+        <div>Action</div>
+      </div>
+      <div id="med-table-rows">
+        <!-- Injected dynamically -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Interactive Calculators & Note Area -->
+  <div class="tools-split">
+    <!-- Calculator Panel -->
+    <div class="panel">
+      <h3><i class="fa-solid fa-calculator"></i> Pediatric AOM Dosing Calculator</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="calc-weight">Patient Weight</label>
+          <input type="number" id="calc-weight" min="1" max="150" placeholder="e.g. 15" oninput="calculatePedDose()">
+        </div>
+        <div class="form-group">
+          <label for="calc-unit">Weight Unit</label>
+          <select id="calc-unit" onchange="calculatePedDose()">
+            <option value="kg">kg (Kilograms)</option>
+            <option value="lbs">lbs (Pounds)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:16px;">
+        <label for="calc-drug">Antibiotic Regimen</label>
+        <select id="calc-drug" onchange="calculatePedDose()">
+          <option value="amox_high">Amoxicillin High-Dose (90 mg/kg/day divided BID)</option>
+          <option value="aug_high">Amoxicillin-Clavulanate (90 mg/kg/day divided BID - 14:1 ratio)</option>
+        </select>
+      </div>
+      <div class="calc-result-box" id="calc-result">
+        <!-- Result Injected -->
+      </div>
+    </div>
+
+    <!-- EHR Clinical Note Generator -->
+    <div class="panel">
+      <h3><i class="fa-solid fa-file-signature"></i> Point-of-Care EHR Note</h3>
+      <textarea class="note-textarea" id="ehr-note" readonly></textarea>
+      <div class="note-actions">
+        <button class="btn-calc" style="margin-top:0;" onclick="copyNote()"><i class="fa-regular fa-clipboard"></i> Copy Note to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Monograph Modal -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-drug-title">Drug Detail</h3>
+        <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-drug-body">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Clinical Data Source
+    const DX_DATA = {
+      aom: {
+        title: "Acute Otitis Media (AOM)",
+        badgeClass: "primary",
+        badgeText: "Primary Otalgia",
+        epidemiology: "Peak incidence 6-24 months. Streptococcus pneumoniae, H. influenzae, M. catarrhalis.",
+        workup: "Otoscopy: TM bulging (critical), loss of landmarks, erythema + middle ear effusion (MEE) on pneumatic otoscopy.",
+        triage: "ACOG/AAFP: Observation option for healthy children ≥2 years with unilateral mild pain. Otherwise, treatment is indicated. Adults require immediate treatment.",
+        medIds: ["amox", "aug", "cefdinir", "azith"]
+      },
+      aoe: {
+        title: "Otitis Externa (AOE)",
+        badgeClass: "primary",
+        badgeText: "Primary Otalgia",
+        epidemiology: "Swimmer's ear. Pseudomonas aeruginosa, Staphylococcus aureus.",
+        workup: "Severe pain with tragal pressure or pinna traction. Canal edema, erythema, debris.",
+        triage: "Treat topically. Avoid systemic antibiotics unless infection spreads beyond the ear canal (e.g. cellulitis) or patient is immunocompromised.",
+        medIds: ["ciprodex", "oflox", "cortisporin"]
+      },
+      ome: {
+        title: "Otitis Media with Effusion (OME)",
+        badgeClass: "primary",
+        badgeText: "Primary Otalgia",
+        epidemiology: "Often occurs following AOM resolution or Eustachian tube dysfunction.",
+        workup: "Amber-colored TM, air-fluid levels or bubbles. No acute inflammation (no bulging, minimal/no erythema, no fever).",
+        triage: "No antibiotics or antihistamines/decongestants. Watchful waiting for 3 months. Refer to ENT for tympanostomy tubes if bilateral effusion persists >3 months or causes developmental/hearing delay.",
+        medIds: ["watch_wait"]
+      },
+      rhs: {
+        title: "Ramsay Hunt Syndrome",
+        badgeClass: "referred",
+        badgeText: "Vesicular Referred Otalgia",
+        epidemiology: "Herpes Zoster Oticus. Reactivation of varicella-zoster virus in geniculate ganglion.",
+        workup: "Vesicles in external ear canal, auricle, or soft palate. Associated with ipsilateral facial nerve palsy, vertigo, or hearing loss.",
+        triage: "Initiate oral antivirals and corticosteroids within 72 hours of onset to optimize recovery of facial function.",
+        medIds: ["valac", "prednisone"]
+      },
+      bm: {
+        title: "Bullous Myringitis",
+        badgeClass: "primary",
+        badgeText: "Primary Otalgia",
+        epidemiology: "Often associated with viral upper respiratory infections or Mycoplasma pneumoniae.",
+        workup: "Otoscopy shows blisters (bullae) filled with fluid or blood on the tympanic membrane. Sudden onset of severe, throbbing otalgia.",
+        triage: "Manage similarly to AOM (oral antibiotics for bacterial coverage) plus aggressive oral/topical analgesics.",
+        medIds: ["amox", "ciprodex"]
+      },
+      moe: {
+        title: "Malignant Otitis Externa (MOE)",
+        badgeClass: "emergency",
+        badgeText: "Urologic/Skull Base Emergency",
+        epidemiology: "Necrotizing infection of external canal spreading to temporal bone. Mostly elderly diabetics or immunocompromised.",
+        workup: "Deep, severe pain (worse at night), purulent discharge, granulation tissue on canal floor. Elevated ESR/CRP. Cranial nerve VII palsy.",
+        triage: "Urgent CT or MRI. Immediate referral to ENT/ER for admission. Requires prolonged IV antipseudomonals.",
+        medIds: ["iv_cipro", "iv_piptazo"]
+      }
+    };
+
+    const DRUG_DATA = {
+      amox: {
+        name: "Amoxicillin",
+        brand: "Amoxil",
+        class: "Aminopenicillin",
+        tierClass: "first",
+        tierText: "First-Line",
+        dosing: "Adults: 875 mg PO Q12h or 500 mg Q8h for 5-7 days.<br>Peds: 80-90 mg/kg/day divided Q12h for 5-10 days.",
+        duration: "5-7 days (mild/adults), 10 days (<2 years or severe AOM).",
+        cost: "$",
+        costText: "Low (Generic: ~$5-$10)",
+        pearls: "Avoid if patient has taken amoxicillin in last 30 days, has concurrent purulent conjunctivitis (use Augmentin), or has severe penicillin allergy (use Cefdinir/Azithromycin).",
+        moa: "Inhibits bacterial cell wall synthesis by binding to one or more penicillin-binding proteins (PBPs).",
+        sideEffects: "Diarrhea, rash (maculopapular), nausea, vomiting, oral candidiasis.",
+        interactions: "Allopurinol (increases risk of rash), methotrexate (increases toxicity).",
+        monitoring: "Monitor for hypersensitivity/anaphylaxis. Renal adjustment required in severe impairment (eGFR <30 mL/min)."
+      },
+      aug: {
+        name: "Amoxicillin-Clavulanate",
+        brand: "Augmentin ES-600 / Augmentin XR",
+        class: "Penicillin + Beta-Lactamase Inhibitor",
+        tierClass: "second",
+        tierText: "Second-Line",
+        dosing: "Adults: 875/125 mg PO Q12h or 1000 mg XR PO Q12h for 5-10 days.<br>Peds (high dose): 90 mg/kg/day (amox component) divided Q12h.",
+        duration: "5-10 days.",
+        cost: "$$",
+        costText: "Low-Medium (Generic: ~$15-$30)",
+        pearls: "Provides coverage against beta-lactamase producing H. influenzae and M. catarrhalis. Higher rate of GI side effects (diarrhea). Take with food.",
+        moa: "Amoxicillin inhibits bacterial cell wall synthesis; clavulanate potassium binds and inactivates beta-lactamases, extending spectrum.",
+        sideEffects: "Severe diarrhea, abdominal discomfort, vaginitis, hepatotoxicity (rare).",
+        interactions: "Oral contraceptives (efficacy may be reduced), warfarin (increases INR).",
+        monitoring: "Monitor for severe diarrhea (Clostridioides difficile risk). Baseline LFTs if prolonged course."
+      },
+      cefdinir: {
+        name: "Cefdinir",
+        brand: "Omnicef",
+        class: "3rd-Gen Cephalosporin",
+        tierClass: "alt",
+        tierText: "Penicillin Allergy",
+        dosing: "Adults: 300 mg PO Q12h or 600 mg QD for 5-10 days.<br>Peds: 14 mg/kg/day PO in 1 or 2 divided doses.",
+        duration: "5-10 days.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$20-$40)",
+        pearls: "Appropriate for non-anaphylactic penicillin-allergic patients. Red/rust-colored stools may occur if taken with iron supplements.",
+        moa: "Inhibits bacterial cell wall synthesis by binding to PBPs, resisting many beta-lactamases.",
+        sideEffects: "Diarrhea (severe), nausea, headache, skin rash.",
+        interactions: "Antacids, iron supplements (decrease cefdinir absorption by 80%, separate by 2 hours).",
+        monitoring: "Renal function monitoring in severe CKD (eGFR <30 mL/min requires dose reduction)."
+      },
+      azith: {
+        name: "Azithromycin",
+        brand: "Zithromax (Z-Pak)",
+        class: "Macrolide",
+        tierClass: "alt",
+        tierText: "Penicillin Allergy",
+        dosing: "Adults: 500 mg PO on Day 1, then 250 mg daily on Days 2-5.<br>Peds: 10 mg/kg PO on Day 1, then 5 mg/kg on Days 2-5.",
+        duration: "5 Days.",
+        cost: "$",
+        costText: "Low (Generic: ~$10)",
+        pearls: "Reserved for severe (anaphylactic) penicillin-allergic patients. Higher rates of resistance in S. pneumoniae (~30%).",
+        moa: "Binds to 50S ribosomal subunit, inhibiting RNA-dependent protein synthesis.",
+        sideEffects: "QTc prolongation, diarrhea, abdominal pain, nausea, hepatotoxicity.",
+        interactions: "Class IA/III antiarrhythmics, antipsychotics (increased QTc prolongation risk), digoxin.",
+        monitoring: "Baseline EKG if patient has pre-existing cardiovascular risk or on other QTc prolonging medications."
+      },
+      ciprodex: {
+        name: "Ciprofloxacin-Dexamethasone",
+        brand: "Ciprodex",
+        class: "Fluoroquinolone + Corticosteroid Otic",
+        tierClass: "first",
+        tierText: "First-Line (Topical)",
+        dosing: "Adults & Peds: Instill 4 drops into affected ear(s) BID for 7 days.",
+        duration: "7 days.",
+        cost: "$$$",
+        costText: "High (Brand: ~$150-$250, Generic: ~$40-$60)",
+        pearls: "<strong>Safe for perforated tympanic membrane</strong>. Dexamethasone reduces canal inflammation rapidly.",
+        moa: "Ciprofloxacin inhibits DNA gyrase; dexamethasone inhibits inflammatory cytokines.",
+        sideEffects: "Local ear discomfort, pruritus, fungal superinfection.",
+        interactions: "No major systemic drug interactions with topical administration.",
+        monitoring: "Confirm tympanic membrane is intact or patent tube is present. Do not use if viral/fungal ear canal infection is suspected."
+      },
+      oflox: {
+        name: "Ofloxacin 0.3% Otic",
+        brand: "Ocuflox Otic",
+        class: "Fluoroquinolone Otic",
+        tierClass: "first",
+        tierText: "First-Line (Topical)",
+        dosing: "Adults: Instill 10 drops QD or 5 drops BID for 7 days.<br>Peds (1-12y): Instill 5 drops BID for 7 days.",
+        duration: "7 days.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$15-$30)",
+        pearls: "<strong>Safe for perforated tympanic membrane</strong>. Excellent pseudomonal coverage. Cheap alternative to Ciprodex.",
+        moa: "Fluoroquinolone bactericidal agent inhibiting bacterial DNA topoisomerase IV and DNA gyrase.",
+        sideEffects: "Application site reaction, transient earache.",
+        interactions: "None significant with topical otic formulation.",
+        monitoring: "None required."
+      },
+      cortisporin: {
+        name: "Neomycin-Polymyxin B-Hydrocortisone",
+        brand: "Cortisporin Otic",
+        class: "Aminoglycoside + Peptide + Steroid",
+        tierClass: "alt",
+        tierText: "Alternative Topical",
+        dosing: "Adults: 4 drops TID-QID for 7-10 days.<br>Peds: 3 drops TID-QID for 7-10 days.",
+        duration: "7-10 days.",
+        cost: "$",
+        costText: "Low (Generic: ~$10-$20)",
+        pearls: "<strong style='color:#f43f5e;'>CRITICAL WARNING: CONTRAINDICATED IF TM PERFORATED OR TYMPANOSTOMY TUBE IS PRESENT.</strong> Aminoglycosides are ototoxic. High risk of contact dermatitis (neomycin).",
+        moa: "Neomycin inhibits protein synthesis; polymyxin B damages bacterial membrane; hydrocortisone reduces inflammation.",
+        sideEffects: "Ototoxicity (vestibular/cochlear), contact dermatitis (erythema, scaling), stinging.",
+        interactions: "None significant. Do not co-administer other ototoxic ear preparations.",
+        monitoring: "Examine the TM to ensure it is 100% intact before prescribing."
+      },
+      valac: {
+        name: "Valacyclovir",
+        brand: "Valtrex",
+        class: "Antiviral",
+        tierClass: "first",
+        tierText: "First-Line (RHS)",
+        dosing: "Adults: 1 g PO Q8h for 7 days.",
+        duration: "7 days.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$20-$30)",
+        pearls: "Must start within 72 hours of symptom onset to maximize benefit. Protects against permanent facial paralysis.",
+        moa: "Prodrug of acyclovir, which is phosphorylated to inhibit viral DNA synthesis and replication.",
+        sideEffects: "Headache, nausea, renal impairment (crystalline nephropathy - maintain hydration).",
+        interactions: "Tenofovir, nephrotoxic agents (increases valacyclovir levels/kidney injury risk).",
+        monitoring: "Monitor serum creatinine in elderly or pre-existing CKD. Maintain high fluid intake."
+      },
+      prednisone: {
+        name: "Prednisone",
+        brand: "Deltasone",
+        class: "Systemic Corticosteroid",
+        tierClass: "first",
+        tierText: "First-Line (RHS)",
+        dosing: "Adults: 60 mg PO daily for 5 days, then tapered over next 5 days (e.g., 40mg, 30mg, 20mg, 10mg, 5mg).",
+        duration: "10 days total.",
+        cost: "$",
+        costText: "Low (Generic: ~$5)",
+        pearls: "Used in combination with antiviral therapy for Ramsay Hunt to reduce facial nerve edema and pain.",
+        moa: "Decreases inflammation by suppression of migration of polymorphonuclear leukocytes and reversal of increased capillary permeability.",
+        sideEffects: "Hyperglycemia, insomnia, mood changes, fluid retention, dyspepsia.",
+        interactions: "NSAIDs (increases GI bleed risk), fluoroquinolones (increases tendon rupture risk), live vaccines.",
+        monitoring: "Monitor blood glucose levels in diabetic patients."
+      },
+      iv_cipro: {
+        name: "Ciprofloxacin (IV)",
+        brand: "Cipro IV",
+        class: "Fluoroquinolone (IV)",
+        tierClass: "alt",
+        tierText: "MOE Treatment",
+        dosing: "Adults: 400 mg IV Q8h (severe/skull base infection) or 750 mg PO BID.",
+        duration: "6-8 weeks under ENT/ID guidance.",
+        cost: "$$$$",
+        costText: "High (Prolonged course required)",
+        pearls: "Malignant Otitis Externa requires prolonged therapy. Check ESR/CRP weekly to monitor response.",
+        moa: "Inhibits DNA synthesis via DNA gyrase and topoisomerase IV.",
+        sideEffects: "Tendinitis, tendon rupture, QTc prolongation, aortic aneurysm rupture, neuropathy.",
+        interactions: "Antacids, iron (decrease absorption of oral format), QTc prolonging drugs.",
+        monitoring: "Check baseline EKG, renal function, liver enzymes, and joint/tendon pain."
+      },
+      iv_piptazo: {
+        name: "Piperacillin-Tazobactam (IV)",
+        brand: "Zosyn",
+        class: "Antipseudomonal Penicillin Combo",
+        tierClass: "alt",
+        tierText: "MOE Treatment",
+        dosing: "Adults: 4.5 g IV Q6h (extended infusion 4 hours preferred).",
+        duration: "6-8 weeks.",
+        cost: "$$$$",
+        costText: "High (Requires PICC line and home health)",
+        pearls: "Indicated for malignant otitis externa refractory to oral ciprofloxacin or if pseudomonal strain is resistant.",
+        moa: "Piperacillin inhibits cell wall synthesis; tazobactam protects from beta-lactamases.",
+        sideEffects: "AKI (especially when combined with Vancomycin), leukopenia, diarrhea.",
+        interactions: "Vancomycin (nephrotoxicity synergy), methotrexate, vecruonium.",
+        monitoring: "CBC, BMP, and LFTs weekly during home IV infusion therapy."
+      },
+      watch_wait: {
+        name: "Observation / Watchful Waiting",
+        brand: "N/A",
+        class: "Non-Pharmacologic",
+        tierClass: "first",
+        tierText: "First-Line",
+        dosing: "No antibiotics. Schedule follow-up in 8-12 weeks.",
+        duration: "3 months.",
+        cost: "$",
+        costText: "No cost",
+        pearls: "90% of OME cases resolve spontaneously within 3 months. Inform parents/patient that antibiotics offer no clinical benefit for sterile effusion.",
+        moa: "Allow natural mucociliary clearance and Eustachian tube equilibration.",
+        sideEffects: "Hearing loss (transient), TM retraction.",
+        interactions: "None.",
+        monitoring: "Audiogram if bilateral effusion persists >3 months."
+      }
+    };
+
+    let activeDx = 'aom';
+
+    function selectDx(dxKey, element) {
+      activeDx = dxKey;
+      document.querySelectorAll('.step-box').forEach(box => box.classList.remove('active-step'));
+      element.classList.add('active-step');
+      renderDxInfo();
+      renderMedTable();
+      updateEhrNote();
+    }
+
+    function renderDxInfo() {
+      const dx = DX_DATA[activeDx];
+      const sidebar = document.getElementById('dx-sidebar');
+      sidebar.innerHTML = `
+        <span class="dx-badge ${dx.badgeClass}">${dx.badgeText}</span>
+        <h2 style="font-size:1.3rem; margin-bottom:12px; color:#c084fc;">${dx.title}</h2>
+        <div class="dx-section">
+          <div class="dx-section-title">Etiology & Pathogens</div>
+          <div class="dx-section-content">${dx.epidemiology}</div>
+        </div>
+        <div class="dx-section">
+          <div class="dx-section-title">Diagnostic Criteria</div>
+          <div class="dx-section-content">${dx.workup}</div>
+        </div>
+        <div class="dx-section" style="margin-bottom:0;">
+          <div class="dx-section-title">Clinical Triage Rules</div>
+          <div class="dx-section-content">${dx.triage}</div>
+        </div>
+      `;
+    }
+
+    function renderMedTable() {
+      const dx = DX_DATA[activeDx];
+      const container = document.getElementById('med-table-rows');
+      container.innerHTML = '';
+
+      dx.medIds.forEach(id => {
+        const drug = DRUG_DATA[id];
+        if (!drug) return;
+
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.innerHTML = `
+          <div>
+            <div class="drug-name">${drug.name}</div>
+            <div class="drug-brand">${drug.brand}</div>
+            <span class="drug-tier ${drug.tierClass}">${drug.tierText}</span>
+          </div>
+          <div style="font-size:0.85rem; color:#cbd5e1;">${drug.class}</div>
+          <div class="drug-dosing">${drug.dosing}</div>
+          <div class="drug-pearls">${drug.pearls}</div>
+          <div>
+            <button class="btn-details" onclick="showMonograph('${id}')">Monograph</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function showMonograph(id) {
+      const drug = DRUG_DATA[id];
+      if (!drug) return;
+
+      document.getElementById('modal-drug-title').innerText = `${drug.name} (${drug.brand}) Monograph`;
+      const body = document.getElementById('modal-drug-body');
+      
+      let warningHtml = '';
+      if (id === 'cortisporin') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> OTOTOXICITY WARNING:</strong>
+            Do NOT prescribe neomycin drops if the tympanic membrane is perforated, patent tubes are present, or cannot be fully visualized. Aminoglycoside entry into the middle/inner ear causes irreversible sensorineural hearing loss. Use Ofloxacin or Ciprodex instead.
+          </div>
+        `;
+      } else if (id === 'azith') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> CARDIOVASCULAR WARNING:</strong>
+            Associated with QTc prolongation and elevated risk of cardiac arrhythmias. Avoid in patients with congenital QTc prolongation, uncorrected hypokalemia/hypomagnesemia, or bradycardia.
+          </div>
+        `;
+      } else if (id === 'valac') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> RENAL WARNING:</strong>
+            Valacyclovir is renally cleared and can precipitate in renal tubules. Dose adjust for eGFR <30 mL/min. Encourage aggressive oral hydration during therapy.
+          </div>
+        `;
+      }
+
+      body.innerHTML = `
+        ${warningHtml}
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Mechanism of Action</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.moa}</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div>
+            <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Dosing & Duration</strong>
+            <p style="font-size:0.9rem; margin-top:4px; color:#c084fc;">${drug.dosing}</p>
+          </div>
+          <div>
+            <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Cost Profile</strong>
+            <p style="font-size:0.9rem; margin-top:4px; font-weight:700;" class="${drug.cost === '$' ? 'cost-low' : drug.cost === '$$' ? 'cost-med' : 'cost-high'}">${drug.costText}</p>
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Side Effects</strong>
+          <p style="font-size:0.9rem; margin-top:4px; color:#fda4af;">${drug.sideEffects}</p>
+        </div>
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Major Drug Interactions</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.interactions}</p>
+        </div>
+        <div>
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Monitoring Parameters</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.monitoring}</p>
+        </div>
+      `;
+
+      document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').style.display = 'none';
+    }
+
+    // Close modal on click outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('detail-modal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+
+    // Pediatric Dosing Calculator
+    function calculatePedDose() {
+      const weightVal = parseFloat(document.getElementById('calc-weight').value);
+      const unit = document.getElementById('calc-unit').value;
+      const drug = document.getElementById('calc-drug').value;
+      const resultBox = document.getElementById('calc-result');
+
+      if (isNaN(weightVal) || weightVal <= 0) {
+        resultBox.style.display = 'none';
+        return;
+      }
+
+      let weightKg = weightVal;
+      if (unit === 'lbs') {
+        weightKg = weightVal / 2.20462;
+      }
+
+      resultBox.style.display = 'block';
+
+      // Formula: 90 mg/kg/day divided BID (every 12 hours)
+      const dailyMg = weightKg * 90;
+      const singleMg = dailyMg / 2;
+
+      let suspensionString = '';
+      let warningHtml = '';
+
+      if (drug === 'amox_high') {
+        // Amoxicillin suspension is typically 400 mg / 5 mL
+        const singleMl = (singleMg * 5) / 400;
+        
+        // Adult limit check: max 1000 mg single dose or 2000 mg daily
+        if (dailyMg > 2000) {
+          warningHtml = `<div style="color:var(--accent-rose); font-weight:700; margin-top:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Dose exceeds maximum adult daily limit (2000 mg/day). Cap dosage at 875 mg BID or 1000 mg BID depending on severity.</div>`;
+        }
+
+        suspensionString = `
+          <strong>Amoxicillin 400mg/5mL Suspension:</strong><br>
+          <span style="font-size:1.15rem; color:#34d399; font-weight:700;">${singleMl.toFixed(1)} mL</span> PO every 12 hours (${singleMg.toFixed(0)} mg BID).<br>
+          Total daily dose: ${dailyMg.toFixed(0)} mg/day.
+        `;
+      } else {
+        // Augmentin ES-600 is 600 mg (amox) / 42.9 mg (clav) per 5 mL
+        const singleMl = (singleMg * 5) / 600;
+
+        if (dailyMg > 2000) {
+          warningHtml = `<div style="color:var(--accent-rose); font-weight:700; margin-top:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Dose exceeds maximum adult daily limit (2000 mg/day). Cap dosage at Augmentin 875/125 mg BID.</div>`;
+        }
+
+        suspensionString = `
+          <strong>Augmentin ES-600 Suspension (600mg/42.9mg per 5mL):</strong><br>
+          <span style="font-size:1.15rem; color:#34d399; font-weight:700;">${singleMl.toFixed(1)} mL</span> PO every 12 hours (${singleMg.toFixed(0)} mg BID).<br>
+          Provides correct 14:1 ratio of amoxicillin:clavulanate to prevent excess clavulanate-induced diarrhea.
+        `;
+      }
+
+      resultBox.innerHTML = `
+        <div style="font-weight:700; color:#c084fc; margin-bottom:6px;"><i class="fa-solid fa-circle-check"></i> Calculated Pediatric AOM Dose (${weightKg.toFixed(1)} kg)</div>
+        <div>${suspensionString}</div>
+        ${warningHtml}
+      `;
+      updateEhrNote();
+    }
+
+    // EHR Note Compiler
+    function updateEhrNote() {
+      const dx = DX_DATA[activeDx];
+      const weightVal = parseFloat(document.getElementById('calc-weight').value);
+      const unit = document.getElementById('calc-unit').value;
+      const drug = document.getElementById('calc-drug').value;
+
+      let pedDosingNote = '';
+      if (!isNaN(weightVal) && weightVal > 0) {
+        let weightKg = (unit === 'lbs') ? (weightVal / 2.20462) : weightVal;
+        const dailyMg = weightKg * 90;
+        const singleMg = dailyMg / 2;
+        const drugName = (drug === 'amox_high') ? 'Amoxicillin 400mg/5mL' : 'Augmentin ES-600';
+        const singleMl = (drug === 'amox_high') ? (singleMg * 5 / 400) : (singleMg * 5 / 600);
+        
+        pedDosingNote = `PEDIATRIC DOSING APPLIED:
+- Weight: ${weightVal} ${unit} (${weightKg.toFixed(1)} kg)
+- Regimen: 90 mg/kg/day divided BID
+- Prescription: ${drugName} suspension, ${singleMl.toFixed(1)} mL PO Q12H (${singleMg.toFixed(0)} mg BID) x 10 days.
+`;
+      }
+
+      const noteText = `OTOLOGY CLINICAL ASSESSMENT & PLAN NOTE
+--------------------------------------------------
+DIAGNOSIS SELECTOR: ${dx.title.toUpperCase()}
+CATEGORY: ${dx.badgeText.toUpperCase()}
+
+CLINICAL CRITERIA MET:
+- Reviewed pathognomonic physical examination and pneumatic otoscopy features.
+- Safety check: Rule out mastoiditis, necrotizing spread, and facial nerve palsy.
+- Counselled patient/caregivers on natural course, pain control, and follow-up thresholds.
+
+${pedDosingNote}
+MANAGEMENT PLAN:
+- Primary care guidelines followed for medication selection.
+- Confirmed TM status before prescribing topical aminoglycosides.
+- Scheduled clinical re-evaluation in 48-72h if symptoms fail to improve.`;
+
+      document.getElementById('ehr-note').value = noteText;
+    }
+
+    function copyNote() {
+      const noteTextArea = document.getElementById('ehr-note');
+      noteTextArea.select();
+      navigator.clipboard.writeText(noteTextArea.value).then(() => {
+        alert("Clinical assessment note copied to clipboard!");
+      });
+    }
+
+    // Initialize
+    selectDx('aom', document.querySelector('.step-box'));
+  </script>
+</body>
+</html>

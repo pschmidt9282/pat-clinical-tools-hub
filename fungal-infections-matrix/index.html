@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fungal Infections Management Matrix | OpenEvidence Sourced</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1e293b;
+      --border-color: #24334a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-teal: #10b981;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-pink: #ec4899;
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Back Button Banner */
+    .back-nav {
+      margin-bottom: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #090d16;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #4c0519 50%, #db2777 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #f472b6, #ec4899, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title-group p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    .oe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(236, 72, 153, 0.15);
+      border: 1px solid rgba(236, 72, 153, 0.4);
+      color: #f472b6;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-right: 8px;
+    }
+
+    .filter-btn {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: #f472b6;
+    }
+
+    .filter-btn.active {
+      background: rgba(236, 72, 153, 0.15);
+      border-color: #f472b6;
+      color: #f472b6;
+      box-shadow: 0 0 10px rgba(236, 72, 153, 0.1);
+    }
+
+    /* Split layout */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 950px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .sidebar-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      color: #f472b6;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .dx-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      background: rgba(236, 72, 153, 0.15);
+      color: #f472b6;
+      border: 1px solid rgba(236, 72, 153, 0.3);
+    }
+
+    .sidebar-section {
+      margin-bottom: 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-section-content {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
+    .sidebar-section-content ul {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    .sidebar-section-content li {
+      margin-bottom: 4px;
+    }
+
+    /* Table Container */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .table-header-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1.5fr 2fr 0.6fr;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1.5fr 2fr 0.6fr;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 20px;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .table-row:hover {
+      background: var(--bg-card-hover);
+    }
+
+    @media (max-width: 768px) {
+      .table-header-row, .table-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 16px;
+      }
+      .table-header-row {
+        display: none;
+      }
+      .table-row {
+        border-bottom: 2px solid var(--border-color);
+      }
+    }
+
+    .drug-name {
+      font-weight: 700;
+      color: #f8fafc;
+      font-size: 0.95rem;
+    }
+
+    .drug-brand {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .drug-tier {
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .drug-tier.first {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+
+    .drug-tier.second {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+
+    .drug-tier.alt {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+    }
+
+    .drug-dosing {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+
+    .drug-pearls {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+    }
+
+    .drug-cost {
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .cost-low { color: #34d399; }
+    .cost-med { color: #fbbf24; }
+    .cost-high { color: #f87171; }
+
+    .btn-details {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-details:hover {
+      background: #f472b6;
+      border-color: #f472b6;
+      color: #090d16;
+    }
+
+    /* Calculator and Note Panel */
+    .tools-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .tools-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .panel h3 {
+      font-size: 1.1rem;
+      color: #f472b6;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-group input, .form-group select {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #f472b6;
+      outline: none;
+    }
+
+    .btn-calc {
+      background: #f472b6;
+      border: none;
+      color: #090d16;
+      padding: 10px 16px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .btn-calc:hover {
+      opacity: 0.9;
+    }
+
+    .calc-result-box {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(236, 72, 153, 0.06);
+      border: 1px dashed rgba(236, 72, 153, 0.4);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      display: none;
+      line-height: 1.45;
+    }
+
+    /* EHR Note Area */
+    .note-textarea {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 100%;
+      height: 250px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      resize: none;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .note-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 650px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .warning-panel {
+      background: rgba(244, 63, 94, 0.08);
+      border-left: 4px solid var(--accent-rose);
+      color: #fda4af;
+      padding: 14px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back button -->
+  <div class="back-nav">
+    <a href="../index.html" class="btn-back">
+      <i class="fa-solid fa-arrow-left"></i> Back to Hub
+    </a>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="header-banner">
+    <div class="header-title-group">
+      <h1><i class="fa-solid fa-virus"></i> Fungal Infections Therapy Matrix</h1>
+      <p>IDSA & CDC-based diagnostic and prescribing matrices for superficial mycoses</p>
+    </div>
+    <div class="oe-badge">
+      <i class="fa-solid fa-circle-check"></i> OpenEvidence Sourced
+    </div>
+  </header>
+
+  <!-- Location and Extent Filters -->
+  <section class="filter-bar">
+    <span class="filter-title">Select Location/Extent:</span>
+    <button class="filter-btn active" onclick="selectFungal('pedis', this)">Tinea Pedis</button>
+    <button class="filter-btn" onclick="selectFungal('corporis', this)">Tinea Corporis/Cruris</button>
+    <button class="filter-btn" onclick="selectFungal('capitis', this)">Tinea Capitis</button>
+    <button class="filter-btn" onclick="selectFungal('onychomycosis', this)">Onychomycosis</button>
+    <button class="filter-btn" onclick="selectFungal('versicolor', this)">Tinea Versicolor</button>
+    <button class="filter-btn" onclick="selectFungal('candidiasis', this)">Mucosal Candidiasis</button>
+  </section>
+
+  <!-- Core Layout Grid -->
+  <div class="layout-grid">
+    <!-- Sidebar: Selected Infection Info -->
+    <aside class="sidebar-card" id="fungal-sidebar">
+      <!-- Injected dynamically -->
+    </aside>
+
+    <!-- Main Table: Medication Matrix -->
+    <main class="table-container">
+      <div class="table-header-row">
+        <div>Medication & Tier</div>
+        <div>Class</div>
+        <div>Dosing & Duration</div>
+        <div>Primary Care Pearls / Interactions</div>
+        <div>Action</div>
+      </div>
+      <div id="med-table-rows">
+        <!-- Injected dynamically -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Interactive Calculators & Note Area -->
+  <div class="tools-split">
+    <!-- Systemic Antifungal LFT Monitor Scheduler -->
+    <div class="panel">
+      <h3><i class="fa-solid fa-shield-halved"></i> Terbinafine LFT Safety Scheduler</h3>
+      <div class="form-group">
+        <label for="sched-drug">Select Systemic Regimen</label>
+        <select id="sched-drug" onchange="calculateSchedule()">
+          <option value="terb_nail">Oral Terbinafine (Toenail Onychomycosis - 12 Weeks)</option>
+          <option value="terb_finger">Oral Terbinafine (Fingernail Onychomycosis - 6 Weeks)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sched-start">Treatment Start Date</label>
+        <input type="date" id="sched-start" onchange="calculateSchedule()">
+      </div>
+      <div class="calc-result-box" id="sched-result">
+        <!-- Result Injected -->
+      </div>
+
+      <!-- Nesting the weight-based Capitis Dosing Calculator underneath -->
+      <h3 style="margin-top:24px;"><i class="fa-solid fa-baby"></i> Pediatric Tinea Capitis Dosing</h3>
+      <div class="form-group" style="display:grid; grid-template-columns:1fr 1.2fr; gap:10px; margin-bottom:12px;">
+        <div>
+          <label for="ped-weight">Weight</label>
+          <input type="number" id="ped-weight" min="1" max="100" placeholder="e.g. 20" oninput="calculatePedCapitis()">
+        </div>
+        <div>
+          <label for="ped-unit">Unit</label>
+          <select id="ped-unit" onchange="calculatePedCapitis()">
+            <option value="kg">kg (Kilograms)</option>
+            <option value="lbs">lbs (Pounds)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="ped-drug">Select Pediatric Antifungal</label>
+        <select id="ped-drug" onchange="calculatePedCapitis()">
+          <option value="griseo_micro">Griseofulvin Microsize (20-25 mg/kg/day x 6-8 weeks)</option>
+          <option value="terb_oral">Oral Terbinafine (Weight-Band: 62.5mg / 125mg / 250mg QD)</option>
+        </select>
+      </div>
+      <div class="calc-result-box" id="ped-result">
+        <!-- Result Injected -->
+      </div>
+    </div>
+
+    <!-- EHR Clinical Note Generator -->
+    <div class="panel">
+      <h3><i class="fa-solid fa-file-signature"></i> Point-of-Care EHR Note</h3>
+      <textarea class="note-textarea" id="ehr-note" readonly></textarea>
+      <div class="note-actions">
+        <button class="btn-calc" style="margin-top:0;" onclick="copyNote()"><i class="fa-regular fa-clipboard"></i> Copy Note to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Monograph Modal -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-drug-title">Drug Detail</h3>
+        <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-drug-body">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Clinical Data Source
+    const FUNGAL_DATA = {
+      pedis: {
+        title: "Tinea Pedis (Athlete's Foot)",
+        badgeText: "Dermatophytosis",
+        etiology: "Trichophyton rubrum, Trichophyton mentagrophytes. Sourced from floor moisture/fomites.",
+        workup: "Pruritus, scaling, erythema, maceration of interdigital spaces (or moccasin distribution). KOH Prep: Segmented hyphae.",
+        triage: "Topical therapy is first-line for localized interdigital infections. Reserve systemic oral therapy for moccasin/hyperkeratotic type, extensive vesicle formation, or failure of topical azoles.",
+        medIds: ["terb_cream", "clot_cream", "terb_oral_short", "itraconazole_oral"]
+      },
+      corporis: {
+        title: "Tinea Corporis & Cruris",
+        badgeText: "Dermatophytosis",
+        etiology: "T. rubrum, Microsporum canis. Ringworm / Jock itch.",
+        workup: "Annular plaque, elevated scaly border with central clearing. KOH Prep: Branched septate hyphae.",
+        triage: "Topicals for isolated plaques. Systemic oral therapy for extensive lesions, immunocompromised patients, or refractory cases.",
+        medIds: ["terb_cream", "clot_cream", "fluconazole_weekly", "terb_oral_short"]
+      },
+      capitis: {
+        title: "Tinea Capitis (Scalp)",
+        badgeText: "Dermatophytosis (Follicular)",
+        etiology: "Trichophyton tonsurans (~90% in US), Microsporum species. Highly contagious.",
+        workup: "Scalp scaling, alopecia, broken hairs (black dots), kerion (inflammatory boggy mass).",
+        triage: "<strong>Systemic oral therapy is MANDATORY.</strong> Topical antifungals are ineffective due to failure to penetrate hair follicles. Active clinical contact screening advised.",
+        medIds: ["griseo_ped", "terb_oral_ped", "se_shampoo"]
+      },
+      onychomycosis: {
+        title: "Onychomycosis (Nails)",
+        badgeText: "Onychomycosis",
+        etiology: "T. rubrum, T. mentagrophytes, Candida species.",
+        workup: "Subungual hyperkeratosis, nail thickening, yellow-brown discoloration, onycholysis. <strong>Confirm diagnosis via KOH prep, culture, or PCR before prescribing oral medications.</strong>",
+        triage: "Oral Terbinafine is gold standard. Topically applied lacquers (Ciclopirox, Jublia) require 48 weeks of daily application, have low cure rates (~15%), and are extremely expensive, but avoids liver risks.",
+        medIds: ["terb_oral_nail", "ciclopirox_lacquer", "efinaconazole_sol", "itraconazole_pulse"]
+      },
+      versicolor: {
+        title: "Tinea Versicolor",
+        badgeText: "Malassezia Infection",
+        etiology: "Malassezia furfur (pityrosporum). Commensal yeast. Thrives in warm, humid weather.",
+        workup: "Hypopigmented, hyperpigmented, or erythematous macules/plaques on trunk/neck. KOH Prep: 'Spaghetti and meatballs' appearance (short hyphae + yeast).",
+        triage: "Topical selenium sulfide or ketoconazole shampoo is first-line. Systemic Fluconazole is highly effective for extensive disease. <strong style='color:#f87171;'>Warning: Oral Ketoconazole is contraindicated due to severe hepatotoxicity risk.</strong>",
+        medIds: ["keto_shampoo", "se_lotion", "fluconazole_versicolor"]
+      },
+      candidiasis: {
+        title: "Mucosal Candidiasis (Thrush & VVC)",
+        badgeText: "Candidiasis",
+        etiology: "Candida albicans. Opportunistic overgrowth.",
+        workup: "Oral: White plaques on tongue/palate that scrape off leaving bleeding base. Vaginal (VVC): Thick 'cottage-cheese' discharge, pruritus, vaginal pH <4.5.",
+        triage: "VVC: Oral Fluconazole single dose is first-line (uncomplicated). *Contraindicated or high-risk in pregnancy (use topical clotrimazole/terconazole x 7 days). Thrush: Mild cases managed with topicals (nystatin swish/swallow or clotrimazole troches); moderate-severe require daily oral Fluconazole.",
+        medIds: ["fluconazole_vvc", "nystatin_susp", "clotrimazole_troches", "fluconazole_thrush"]
+      }
+    };
+
+    const DRUG_DATA = {
+      terb_cream: {
+        name: "Terbinafine 1% Cream",
+        brand: "Lamisil AT",
+        class: "Allylamine Topical",
+        tierClass: "first",
+        tierText: "First-Line (Topical)",
+        dosing: "Apply to affected area(s) QD or BID for 1-2 weeks.",
+        duration: "1-2 weeks (shorter course than topical azoles).",
+        cost: "$",
+        costText: "Low (OTC: ~$8-$12)",
+        pearls: "Fungicidal mechanism allows shorter treatment course. Excellent for local tinea pedis, corporis, cruris.",
+        moa: "Inhibits squalene epoxidase, interfering with fungal sterol synthesis (leads to ergosterol deficiency and squalene accumulation, killing the fungal cell).",
+        sideEffects: "Local skin irritation, burning, dryness, contact dermatitis.",
+        interactions: "None significant with topical application.",
+        monitoring: "None required."
+      },
+      clot_cream: {
+        name: "Clotrimazole 1% Cream",
+        brand: "Lotrimin AF",
+        class: "Imidazole Topical",
+        tierClass: "second",
+        tierText: "Alternative Topical",
+        dosing: "Apply to affected area(s) BID for 2-4 weeks.",
+        duration: "2-4 weeks.",
+        cost: "$",
+        costText: "Low (OTC/Generic: ~$5-$10)",
+        pearls: "Fungistatic. Requires compliance with longer duration. Safe in pregnancy.",
+        moa: "Binds to phospholipids in fungal cell membrane, altering permeability and depleting essential intracellular elements.",
+        sideEffects: "Local erythema, stinging, blistering, peeling.",
+        interactions: "None significant.",
+        monitoring: "None."
+      },
+      terb_oral_short: {
+        name: "Terbinafine (Oral - Short Course)",
+        brand: "Lamisil",
+        class: "Allylamine Systemic",
+        tierClass: "first",
+        tierText: "First-Line (Systemic)",
+        dosing: "250 mg PO daily for 2 weeks.",
+        duration: "2 Weeks.",
+        cost: "$",
+        costText: "Low (Generic: ~$10)",
+        pearls: "Highly effective for extensive tinea pedis (moccasin type), extensive tinea corporis, or cases unresponsive to topicals.",
+        moa: "Squalene epoxidase inhibitor, accumulating toxic squalene intracellularly.",
+        sideEffects: "Headache, gastrointestinal upset, taste disturbance (dysgeusia), elevated transaminases.",
+        interactions: "Strong CYP2D6 inhibitor (increases levels of TCAs, beta-blockers, dextromethorphan).",
+        monitoring: "Baseline LFTs recommended even for short courses if pre-existing liver disease is present."
+      },
+      itraconazole_oral: {
+        name: "Itraconazole",
+        brand: "Sporanox",
+        class: "Triazole Systemic",
+        tierClass: "alt",
+        tierText: "Alternative Systemic",
+        dosing: "100 mg PO BID or 200 mg daily for 2 weeks. Take with food or acidic beverage.",
+        duration: "2 Weeks.",
+        cost: "$$$",
+        costText: "Medium-High (Generic: ~$50-$80)",
+        pearls: "Broad-spectrum. Absorption is pH-dependent (avoid antacids, PPIs, H2 blockers). alternative to terbinafine.",
+        moa: "Inhibits fungal cytochrome P450-dependent 14-alpha-demethylase, halting ergosterol synthesis.",
+        sideEffects: "Hepatotoxicity, QTc prolongation, congestive heart failure (negative inotrope), hypokalemia.",
+        interactions: "Potent CYP3A4 inhibitor! Contraindicated with simvastatin, lovastatin, quinidine, eplerenone. QTc synergy with antiarrhythmics.",
+        monitoring: "Baseline LFTs, check electrolytes, monitor for signs of congestive heart failure."
+      },
+      fluconazole_weekly: {
+        name: "Fluconazole (Weekly)",
+        brand: "Diflucan",
+        class: "Triazole Systemic",
+        tierClass: "first",
+        tierText: "First-Line (Systemic)",
+        dosing: "150 mg PO once weekly for 2-4 weeks.",
+        duration: "2-4 weeks.",
+        cost: "$",
+        costText: "Low (Generic: ~$5-$10)",
+        pearls: "High compliance due to weekly dosing. Excellent for extensive tinea corporis/cruris or refractory versicolor.",
+        moa: "Inhibits 14-alpha-demethylase, disrupting membrane structure.",
+        sideEffects: "Headache, nausea, abdominal pain, rash, transient LFT elevations.",
+        interactions: "Moderate CYP3A4 and strong CYP2C9 inhibitor (increases warfarin, phenytoin, sulfonylureas). QTc prolonging drugs.",
+        monitoring: "Monitor INR closely if co-prescribed with Warfarin."
+      },
+      griseo_ped: {
+        name: "Griseofulvin Microsize",
+        brand: "Grifulvin V",
+        class: "Mitotic Inhibitor",
+        tierClass: "first",
+        tierText: "First-Line (Capitis)",
+        dosing: "Peds: 20-25 mg/kg/day PO single dose or divided BID. Max 1000 mg/day.",
+        duration: "6-8 weeks (traditional choice for Microsporum).",
+        cost: "$$",
+        costText: "Medium (Generic: ~$40-$80)",
+        pearls: "<strong>Must take with a fatty meal (e.g. ice cream, whole milk, peanut butter) to maximize GI absorption.</strong>",
+        moa: "Binds to fungal microtubular proteins, disrupting mitotic spindle and halting metaphase.",
+        sideEffects: "Headache (common, may resolve with continued use), photosensitivity, GI distress, granulocytopenia (rare).",
+        interactions: "Oral contraceptives (decreases efficacy - use backup barrier), warfarin (decreases INR), alcohol (disulfiram-like reaction).",
+        monitoring: "Baseline and periodic CBC, LFTs if course exceeds 8 weeks."
+      },
+      terb_oral_ped: {
+        name: "Terbinafine (Oral Pediatric)",
+        brand: "Lamisil Oral Granules / Tablets",
+        class: "Allylamine Systemic",
+        tierClass: "first",
+        tierText: "First-Line (Capitis)",
+        dosing: "Peds weight-band:<br>- 10-20 kg: 62.5 mg PO daily.<br>- 20-40 kg: 125 mg PO daily.<br>- &gt;40 kg: 250 mg PO daily.",
+        duration: "4-6 weeks (preferred for Trichophyton tonsurans).",
+        cost: "$$",
+        costText: "Medium (Generic: ~$20-$40)",
+        pearls: "Shorter duration than griseofulvin. Well-tolerated. Tablets can be crushed and mixed with applesauce.",
+        moa: "Inhibits squalene epoxidase.",
+        sideEffects: "Abdominal pain, headache, rash, transient taste disturbance.",
+        interactions: "CYP2D6 substrates.",
+        monitoring: "Baseline LFTs required."
+      },
+      se_shampoo: {
+        name: "Selenium Sulfide 2.5% / Ketoconazole 2% Shampoo",
+        brand: "Selsun Blue / Nizoral Shampoo",
+        class: "Topical Antifungal Shampoo",
+        tierClass: "first",
+        tierText: "Adjunctive (Capitis)",
+        dosing: "Apply to scalp, lather, leave on for 5-10 minutes, then rinse. Use 2-3 times/week.",
+        duration: "During course of oral therapy.",
+        cost: "$",
+        costText: "Low (OTC/Generic: ~$10)",
+        pearls: "Used to reduce fungal spore shedding and prevent transmission to household contacts. Does not cure capitis alone.",
+        moa: "Cytostatic effect on epidermis and follicular infundibulum; direct fungicidal activity.",
+        sideEffects: "Local scalp dryness, hair discoloration, scalp irritation.",
+        interactions: "None.",
+        monitoring: "None."
+      },
+      terb_oral_nail: {
+        name: "Terbinafine (Oral - Nail Course)",
+        brand: "Lamisil",
+        class: "Allylamine Systemic",
+        tierClass: "first",
+        tierText: "First-Line (Onycho)",
+        dosing: "250 mg PO daily.<br>(6 weeks for fingernails, 12 weeks for toenails).",
+        duration: "6 weeks (fingers) or 12 weeks (toes).",
+        cost: "$",
+        costText: "Low (Generic: ~$10-$20)",
+        pearls: "Gold standard. High cure rate (~75%). Long half-life (persists in nail plate for months after treatment ends). <strong style='color:#f87171;'>Baseline and mid-treatment LFTs mandatory.</strong>",
+        moa: "Squalene epoxidase inhibitor, disrupting fungal cell membrane.",
+        sideEffects: "Hepatotoxicity (rare but severe), taste loss (temporary), rash, neutropenia (rare), dyspepsia.",
+        interactions: "CYP2D6 inhibitor. Avoid with drugs highly metabolized by CYP2D6.",
+        monitoring: "ALT and AST at baseline and at week 6 of 12-week course. Discontinue if transaminases exceed 3x ULN."
+      },
+      ciclopirox_lacquer: {
+        name: "Ciclopirox 8% Lacquer",
+        brand: "Penlac",
+        class: "Hydroxypiridone Topical",
+        tierClass: "alt",
+        tierText: "Alternative Topical",
+        dosing: "Apply to nail plate daily at bedtime. Remove once weekly with alcohol.",
+        duration: "48 Weeks.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$30-$60)",
+        pearls: "Very low mycological cure rate (~12%). Indicated for mild-moderate cases without matrix involvement or if oral therapy is contraindicated.",
+        moa: "Chelates polyvalent cations (Fe3+ or Al3+), inhibiting metal-dependent enzymes in fungal cell.",
+        sideEffects: "Periungual erythema, nail shape changes, burning sensation.",
+        interactions: "None significant.",
+        monitoring: "None."
+      },
+      efinaconazole_sol: {
+        name: "Efinaconazole 10% Solution",
+        brand: "Jublia",
+        class: "Triazole Topical",
+        tierClass: "alt",
+        tierText: "Alternative Topical",
+        dosing: "Apply 1 drop daily to affected nail(s) (2 drops if big toenail). Use flow-through brush.",
+        duration: "48 Weeks.",
+        cost: "$$$$",
+        costText: "Very High (Brand-only: ~$600-$1000 without insurance)",
+        pearls: "Better nail penetration and efficacy (~17% cure) than ciclopirox. Prohibitively expensive without prior authorization.",
+        moa: "Inhibits 14-alpha-demethylase, depleting ergosterol.",
+        sideEffects: "Ingrown toenail, application site dermatitis, vesicles, pain.",
+        interactions: "None.",
+        monitoring: "None."
+      },
+      itraconazole_pulse: {
+        name: "Itraconazole Pulse Therapy",
+        brand: "Sporanox",
+        class: "Triazole Systemic",
+        tierClass: "alt",
+        tierText: "Alternative Systemic",
+        dosing: "200 mg PO BID for 1 week per month.<br>(2 pulses for fingernails, 3 pulses for toenails).",
+        duration: "2-3 months.",
+        cost: "$$$",
+        costText: "Medium-High (Generic: ~$80-$150)",
+        pearls: "Pulse dosing reduces cumulative liver exposure. Take with meals.",
+        moa: "Disrupts ergosterol synthesis.",
+        sideEffects: "Hepatotoxicity, QTc prolongation, peripheral neuropathy, edema.",
+        interactions: "Potent CYP3A4 inhibitor. Do not use with Simvastatin, Lovastatin, or QTc prolonging drugs.",
+        monitoring: "Baseline LFTs. Monitor for heart failure symptoms."
+      },
+      keto_shampoo: {
+        name: "Ketoconazole 2% Shampoo",
+        brand: "Nizoral Shampoo",
+        class: "Imidazole Topical",
+        tierClass: "first",
+        tierText: "First-Line (Versicolor)",
+        dosing: "Apply to wet skin of affected areas, lather, leave for 5-10 minutes, then wash off. Use daily for 3 consecutive days.",
+        duration: "3 days.",
+        cost: "$",
+        costText: "Low (Generic: ~$15)",
+        pearls: "Highly effective, safe, and convenient first-line option for localized or moderately extensive tinea versicolor.",
+        moa: "Disrupts synthesis of ergosterol in yeast cell membrane.",
+        sideEffects: "Local skin dryness, application site irritation, mild burning.",
+        interactions: "None.",
+        monitoring: "None."
+      },
+      se_lotion: {
+        name: "Selenium Sulfide 2.5% Lotion",
+        brand: "Selsun Blue Lotion",
+        class: "Antifungal Lotion",
+        tierClass: "first",
+        tierText: "First-Line (Versicolor)",
+        dosing: "Apply thin layer to affected skin daily, leave on for 10 minutes, then rinse. Use daily for 7 days.",
+        duration: "7 days.",
+        cost: "$",
+        costText: "Low (Generic: ~$10)",
+        pearls: "Classic cost-effective treatment. Warn patient that hypopigmented areas take months to return to normal color after yeast is killed.",
+        moa: "Cytostatic effect on epithelial cells; direct anti-Malassezia yeast activity.",
+        sideEffects: "Skin dryness, transient skin irritation, odor.",
+        interactions: "None.",
+        monitoring: "None."
+      },
+      fluconazole_versicolor: {
+        name: "Fluconazole (Oral - Versicolor)",
+        brand: "Diflucan",
+        class: "Triazole Systemic",
+        tierClass: "second",
+        tierText: "Systemic Alternative",
+        dosing: "300 mg PO once weekly for 2 weeks OR single 400 mg dose.",
+        duration: "1-2 weeks.",
+        cost: "$",
+        costText: "Low (Generic: ~$5)",
+        pearls: "Excellent for extensive, recurrent, or topically refractory tinea versicolor. Sweat-excreted, so patient should exercise/sweat 1 hour post-dose and avoid showering for a few hours.",
+        moa: "Inhibits fungal cell membrane ergosterol synthesis.",
+        sideEffects: "Headache, nausea, QTc prolongation (rare).",
+        interactions: "CYP3A4 and CYP2C9 inhibitor.",
+        monitoring: "Review cardiovascular history for QTc risk."
+      },
+      fluconazole_vvc: {
+        name: "Fluconazole (Oral - VVC)",
+        brand: "Diflucan",
+        class: "Triazole Systemic",
+        tierClass: "first",
+        tierText: "First-Line (Oral)",
+        dosing: "Uncomplicated: 150 mg PO x 1 single dose.<br>Complicated: 150 mg PO Q72h for 3 doses (days 1, 4, 7).",
+        duration: "1-3 doses.",
+        cost: "$",
+        costText: "Low (Generic: ~$4)",
+        pearls: "Highly effective for yeast infections. <strong style='color:#f43f5e;'>CONTRAINDICATED / HIGH RISK IN PREGNANCY</strong> (associated with spontaneous abortion/birth defects; use topical azole inserts for 7 days instead).",
+        moa: "Triazole antifungal inhibiting yeast membrane integrity.",
+        sideEffects: "Headache, nausea, abdominal pain.",
+        interactions: "CYP2D6, CYP3A4 substrate interactions. Enhances Warfarin and Sulfonylureas.",
+        monitoring: "Pregnancy screen if childbearing age."
+      },
+      nystatin_susp: {
+        name: "Nystatin Suspension",
+        brand: "Bio-Statin",
+        class: "Polyene Topical",
+        tierClass: "first",
+        tierText: "First-Line (Thrush)",
+        dosing: "4-6 mL PO QID. Hold in mouth, swish around for several minutes, then swallow. Shake well.",
+        duration: "7-14 days.",
+        cost: "$",
+        costText: "Low (Generic: ~$15-$25)",
+        pearls: "First line for mild, localized oral thrush. Safe, not absorbed systemically. Check for dentures (should be cleaned separately).",
+        moa: "Binds to sterols in fungal cell membrane, creating pores that leak intracellular components.",
+        sideEffects: "Mild diarrhea, nausea, vomiting, oral irritation.",
+        interactions: "None significant.",
+        monitoring: "Verify patient holds and swishes before swallowing."
+      },
+      clotrimazole_troches: {
+        name: "Clotrimazole Troches",
+        brand: "Mycelex Troche",
+        class: "Imidazole Topical",
+        tierClass: "first",
+        tierText: "First-Line (Thrush)",
+        dosing: "10 mg troche dissolved slowly in mouth 5 times/day.",
+        duration: "7-14 days.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$25-$40)",
+        pearls: "Excellent alternative to nystatin. Requires patient compliance with dosing 5 times daily. Do not chew or swallow whole.",
+        moa: "Alters yeast cell membrane permeability.",
+        sideEffects: "Nausea, vomiting, elevated transaminases (mild).",
+        interactions: "May increase tacrolimus/sirolimus levels (salivary absorption).",
+        monitoring: "Monitor LFTs if patient has liver disease and is on prolonged courses."
+      },
+      fluconazole_thrush: {
+        name: "Fluconazole (Oral - Thrush)",
+        brand: "Diflucan",
+        class: "Triazole Systemic",
+        tierClass: "second",
+        tierText: "Systemic (Thrush)",
+        dosing: "100-200 mg PO daily.",
+        duration: "7-14 days.",
+        cost: "$",
+        costText: "Low (Generic: ~$10)",
+        pearls: "Indicated for moderate-to-severe oral thrush or immunocompromised patients (e.g. HIV/AIDS, active chemotherapy).",
+        moa: "Systemic ergosterol synthesis inhibitor.",
+        sideEffects: "Headache, nausea, abdominal discomfort, QTc prolongation.",
+        interactions: "Significant CYP enzyme interactions.",
+        monitoring: "Monitor liver enzymes and EKG if patient has risk factors for QTc prolongation."
+      }
+    };
+
+    let activeFungal = 'pedis';
+
+    function selectFungal(fungalKey, element) {
+      activeFungal = fungalKey;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      renderFungalInfo();
+      renderMedTable();
+      updateEhrNote();
+    }
+
+    function renderFungalInfo() {
+      const f = FUNGAL_DATA[activeFungal];
+      const sidebar = document.getElementById('fungal-sidebar');
+      sidebar.innerHTML = `
+        <span class="dx-badge">${f.badgeText}</span>
+        <h2 style="font-size:1.3rem; margin-bottom:12px; color:#f472b6;">${f.title}</h2>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Etiology & Pathogens</div>
+          <div class="sidebar-section-content">${f.etiology}</div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">KOH / Work Up</div>
+          <div class="sidebar-section-content">${f.workup}</div>
+        </div>
+        <div class="sidebar-section" style="margin-bottom:0;">
+          <div class="sidebar-section-title">Topical vs. Oral Triage</div>
+          <div class="sidebar-section-content">${f.triage}</div>
+        </div>
+      `;
+    }
+
+    function renderMedTable() {
+      const f = FUNGAL_DATA[activeFungal];
+      const container = document.getElementById('med-table-rows');
+      container.innerHTML = '';
+
+      f.medIds.forEach(id => {
+        const drug = DRUG_DATA[id];
+        if (!drug) return;
+
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.innerHTML = `
+          <div>
+            <div class="drug-name">${drug.name}</div>
+            <div class="drug-brand">${drug.brand}</div>
+            <span class="drug-tier ${drug.tierClass}">${drug.tierText}</span>
+          </div>
+          <div style="font-size:0.85rem; color:#cbd5e1;">${drug.class}</div>
+          <div class="drug-dosing">${drug.dosing}</div>
+          <div class="drug-pearls">${drug.pearls}</div>
+          <div>
+            <button class="btn-details" onclick="showMonograph('${id}')">Monograph</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function showMonograph(id) {
+      const drug = DRUG_DATA[id];
+      if (!drug) return;
+
+      document.getElementById('modal-drug-title').innerText = `${drug.name} (${drug.brand}) Monograph`;
+      const body = document.getElementById('modal-drug-body');
+      
+      let warningHtml = '';
+      if (id === 'terb_oral_nail' || id === 'terb_oral_short') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> HEPATOTOXICITY WARNING:</strong>
+            Systemic oral terbinafine is associated with rare cases of idiosyncratic liver failure, sometimes leading to liver transplant or death. <strong style="color:#f87171;">Do not prescribe to patients with active or chronic liver disease.</strong> Check baseline LFTs and mid-treatment LFTs at 6 weeks.
+          </div>
+        `;
+      } else if (id.startsWith('fluconazole') || id === 'itraconazole_pulse' || id === 'itraconazole_oral') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> QTc & CYP DRUG INTERACTIONS:</strong>
+            Systemic azole antifungals are major CYP3A4 inhibitors. Co-administration with simvastatin, lovastatin, quinidine, or class IA/III antiarrhythmics is contraindicated. Can trigger severe QTc prolongation and Torsades de Pointes.
+          </div>
+        `;
+      } else if (id === 'griseo_ped') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> FATTY MEAL REQUISITE:</strong>
+            Griseofulvin is highly lipophilic. GI absorption is poor unless taken with a high-fat meal (e.g. ice cream, peanut butter, whole milk). Failure to do so leads to sub-therapeutic levels and treatment failure.
+          </div>
+        `;
+      }
+
+      body.innerHTML = `
+        ${warningHtml}
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Mechanism of Action</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.moa}</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div>
+            <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Dosing & Duration</strong>
+            <p style="font-size:0.9rem; margin-top:4px; color:#f472b6;">${drug.dosing}</p>
+          </div>
+          <div>
+            <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Cost Profile</strong>
+            <p style="font-size:0.9rem; margin-top:4px; font-weight:700;" class="${drug.cost === '$' ? 'cost-low' : drug.cost === '$$' ? 'cost-med' : 'cost-high'}">${drug.costText}</p>
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Side Effects</strong>
+          <p style="font-size:0.9rem; margin-top:4px; color:#fda4af;">${drug.sideEffects}</p>
+        </div>
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Major Drug Interactions</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.interactions}</p>
+        </div>
+        <div>
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Monitoring Parameters</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.monitoring}</p>
+        </div>
+      `;
+
+      document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('detail-modal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+
+    // Terbinafine Safety Scheduler
+    function calculateSchedule() {
+      const drug = document.getElementById('sched-drug').value;
+      const startVal = document.getElementById('sched-start').value;
+      const resultBox = document.getElementById('sched-result');
+
+      if (!startVal) {
+        resultBox.style.display = 'none';
+        return;
+      }
+
+      resultBox.style.display = 'block';
+
+      const startDate = new Date(startVal + 'T00:00:00');
+      const baselineDateStr = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      
+      let midDateStr = '';
+      let endDateStr = '';
+
+      if (drug === 'terb_nail') {
+        // 12 weeks: mid at 6 weeks, end at 12 weeks
+        const midDate = new Date(startDate);
+        midDate.setDate(startDate.getDate() + (6 * 7));
+        midDateStr = midDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + (12 * 7));
+        endDateStr = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } else {
+        // 6 weeks: mid at 3 weeks, end at 6 weeks
+        const midDate = new Date(startDate);
+        midDate.setDate(startDate.getDate() + (3 * 7));
+        midDateStr = midDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + (6 * 7));
+        endDateStr = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+
+      resultBox.innerHTML = `
+        <div style="font-weight:700; color:#f472b6; margin-bottom:8px;"><i class="fa-solid fa-calendar-days"></i> Calculated Lab & Treatment Timeline</div>
+        <div style="display:grid; grid-template-columns: 1fr; gap:8px; font-size:0.85rem;">
+          <div><i class="fa-solid fa-flask" style="color:#34d399;"></i> <strong>Baseline LFTs:</strong> Check on or before <strong>${baselineDateStr}</strong></div>
+          <div><i class="fa-solid fa-flask" style="color:#fbbf24;"></i> <strong>Mid-treatment LFTs:</strong> Check on <strong>${midDateStr}</strong></div>
+          <div><i class="fa-solid fa-calendar-check" style="color:#38bdf8;"></i> <strong>Treatment Completion:</strong> End therapy on <strong>${endDateStr}</strong></div>
+        </div>
+        <div style="font-size:0.78rem; color:var(--text-muted); margin-top:8px; border-top:1px solid var(--border-color); padding-top:6px;">
+          *Discontinue immediately if ALT/AST >3x upper limit of normal or if signs of hepatotoxicity (dark urine, jaundice, right-upper quadrant pain) develop.
+        </div>
+      `;
+      updateEhrNote();
+    }
+
+    // Pediatric Dosing Calculator
+    function calculatePedCapitis() {
+      const weightVal = parseFloat(document.getElementById('ped-weight').value);
+      const unit = document.getElementById('ped-unit').value;
+      const drug = document.getElementById('ped-drug').value;
+      const resultBox = document.getElementById('ped-result');
+
+      if (isNaN(weightVal) || weightVal <= 0) {
+        resultBox.style.display = 'none';
+        return;
+      }
+
+      resultBox.style.display = 'block';
+
+      let weightKg = weightVal;
+      if (unit === 'lbs') {
+        weightKg = weightVal / 2.20462;
+      }
+
+      let doseText = '';
+      if (drug === 'griseo_micro') {
+        // 20-25 mg/kg/day
+        const minMg = weightKg * 20;
+        const maxMg = weightKg * 25;
+        // Griseofulvin microsize suspension is 125 mg / 5 mL
+        const minMl = (minMg * 5) / 125;
+        const maxMl = (maxMg * 5) / 125;
+
+        doseText = `
+          <strong>Griseofulvin Microsize (125mg/5mL Suspension):</strong><br>
+          Range: ${minMg.toFixed(0)} mg to ${maxMg.toFixed(0)} mg daily PO.<br>
+          Liquid volume: <span style="font-size:1.1rem; color:#34d399; font-weight:700;">${minMl.toFixed(1)} mL – ${maxMl.toFixed(1)} mL</span> PO once daily with fatty meals (6-8 weeks).
+        `;
+      } else {
+        // Terbinafine weight bands
+        let mg = 0;
+        if (weightKg < 10) {
+          mg = 31.25;
+        } else if (weightKg >= 10 && weightKg < 20) {
+          mg = 62.5;
+        } else if (weightKg >= 20 && weightKg <= 40) {
+          mg = 125;
+        } else {
+          mg = 250;
+        }
+        
+        doseText = `
+          <strong>Oral Terbinafine (Pediatric Weight Band):</strong><br>
+          Weight category matches band: ${mg} mg PO daily.<br>
+          Prescribe: <span style="font-size:1.1rem; color:#34d399; font-weight:700;">${mg} mg</span> PO daily (tablets can be crushed/sprinkled on applesauce) for 4-6 weeks.
+        `;
+      }
+
+      resultBox.innerHTML = `
+        <div style="font-weight:700; color:#f472b6; margin-bottom:6px;"><i class="fa-solid fa-circle-check"></i> Calculated Pediatric Capitis Dose (${weightKg.toFixed(1)} kg)</div>
+        <div>${doseText}</div>
+      `;
+      updateEhrNote();
+    }
+
+    // EHR Note Compiler
+    function updateEhrNote() {
+      const f = FUNGAL_DATA[activeFungal];
+      const startVal = document.getElementById('sched-start').value;
+      const schedDrug = document.getElementById('sched-drug').value;
+      const pedWeight = parseFloat(document.getElementById('ped-weight').value);
+      const pedUnit = document.getElementById('ped-unit').value;
+      const pedDrug = document.getElementById('ped-drug').value;
+
+      let lftScheduleNote = '';
+      if (startVal && (activeFungal === 'onychomycosis' || activeFungal === 'pedis')) {
+        const drugLabel = (schedDrug === 'terb_nail') ? 'Oral Terbinafine (12-week course)' : 'Oral Terbinafine (6-week course)';
+        lftScheduleNote = `SAFETY SCHEDULER ACTIVE:
+- Regimen: ${drugLabel} starting ${startVal}
+- Lab Schedule: Baseline LFTs checked. Ordered follow-up transaminases (ALT/AST) check.
+`;
+      }
+
+      let pedDosingNote = '';
+      if (!isNaN(pedWeight) && pedWeight > 0 && activeFungal === 'capitis') {
+        const drugLabel = (pedDrug === 'griseo_micro') ? 'Griseofulvin Microsize (20-25 mg/kg/day)' : 'Oral Terbinafine';
+        pedDosingNote = `PEDIATRIC DOSING APPLIED (Tinea Capitis):
+- Weight: ${pedWeight} ${pedUnit}
+- Regimen: ${drugLabel}
+- Counselor: Instructed caregiver on administration rules (e.g. fatty meal, course compliance).
+`;
+      }
+
+      const noteText = `DERMATOLOGY & INFECTIOUS DISEASE ASSESSMENT NOTE
+--------------------------------------------------
+FUNGAL LESION LOCATION: ${f.title.toUpperCase()}
+TAXONOMY: ${f.badgeText.toUpperCase()}
+
+CLINICAL WORK UP:
+- Physical examination matches morphology: ringworm, athlete's foot scaling, nail subungual debris, or oral plaques.
+- Performed KOH prep verification.
+- Reviewed indications for topical vs. systemic prescribing tiers.
+
+${lftScheduleNote}${pedDosingNote}
+MANAGEMENT PLAN:
+- Sourced medication guidelines matching IDSA and CDC protocols.
+- Reviewed hepatic safety warnings, azole drug-drug interactions (CYP3A4 inhibition), and Beers criteria.
+- Counseled patient on red flags (LFT dysfunction: dark urine, jaundice, itching).
+- Instructed patient to return if symptoms do not improve within expected therapeutic timeframe.`;
+
+      document.getElementById('ehr-note').value = noteText;
+    }
+
+    function copyNote() {
+      const noteTextArea = document.getElementById('ehr-note');
+      noteTextArea.select();
+      navigator.clipboard.writeText(noteTextArea.value).then(() => {
+        alert("Fungal infection clinical note copied to clipboard!");
+      });
+    }
+
+    // Initialize
+    selectFungal('pedis', document.querySelector('.filter-btn'));
+  </script>
+</body>
+</html>

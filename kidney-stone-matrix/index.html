@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kidney Stone Workup Sequence & Prevention Matrix | OpenEvidence Sourced</title>
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1e293b;
+      --border-color: #24334a;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-teal: #10b981;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --accent-pink: #ec4899;
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* Back Button Banner */
+    .back-nav {
+      margin-bottom: 16px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-back:hover {
+      background: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      color: #090d16;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #06b6d4 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-title-group h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #34d399, #06b6d4, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title-group p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    .oe-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: #22d3ee;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Workflow Cards */
+    .workflow-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .workflow-card h3 {
+      color: #22d3ee;
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .flow-step {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      position: relative;
+    }
+
+    .flow-step.red-flag {
+      border-color: rgba(244, 63, 94, 0.5);
+      background: rgba(244, 63, 94, 0.02);
+    }
+
+    .step-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #34d399;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .step-label.flag-label {
+      color: #f87171;
+    }
+
+    .step-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+
+    .step-content {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .step-content ul {
+      padding-left: 14px;
+      margin-top: 4px;
+    }
+
+    /* Cause-based Filtering Section */
+    .filter-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .filter-btn {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: #22d3ee;
+    }
+
+    .filter-btn.active {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: #22d3ee;
+      color: #22d3ee;
+      box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);
+    }
+
+    /* Split layout */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 950px) {
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sidebar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .sidebar-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      color: #22d3ee;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .stone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .stone-type-name {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .stone-ph-badge {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #34d399;
+    }
+
+    .sidebar-section {
+      margin-bottom: 16px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-section-content {
+      font-size: 0.88rem;
+      color: #e2e8f0;
+      line-height: 1.45;
+    }
+
+    .sidebar-section-content ul {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    .sidebar-section-content li {
+      margin-bottom: 4px;
+    }
+
+    /* Table Container */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .table-header-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1.5fr 2fr 0.6fr;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1.5fr 2fr 0.6fr;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 20px;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .table-row:hover {
+      background: var(--bg-card-hover);
+    }
+
+    @media (max-width: 768px) {
+      .table-header-row, .table-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 16px;
+      }
+      .table-header-row {
+        display: none;
+      }
+      .table-row {
+        border-bottom: 2px solid var(--border-color);
+      }
+    }
+
+    .drug-name {
+      font-weight: 700;
+      color: #f8fafc;
+      font-size: 0.95rem;
+    }
+
+    .drug-brand {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .drug-tier {
+      display: inline-block;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .drug-tier.first {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+
+    .drug-tier.second {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+
+    .drug-tier.alt {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+    }
+
+    .drug-dosing {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+    }
+
+    .drug-pearls {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+    }
+
+    .drug-cost {
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .cost-low { color: #34d399; }
+    .cost-med { color: #fbbf24; }
+    .cost-high { color: #f87171; }
+
+    .btn-details {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-details:hover {
+      background: #22d3ee;
+      border-color: #22d3ee;
+      color: #090d16;
+    }
+
+    /* Calculator and Note Panel */
+    .tools-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 800px) {
+      .tools-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .panel h3 {
+      font-size: 1.1rem;
+      color: #22d3ee;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .form-group input, .form-group select {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #22d3ee;
+      outline: none;
+    }
+
+    .btn-calc {
+      background: #22d3ee;
+      border: none;
+      color: #090d16;
+      padding: 10px 16px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+      width: 100%;
+    }
+
+    .btn-calc:hover {
+      opacity: 0.9;
+    }
+
+    .calc-result-box {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(6, 182, 212, 0.06);
+      border: 1px dashed rgba(6, 182, 212, 0.4);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      display: none;
+    }
+
+    /* EHR Note Area */
+    .note-textarea {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 100%;
+      height: 220px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      resize: none;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .note-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 650px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .warning-panel {
+      background: rgba(244, 63, 94, 0.08);
+      border-left: 4px solid var(--accent-rose);
+      color: #fda4af;
+      padding: 14px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back button -->
+  <div class="back-nav">
+    <a href="../index.html" class="btn-back">
+      <i class="fa-solid fa-arrow-left"></i> Back to Hub
+    </a>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="header-banner">
+    <div class="header-title-group">
+      <h1><i class="fa-solid fa-calculator"></i> Kidney Stone Workup & Management</h1>
+      <p>AUA/ACP clinical pathways for urolithiasis triage and cause-based prevention</p>
+    </div>
+    <div class="oe-badge">
+      <i class="fa-solid fa-circle-check"></i> OpenEvidence Sourced
+    </div>
+  </header>
+
+  <!-- Step-by-Step Diagnostic Sequence -->
+  <section class="workflow-card">
+    <h3><i class="fa-solid fa-bezier-curve"></i> Diagnostic Work Up Sequence</h3>
+    <div class="flow-steps">
+      <!-- Step 1 -->
+      <div class="flow-step">
+        <div class="step-label">Step 1</div>
+        <div class="step-name">Presentation & Labs</div>
+        <div class="step-content">
+          Acute, severe, unilateral flank pain radiating to groin, hematuria, nausea.
+          <ul>
+            <li><strong>Urinalysis</strong>: Microhematuria, check pH, rule out UTI.</li>
+            <li><strong>BMP</strong>: Cr (renal function), Calcium.</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Step 2 -->
+      <div class="flow-step">
+        <div class="step-label">Step 2</div>
+        <div class="step-name">Diagnostic Imaging</div>
+        <div class="step-content">
+          <strong>Low-dose non-contrast CT Abdomen/Pelvis (CT KUB)</strong>: Gold standard (sens. 95-97%).
+          <br><br>
+          *Use <strong>Renal Ultrasound</strong> for pregnant patients, children, or serial monitoring.
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="flow-step">
+        <div class="step-label">Step 3</div>
+        <div class="step-name">Stone Size Triage</div>
+        <div class="step-content">
+          Determine treatment pathway:
+          <ul>
+            <li><strong>&lt;5 mm</strong>: 90% pass. Hydration + pain control + MET.</li>
+            <li><strong>5-10 mm</strong>: 50% pass. Consider Tamsulosin (MET).</li>
+            <li><strong>&gt;10 mm</strong>: Unlikely to pass. Refer to Urology for lithotripsy/ureteroscopy.</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Step 4 -->
+      <div class="flow-step red-flag">
+        <div class="step-label flag-label"><span>Step 4</span> <i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="step-name" style="color:#f87171;">Red Flags (ER/Urology)</div>
+        <div class="step-content" style="color:#cbd5e1;">
+          <strong>Immediate Urology intervention if:</strong>
+          <ul>
+            <li>Obstructing stone + infection (fever, pyuria). <em>Urologic emergency!</em></li>
+            <li>AKI, anuria (e.g. solitary kidney).</li>
+            <li>Intractable pain/vomiting.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cause-based Filtering Section -->
+  <section class="filter-bar">
+    <span class="filter-title">Select Stone Type (Cause-Based Prevention):</span>
+    <button class="filter-btn active" onclick="selectStone('oxalate', this)">Calcium Oxalate</button>
+    <button class="filter-btn" onclick="selectStone('phosphate', this)">Calcium Phosphate</button>
+    <button class="filter-btn" onclick="selectStone('uric', this)">Uric Acid</button>
+    <button class="filter-btn" onclick="selectStone('struvite', this)">Struvite (Infectious)</button>
+    <button class="filter-btn" onclick="selectStone('cystine', this)">Cystine</button>
+  </section>
+
+  <!-- Core Layout Grid -->
+  <div class="layout-grid">
+    <!-- Sidebar: Selected Stone Info -->
+    <aside class="sidebar-card" id="stone-sidebar">
+      <!-- Injected dynamically -->
+    </aside>
+
+    <!-- Main Table: Medication Matrix -->
+    <main class="table-container">
+      <div class="table-header-row">
+        <div>Medication & Tier</div>
+        <div>Class</div>
+        <div>Dosing & Duration</div>
+        <div>Clinical Pearls / Warnings</div>
+        <div>Action</div>
+      </div>
+      <div id="med-table-rows">
+        <!-- Injected dynamically -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Interactive Calculators & Note Area -->
+  <div class="tools-split">
+    <!-- Calculator Panel -->
+    <div class="panel">
+      <h3><i class="fa-solid fa-calculator"></i> Expulsive Probability & MET Dosing</h3>
+      <div class="form-group">
+        <label for="stone-size">Stone Size (in mm)</label>
+        <input type="number" id="stone-size" min="1" max="30" placeholder="e.g. 4" oninput="calculateStonePassage()">
+      </div>
+      <div class="calc-result-box" id="calc-result">
+        <!-- Result Injected -->
+      </div>
+    </div>
+
+    <!-- EHR Clinical Note Generator -->
+    <div class="panel">
+      <h3><i class="fa-solid fa-file-signature"></i> Point-of-Care EHR Note</h3>
+      <textarea class="note-textarea" id="ehr-note" readonly></textarea>
+      <div class="note-actions">
+        <button class="btn-calc" onclick="copyNote()"><i class="fa-regular fa-clipboard"></i> Copy Note to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Monograph Modal -->
+  <div class="modal-overlay" id="detail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-drug-title">Drug Detail</h3>
+        <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-drug-body">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Clinical Data Source
+    const STONE_DATA = {
+      oxalate: {
+        title: "Calcium Oxalate",
+        phRange: "Variable (usually acidic to neutral)",
+        incidence: "75 - 80% of all stones (most common)",
+        pathogenesis: "Hypercalciuria, hyperoxaluria, hypocitraturia, dehydration, high sodium diet.",
+        dietary: "Increase fluid intake (target urine output >2.5L/day). Maintain normal calcium intake (1000-1200mg/day to bind oxalate in gut). Low sodium (<2g/day) and low oxalate diet (limit spinach, rhubarb, nuts).",
+        medIds: ["tamsulosin", "thiazide", "pot_cit"]
+      },
+      phosphate: {
+        title: "Calcium Phosphate",
+        phRange: "Alkaline (Urine pH >6.5)",
+        incidence: "5 - 10% of stones",
+        pathogenesis: "Renal Tubular Acidosis (RTA) Type I, primary hyperparathyroidism.",
+        dietary: "High fluid intake. Treat underlying hyperparathyroidism or RTA. Sodium restriction.",
+        medIds: ["tamsulosin", "thiazide", "pot_cit_caution"]
+      },
+      uric: {
+        title: "Uric Acid",
+        phRange: "Persistently Acidic (Urine pH <5.5)",
+        incidence: "5 - 10% of stones",
+        pathogenesis: "Hyperuricosuria, gout, metabolic syndrome, high purine diet.",
+        dietary: "High fluid intake. Limit purine-rich foods (red meats, shellfish, yeast). Limit alcohol.",
+        medIds: ["tamsulosin", "pot_cit", "allopurinol"]
+      },
+      struvite: {
+        title: "Struvite (Triple Phosphate)",
+        phRange: "Highly Alkaline (Urine pH >7.5)",
+        incidence: "5 - 15% of stones",
+        pathogenesis: "Infection with urea-splitting bacteria (Proteus, Klebsiella, Pseudomonas). Urease converts urea to ammonia.",
+        dietary: "Surgical removal (staghorn calculi) is almost always required due to high bacterial colonization. Maintain high hydration.",
+        medIds: ["tamsulosin", "aha"]
+      },
+      cystine: {
+        title: "Cystine",
+        phRange: "Acidic (Urine pH <7.0)",
+        incidence: "< 1% of stones (rare)",
+        pathogenesis: "Autosomal recessive defect in renal transport of dibasic amino acids (cystine, lysine, ornithine, arginine).",
+        dietary: "Extreme hydration (fluid intake >4L/day, ensuring waking up at night to drink). Restrict sodium and animal protein.",
+        medIds: ["tamsulosin", "pot_cit", "tiopronin"]
+      }
+    };
+
+    const DRUG_DATA = {
+      tamsulosin: {
+        name: "Tamsulosin",
+        brand: "Flomax",
+        class: "Alpha-1a Adrenergic Blocker",
+        tierClass: "first",
+        tierText: "First-Line (MET)",
+        dosing: "0.4 mg PO daily. Take 30 minutes after the same meal each day.",
+        duration: "Up to 28 days (or until stone passes).",
+        cost: "$",
+        costText: "Low (Generic: ~$5-$10)",
+        pearls: "Relaxation of distal ureteric smooth muscle. Reduces pain episodes and time to passage for stones 5-10mm. Off-label for medical expulsive therapy (MET).",
+        moa: "Selectively blocks alpha-1a receptors in prostate and distal ureter, relaxing smooth muscle.",
+        sideEffects: "Orthostatic hypotension, retrograde ejaculation, dizziness, nasal congestion.",
+        interactions: "PDE-5 inhibitors (e.g. sildenafil, increases hypotension risk), strong CYP3A4 inhibitors.",
+        monitoring: "Monitor blood pressure (first-dose syncope risk). Counsel on orthostatic precautions."
+      },
+      thiazide: {
+        name: "Chlorthalidone / Hydrochlorothiazide",
+        brand: "Hygroton / Microzide",
+        class: "Thiazide-like / Thiazide Diuretic",
+        tierClass: "first",
+        tierText: "First-Line (Prevention)",
+        dosing: "Chlorthalidone: 25-50 mg PO daily.<br>HCTZ: 25-50 mg PO BID (BID preferred due to short half-life).",
+        duration: "Chronic daily therapy.",
+        cost: "$",
+        costText: "Low (Generic: ~$5)",
+        pearls: "Indicated for recurrent calcium stones with hypercalciuria. Increases calcium reabsorption in distal tubule, lowering urine calcium excretion by ~50%.",
+        moa: "Inhibits sodium-chloride cotransporter in distal convoluted tubule; increases calcium reabsorption.",
+        sideEffects: "Hypokalemia, hyponatremia, gout flares, hyperglycemia, orthostasis.",
+        interactions: "Lithium (increases lithium levels), NSAIDs (attenuate antihypertensive effect), QTc prolonging drugs.",
+        monitoring: "Check BMP (electrolytes, creatinine) 1-2 weeks after initiation and then periodically."
+      },
+      pot_cit: {
+        name: "Potassium Citrate",
+        brand: "Urocit-K",
+        class: "Urinary Alkalinizer & Citrate Repletor",
+        tierClass: "first",
+        tierText: "First-Line (Prevention)",
+        dosing: "20-30 mEq PO BID-TID with meals. Max 100 mEq/day.",
+        duration: "Chronic daily therapy.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$30-$50)",
+        pearls: "Citrate binds calcium in urine, inhibiting crystallization. Citrate is metabolized to bicarbonate, alkalinizing urine. Key for Calcium Oxalate (hypocitraturia) and Uric Acid/Cystine stones.",
+        moa: "Increases urinary citrate excretion; systemic alkalinization leads to increased urine pH.",
+        sideEffects: "Hyperkalemia, GI upset, abdominal pain, diarrhea, nausea (tablet is large).",
+        interactions: "ACE inhibitors, ARBs, potassium-sparing diuretics (extreme risk of hyperkalemia), anticholinergics.",
+        monitoring: "Monitor serum potassium and creatinine. Serial urinalysis to monitor urine pH targets (e.g. 6.2-6.8 for CaOx; 6.5-7.0 for Uric Acid)."
+      },
+      pot_cit_caution: {
+        name: "Potassium Citrate (with caution)",
+        brand: "Urocit-K",
+        class: "Urinary Alkalinizer",
+        tierClass: "second",
+        tierText: "Second-Line / Caution",
+        dosing: "10-20 mEq PO BID-TID. Titrate slowly.",
+        duration: "Chronic daily therapy.",
+        cost: "$$",
+        costText: "Medium (Generic: ~$30-$50)",
+        pearls: "Use with caution in Calcium Phosphate stones. Citrate is beneficial, but raising urine pH &gt;7.0 increases calcium phosphate precipitation. Monitor pH closely.",
+        moa: "Repletes citrate (stone inhibitor) and alkalinizes urine.",
+        sideEffects: "Hyperkalemia, GI upset, nausea.",
+        interactions: "ACE inhibitors, ARBs, potassium supplements.",
+        monitoring: "Strict urine pH monitoring (keep between 6.2 and 6.8; do not allow pH to exceed 7.0)."
+      },
+      allopurinol: {
+        name: "Allopurinol",
+        brand: "Zyloprim",
+        class: "Xanthine Oxidase Inhibitor",
+        tierClass: "alt",
+        tierText: "Hyperuricosuria",
+        dosing: "100-300 mg PO daily. Adjust for renal function.",
+        duration: "Chronic daily therapy.",
+        cost: "$",
+        costText: "Low (Generic: ~$10)",
+        pearls: "Indicated for patients with uric acid stones or calcium oxalate stones with documented hyperuricosuria who fail dietary purine restriction.",
+        moa: "Inhibits xanthine oxidase, the enzyme responsible for converting hypoxanthine to xanthine, and xanthine to uric acid.",
+        sideEffects: "Severe cutaneous adverse reactions (SCAR/Stevens-Johnson - screen HLA-B*5801 in Asian/African ancestry), hepatotoxicity, cytopenias.",
+        interactions: "Azathioprine, mercaptopurine (extreme toxicity, avoid co-prescribing), amoxicillin (rash).",
+        monitoring: "Baseline and periodic LFTs, CBC, renal function. Screen HLA-B*5801 if indicated."
+      },
+      aha: {
+        name: "Acetohydroxamic Acid (AHA)",
+        brand: "Lithostat",
+        class: "Urease Inhibitor",
+        tierClass: "alt",
+        tierText: "Salvage Therapy",
+        dosing: "250 mg PO TID. Administer on empty stomach (1h before or 2h after meals). Max 1.5 g/day.",
+        duration: "Used chronically as adjunctive therapy post-surgical clearance.",
+        cost: "$$$$",
+        costText: "Very High (Brand: ~$300-$500/month)",
+        pearls: "Highly toxic. Reserved for chronic struvite stones refractory to surgical extraction. Inhibits bacterial urease to decrease ammonia production.",
+        moa: "Reversibly inhibits bacterial urease, preventing urea hydrolysis and lowering urine pH/ammonia.",
+        sideEffects: "Hemolytic anemia, deep vein thrombosis (DVT/PE risk), severe headache, alopecia, tremors.",
+        interactions: "Iron supplements (AHA chelates heavy metals, rendering both ineffective).",
+        monitoring: "CBC (check reticulocyte count for hemolysis), renal function. Baseline hypercoagulability screen."
+      },
+      tiopronin: {
+        name: "Tiopronin",
+        brand: "Thiola / Thiola EC",
+        class: "Thiol-binding / Chelating Agent",
+        tierClass: "alt",
+        tierText: "Cystinuria Treatment",
+        dosing: "800-1200 mg/day PO in 3 divided doses. Take 1 hour before or 2 hours after meals.",
+        duration: "Chronic daily therapy.",
+        cost: "$$$$",
+        costText: "Very High (Brand-only: >$1,000/month)",
+        pearls: "For severe cystinuria unresponsive to extreme hydration (>4L/day) and potassium citrate (target pH >7.5). Binds cystine to form a highly soluble compound.",
+        moa: "Active sulfhydryl compound that undergoes thiol-disulfide exchange with cystine, reducing free cystine levels.",
+        sideEffects: "Proteinuria (membranous glomerulopathy), drug rash, fever, lupus-like syndrome, cytopenias.",
+        interactions: "No major systemic pharmacokinetic interactions, but side effect profile overlaps with penicillamine.",
+        monitoring: "24-hour urine protein, CBC, and LFTs every 3-6 months. Baseline urinalysis."
+      }
+    };
+
+    let activeStone = 'oxalate';
+
+    function selectStone(stoneKey, element) {
+      activeStone = stoneKey;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      renderStoneInfo();
+      renderMedTable();
+      updateEhrNote();
+    }
+
+    function renderStoneInfo() {
+      const stone = STONE_DATA[activeStone];
+      const sidebar = document.getElementById('stone-sidebar');
+      sidebar.innerHTML = `
+        <div class="stone-header">
+          <span class="stone-type-name">${stone.title}</span>
+          <span class="stone-ph-badge">Target pH: ${stone.phRange}</span>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Relative Incidence</div>
+          <div class="sidebar-section-content">${stone.incidence}</div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Pathogenesis & Etiology</div>
+          <div class="sidebar-section-content">${stone.pathogenesis}</div>
+        </div>
+        <div class="sidebar-section" style="margin-bottom:0;">
+          <div class="sidebar-section-title">Dietary & Hydration Prevention</div>
+          <div class="sidebar-section-content">${stone.dietary}</div>
+        </div>
+      `;
+    }
+
+    function renderMedTable() {
+      const stone = STONE_DATA[activeStone];
+      const container = document.getElementById('med-table-rows');
+      container.innerHTML = '';
+
+      stone.medIds.forEach(id => {
+        const drug = DRUG_DATA[id];
+        if (!drug) return;
+
+        const row = document.createElement('div');
+        row.className = 'table-row';
+        row.innerHTML = `
+          <div>
+            <div class="drug-name">${drug.name}</div>
+            <div class="drug-brand">${drug.brand}</div>
+            <span class="drug-tier ${drug.tierClass}">${drug.tierText}</span>
+          </div>
+          <div style="font-size:0.85rem; color:#cbd5e1;">${drug.class}</div>
+          <div class="drug-dosing">${drug.dosing}</div>
+          <div class="drug-pearls">${drug.pearls}</div>
+          <div>
+            <button class="btn-details" onclick="showMonograph('${id}')">Monograph</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function showMonograph(id) {
+      const drug = DRUG_DATA[id];
+      if (!drug) return;
+
+      document.getElementById('modal-drug-title').innerText = `${drug.name} (${drug.brand}) Monograph`;
+      const body = document.getElementById('modal-drug-body');
+      
+      let warningHtml = '';
+      if (id === 'thiazide') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> ELECTROLYTE WARNING:</strong>
+            Thiazide diuretics can cause hypokalemia, hyponatremia, and hypercalcemia. Hypokalemia reduces renal citrate excretion, neutralizing the stone prevention benefits. Co-prescribe Potassium Citrate if potassium levels decline.
+          </div>
+        `;
+      } else if (id === 'pot_cit' || id === 'pot_cit_caution') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> HYPERKALEMIA WARNING:</strong>
+            Potassium citrate carries a major risk of severe hyperkalemia in patients with moderate-to-severe renal impairment (eGFR <30 mL/min). Avoid or monitor closely in patients taking ACE inhibitors, ARBs, or potassium-sparing diuretics.
+          </div>
+        `;
+      } else if (id === 'aha') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> BLACK BOX WARNING (AHA):</strong>
+            High incidence of serious adverse effects. Associated with hemolytic anemia (check CBC/retics) and deep vein thrombosis/pulmonary embolism. Avoid in patients with history of thromboembolism or severe renal impairment.
+          </div>
+        `;
+      } else if (id === 'tiopronin') {
+        warningHtml = `
+          <div class="warning-panel">
+            <strong><i class="fa-solid fa-triangle-exclamation"></i> TOXICITY WARNING (TIOPRONIN):</strong>
+            High rate of drug discontinuation (~30%). Can induce membranous glomerulopathy with severe proteinuria, cytopenias, and drug-induced lupus. Requires baseline and serial 24h urine protein monitoring.
+          </div>
+        `;
+      }
+
+      body.innerHTML = `
+        ${warningHtml}
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Mechanism of Action</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.moa}</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div>
+            <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Dosing & Duration</strong>
+            <p style="font-size:0.9rem; margin-top:4px; color:#22d3ee;">${drug.dosing}</p>
+          </div>
+          <div>
+            <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Cost Profile</strong>
+            <p style="font-size:0.9rem; margin-top:4px; font-weight:700;" class="${drug.cost === '$' ? 'cost-low' : drug.cost === '$$' ? 'cost-med' : 'cost-high'}">${drug.costText}</p>
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Side Effects</strong>
+          <p style="font-size:0.9rem; margin-top:4px; color:#fda4af;">${drug.sideEffects}</p>
+        </div>
+        <div style="margin-bottom:16px;">
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Major Drug Interactions</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.interactions}</p>
+        </div>
+        <div>
+          <strong style="color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Monitoring Parameters</strong>
+          <p style="font-size:0.9rem; margin-top:4px;">${drug.monitoring}</p>
+        </div>
+      `;
+
+      document.getElementById('detail-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById('detail-modal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+
+    // Passage Probability Calculator
+    function calculateStonePassage() {
+      const sizeVal = parseFloat(document.getElementById('stone-size').value);
+      const resultBox = document.getElementById('calc-result');
+
+      if (isNaN(sizeVal) || sizeVal <= 0) {
+        resultBox.style.display = 'none';
+        return;
+      }
+
+      resultBox.style.display = 'block';
+      
+      let passageProb = '';
+      let color = '';
+      let recomendation = '';
+
+      if (sizeVal < 2) {
+        passageProb = '97%';
+        color = '#34d399';
+        recomendation = 'Excellent probability of spontaneous passage. Drink 2.5-3L water daily. NSAIDs for pain control. Medical Expulsive Therapy (MET) optional.';
+      } else if (sizeVal >= 2 && sizeVal < 4) {
+        passageProb = '85%';
+        color = '#34d399';
+        recomendation = 'High probability of passage. Drink 3L water/day. Prescribe Tamsulosin 0.4mg PO daily for up to 4 weeks. Strain urine to catch stone.';
+      } else if (sizeVal >= 4 && sizeVal < 6) {
+        passageProb = '60%';
+        color = '#fbbf24';
+        recomendation = 'Moderate probability of passage. Prescribe Tamsulosin 0.4mg PO daily. Provide oral NSAIDs. Urology follow-up in 2 weeks. Return if fever develops.';
+      } else if (sizeVal >= 6 && sizeVal <= 10) {
+        passageProb = '35% (lower pole may be lower)';
+        color = '#f87171';
+        recomendation = 'Low probability of spontaneous passage. Prescribe Tamsulosin 0.4mg daily. Refer to Urology for outpatient evaluation. Obtain BMP to monitor renal function.';
+      } else {
+        passageProb = '<5%';
+        color = '#f43f5e';
+        recomendation = 'Extremely unlikely to pass spontaneously. Refer to Urology for elective interventional extraction (ureteroscopy, shockwave lithotripsy, or PCNL).';
+      }
+
+      resultBox.innerHTML = `
+        <div style="font-weight:700; color:#22d3ee; margin-bottom:6px;"><i class="fa-solid fa-circle-check"></i> Stone Passage Analysis (${sizeVal} mm)</div>
+        <div style="margin-bottom:8px;">Estimated spontaneous passage probability: <strong style="color:${color}; font-size:1.1rem;">${passageProb}</strong></div>
+        <div style="background:#090d16; padding:10px; border-radius:4px; border:1px solid #24334a; font-size:0.82rem; line-height:1.4;">
+          <strong>Clinical Plan:</strong> ${recomendation}
+        </div>
+      `;
+      updateEhrNote();
+    }
+
+    // EHR Note Compiler
+    function updateEhrNote() {
+      const stone = STONE_DATA[activeStone];
+      const sizeVal = parseFloat(document.getElementById('stone-size').value);
+
+      let calcSnippet = '';
+      if (!isNaN(sizeVal) && sizeVal > 0) {
+        let prob = (sizeVal < 2) ? '97%' : (sizeVal < 4) ? '85%' : (sizeVal < 6) ? '60%' : (sizeVal <= 10) ? '35%' : '<5%';
+        calcSnippet = `ACUTE NEPHROLITHIASIS TRIAGE:
+- Obstructing Stone Size: ${sizeVal} mm
+- Est. Spontaneous Passage: ${prob}
+- MET Treatment: Tamsulosin 0.4mg daily prescribed for expulsive facilitation.
+`;
+      }
+
+      const noteText = `NEPHROLOGY & UROLOGY CLINICAL ASSESSMENT NOTE
+--------------------------------------------------
+SELECTED STONE PATHOLOGY: ${stone.title.toUpperCase()}
+RELATIVE STONE INCIDENCE: ${stone.incidence}
+
+CLINICAL EVALUATION:
+- Sourced workup sequence based on AUA/ACP guidelines.
+- Ruled out urologic emergencies: Obstructing stone + infection (fever/pyuria), solitary kidney obstruction, and intractable vomiting.
+- Baseline labs checked (Urinalysis, BMP for creatinine, Serum Calcium).
+- Gold standard imaging: Low-dose non-contrast CT KUB verified.
+
+${calcSnippet}
+CHRONIC CAUSE-BASED PREVENTION:
+- Patient educated on strict hydration target (maintain urine output >2.5 L/day).
+- Diet: ${stone.dietary}
+- Initiated medical prevention matching stone sub-type.
+- Ordered 24-hour urine collection (for volume, calcium, oxalate, citrate, pH, uric acid, sodium, and creatinine) in 6-8 weeks for follow-up titration.`;
+
+      document.getElementById('ehr-note').value = noteText;
+    }
+
+    function copyNote() {
+      const noteTextArea = document.getElementById('ehr-note');
+      noteTextArea.select();
+      navigator.clipboard.writeText(noteTextArea.value).then(() => {
+        alert("Nephrolithiasis clinical note copied to clipboard!");
+      });
+    }
+
+    // Initialize
+    selectStone('oxalate', document.querySelector('.filter-btn'));
+  </script>
+</body>
+</html>
