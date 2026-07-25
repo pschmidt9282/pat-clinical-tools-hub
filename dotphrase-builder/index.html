@@ -439,9 +439,11 @@
       font-size: 0.82rem;
       color: #f8fafc;
       overflow-y: auto;
-      white-space: pre-wrap;
       line-height: 1.45;
       margin-bottom: 16px;
+      resize: none;
+      outline: none;
+      width: 100%;
     }
 
     .btn-copy {
@@ -565,7 +567,8 @@
     <!-- Right Panel: Live Note compiler -->
     <aside class="right-panel">
       <h3><i class="fa-solid fa-code"></i> Live EHR Chart Note</h3>
-      <div class="note-output" id="note-text-box">Select options to compile chart note...</div>
+      <textarea class="note-output" id="note-text-box" placeholder="Select options to compile chart note..."></textarea>
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px; margin-top:-8px;"><i class="fa-solid fa-pen"></i> You can edit this note directly before copying.</div>
       <button class="btn-copy" onclick="copyChartNote()"><i class="fa-regular fa-copy"></i> Copy Note to Clipboard</button>
     </aside>
 
@@ -587,12 +590,50 @@
     let checkedED = [];
     let includeFU = true;
 
-    // Helper: Parse comma separated items, ignoring decimals
+    // Helper: Parse items separated by commas or periods, respecting conditionals ('if') and parentheses
     function parseList(str) {
       if (!str) return [];
-      // Split by comma, or period not surrounded by digits (e.g. "0.4mg" is safe)
-      const raw = str.split(/(?<!\d)\.(?!\d)|,/g);
-      return raw.map(x => x.trim()).filter(x => x.length > 2);
+      
+      // Split by periods first to get sentences, ignoring decimal dots
+      const sentences = str.split(/(?<!\d)\.(?!\d)/g).map(s => s.trim()).filter(s => s.length > 0);
+      const result = [];
+      
+      sentences.forEach(sentence => {
+        let currentItem = "";
+        let parenDepth = 0;
+        let inIfClause = false;
+        
+        for (let i = 0; i < sentence.length; i++) {
+          const char = sentence[i];
+          
+          if (char === '(') parenDepth++;
+          if (char === ')') parenDepth--;
+          
+          // Check if we entered an 'if' clause that is NOT inside parentheses
+          if (parenDepth === 0 && i <= sentence.length - 3) {
+            const sub = sentence.substring(i, i + 3).toLowerCase();
+            if (sub === 'if ' || sub === 'if(' || (i > 0 && sentence[i-1] === ' ' && sub === 'if')) {
+              inIfClause = true;
+            }
+          }
+          
+          // Split on comma only if outside parenthetical groups and not in an 'if' conditional clause
+          if (char === ',' && parenDepth === 0 && !inIfClause) {
+            if (currentItem.trim().length > 0) {
+              result.push(currentItem.trim());
+            }
+            currentItem = "";
+          } else {
+            currentItem += char;
+          }
+        }
+        
+        if (currentItem.trim().length > 0) {
+          result.push(currentItem.trim());
+        }
+      });
+      
+      return result.map(x => x.replace(/\.+$/, "").trim()).filter(x => x.length > 1);
     }
 
     // Helper: Parse differentials split by '>'
@@ -819,7 +860,17 @@
       // 3. Work-up
       let workupPart = '';
       if (checkedWorkup.length > 0) {
-        workupPart = `- **Diagnostics & Work-up**: Ordered/reviewed: ${checkedWorkup.join(', ')} to analyze baseline severity and exclude secondary pathological changes.`;
+        // Find if there are any actual testing/imaging studies checked (excluding clinical diagnosis or none routinely)
+        const hasActualTests = checkedWorkup.some(x => {
+          const lower = x.toLowerCase();
+          return !lower.includes('clinical diagnosis') && !lower.includes('none routinely');
+        });
+        
+        if (hasActualTests) {
+          workupPart = `- **Diagnostics & Work-up**: Ordered/reviewed: ${checkedWorkup.join('; ')} to assist in diagnostic verification and guide treatment decisions.`;
+        } else {
+          workupPart = `- **Diagnostics & Work-up**: ${checkedWorkup.join('; ')}. No acute laboratory or imaging tests indicated at this visit.`;
+        }
       } else {
         workupPart = `- **Diagnostics & Work-up**: Managed clinically; no immediate diagnostic laboratory or imaging tests indicated at this visit.`;
       }
@@ -830,16 +881,20 @@
         // Systemic drug check (e.g. antibiotics or oral antivirals/antifungals)
         const hasSystemic = checkedRx.some(x => {
           const lower = x.toLowerCase();
-          return lower.includes('mg') && (lower.includes('bid') || lower.includes('qd') || lower.includes('tid')) && 
+          return (lower.includes('mg') || lower.includes('mcg') || lower.includes('tab') || lower.includes('capsule')) && 
+                 (lower.includes('bid') || lower.includes('qd') || lower.includes('tid') || lower.includes('q8h') || lower.includes('daily') || lower.includes('weekly')) && 
                  (lower.includes('doxycycline') || lower.includes('amoxicillin') || lower.includes('augmentin') || 
                   lower.includes('bactrim') || lower.includes('valacyclovir') || lower.includes('prednisone') || 
-                  lower.includes('fluconazole') || lower.includes('terbinafine') || lower.includes('apo-') || lower.includes('cefdinir'));
+                  lower.includes('fluconazole') || lower.includes('terbinafine') || lower.includes('apo-') || lower.includes('cefdinir') || 
+                  lower.includes('metoprolol') || lower.includes('atorvastatin') || lower.includes('lisinopril') || 
+                  lower.includes('amlodipine') || lower.includes('clonidine') || lower.includes('midodrine') || 
+                  lower.includes('fludrocortisone') || lower.includes('cilostazol') || lower.includes('aspirin'));
         });
 
         if (hasSystemic) {
-          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (empiric oral systemic therapy: ${checkedRx.join(', ')}) targeting localized tissue inflammation, pending clinical response.`;
+          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (empiric oral systemic therapy: ${checkedRx.join('; ')}) targeting disease process and symptom mitigation, pending clinical response.`;
         } else {
-          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (${checkedRx.join(', ')}) for target therapeutic control.`;
+          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (${checkedRx.join('; ')}) for target therapeutic control.`;
         }
       } else {
         rxPart = `- **Plan & Management**: Conservative outpatient management and local supportive care; no active prescription drug therapy initiated today.`;
@@ -858,7 +913,7 @@
 
       // Combine parts
       const fullNote = [nameHeader, hxPart, diffPart, workupPart, rxPart, fuPart, edPart].filter(x => x !== '').join('\n');
-      document.getElementById('note-text-box').innerText = fullNote;
+      document.getElementById('note-text-box').value = fullNote;
     }
 
     function copyChartNote() {
@@ -867,7 +922,7 @@
         alert("Please select a diagnosis first.");
         return;
       }
-      navigator.clipboard.writeText(box.innerText).then(() => {
+      navigator.clipboard.writeText(box.value).then(() => {
         alert("Highly billable EHR note copied to clipboard!");
       });
     }
