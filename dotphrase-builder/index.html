@@ -2117,7 +2117,7 @@
         rec += " *Clinical Override: Diabetic patient aged 40-75 indicates at least Moderate-Intensity Statin regardless of PREVENT score.*";
       }
 
-      const noteText = `[AHA PREVENT Cardiovascular Risk Assessment]\n${res}\nRecommendation: ${rec}\nParameters: Age ${age}, Sex: ${document.getElementById('prevent-sex').value}, SBP ${sbp} mmHg, eGFR ${egfr}, TC ${tc}, HDL ${hdl}, BMI ${bmi}, Smoker: ${smoker}, Diabetic: ${dm}, On BP Meds: ${htn}, On Statin: ${statin}${plan}`;
+      const noteText = `[AHA PREVENT Cardiovascular Risk Assessment]\n${res}\nRecommendation: ${rec}\nParameters: Age ${age}, Sex: ${document.getElementById('prevent-sex').value === 'female' ? 'Female' : 'Male'}, SBP ${sbp} mmHg, eGFR ${egfr}, TC ${tc}, HDL ${hdl}, BMI ${bmi}, Smoker: ${smoker ? 'Yes' : 'No'}, Diabetic: ${dm ? 'Yes' : 'No'}, On BP Meds: ${htn ? 'Yes' : 'No'}, On Statin: ${statin ? 'Yes' : 'No'}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
@@ -2244,7 +2244,7 @@
                "  - Standard drug dosing; routine age-appropriate metabolic panels";
       }
 
-      const noteText = `[Cockcroft-Gault Renal Dosing Calculator]\n${res}\nRenal Stage: ${staging}\nInputs: Age ${age}y, Weight ${weight}kg, Creatinine ${scr} mg/dL, Female: ${female}${plan}`;
+      const noteText = `[Cockcroft-Gault Renal Dosing Calculator]\n${res}\nRenal Stage: ${staging}\nInputs: Age ${age}y, Weight ${weight}kg, Creatinine ${scr} mg/dL, Female: ${female ? 'Yes' : 'No'}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
