@@ -949,7 +949,7 @@
     <select class="calc-select" id="calc-selector" onchange="selectCalculator(this.value)">
       <option value="centor">Centor Score (Strep Pharyngitis)</option>
       <option value="wells">Wells Criteria (DVT Probability)</option>
-      <option value="ascvd">ASCVD 10-Yr Cardiovascular Risk</option>
+      <option value="prevent">AHA PREVENT Cardiovascular Risk</option>
       <option value="chads">CHADS2-VASc Stroke Risk</option>
       <option value="gfr">Cockcroft-Gault Creatinine Clearance</option>
     </select>
@@ -985,7 +985,7 @@
           <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Entire leg swollen (+1)</label></div>
           <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Calf swelling ≥3cm larger (+1)</label></div>
           <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Pitting edema in symptomatic leg (+1)</label></div>
-          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Collateral non-varicose veins (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Collateral new-varicose veins (+1)</label></div>
           <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="1" onchange="runWells()"> Previously documented DVT (+1)</label></div>
           <div class="calc-input-group" style="border-top:1px solid var(--border-color); padding-top:8px; margin-top:8px;"><label class="calc-input-label"><input type="checkbox" class="wells-check" value="-2" onchange="runWells()"> Alt. diagnosis as likely as DVT (-2)</label></div>
         </div>
@@ -993,43 +993,65 @@
         <button class="btn-insert-calc" onclick="insertWells()">Insert Result into EHR Note</button>
       </div>
 
-      <!-- ASCVD Risk -->
-      <div id="calc-panel-ascvd" class="calc-panel" style="display:none;">
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Estimates 10-year risk of atherosclerotic cardiovascular disease.</p>
+      <!-- PREVENT Risk -->
+      <div id="calc-panel-prevent" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Estimates 10-year and 30-year cardiovascular risk using the AHA PREVENT (2023) equations (race-free, eGFR/statin adjusted).</p>
         <div class="calc-card">
-          <div style="margin-bottom:8px;">
-            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Age (40-79 years):</label>
-            <input type="number" id="ascvd-age" value="55" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
+          <div style="margin-bottom:8px; display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Age (30-79):</label>
+              <input type="number" id="prevent-age" value="55" min="30" max="79" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runPREVENT()">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Sex:</label>
+              <select id="prevent-sex" class="calc-select" style="margin:0; height:32px; padding:4px;" onchange="runPREVENT()">
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:8px; display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Systolic BP (mmHg):</label>
+              <input type="number" id="prevent-sbp" value="130" min="90" max="200" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runPREVENT()">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">eGFR (15-140):</label>
+              <input type="number" id="prevent-egfr" value="90" min="15" max="140" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runPREVENT()">
+            </div>
+          </div>
+          <div style="margin-bottom:8px; display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Total Chol (mg/dL):</label>
+              <input type="number" id="prevent-tc" value="200" min="130" max="320" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runPREVENT()">
+            </div>
+            <div>
+              <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">HDL Chol (mg/dL):</label>
+              <input type="number" id="prevent-hdl" value="50" min="20" max="100" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runPREVENT()">
+            </div>
           </div>
           <div style="margin-bottom:8px;">
-            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Systolic BP (mmHg):</label>
-            <input type="number" id="ascvd-sbp" value="130" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">BMI (18.5-39.9):</label>
+            <input type="number" id="prevent-bmi" value="25.0" step="0.1" min="18.5" max="39.9" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runPREVENT()">
+          </div>
+          <div style="margin-bottom:8px; display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <label class="calc-input-label" style="font-size:0.75rem;"><input type="checkbox" id="prevent-smoker" onchange="runPREVENT()"> Smoker</label>
+            <label class="calc-input-label" style="font-size:0.75rem;"><input type="checkbox" id="prevent-dm" onchange="runPREVENT()"> Diabetic</label>
+          </div>
+          <div style="margin-bottom:12px; display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <label class="calc-input-label" style="font-size:0.75rem;"><input type="checkbox" id="prevent-htn-meds" onchange="runPREVENT()"> BP Meds</label>
+            <label class="calc-input-label" style="font-size:0.75rem;"><input type="checkbox" id="prevent-statin" onchange="runPREVENT()"> Statin Use</label>
           </div>
           <div style="margin-bottom:8px;">
-            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Total Cholesterol (mg/dL):</label>
-            <input type="number" id="ascvd-tc" value="200" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
-          </div>
-          <div style="margin-bottom:8px;">
-            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">HDL Cholesterol (mg/dL):</label>
-            <input type="number" id="ascvd-hdl" value="50" class="inline-number" style="width:100%; height:32px; padding:6px; margin:0;" onchange="runASCVD()">
-          </div>
-          <div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
-            <label class="calc-input-label"><input type="checkbox" id="ascvd-smoker" onchange="runASCVD()"> Smoker</label>
-            <label class="calc-input-label"><input type="checkbox" id="ascvd-dm" onchange="runASCVD()"> Diabetic</label>
-            <label class="calc-input-label"><input type="checkbox" id="ascvd-htn" onchange="runASCVD()"> Treated HTN</label>
-          </div>
-          <div style="margin-bottom:8px;">
-            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Sex & Race Grouping:</label>
-            <select id="ascvd-sex-race" class="calc-select" style="margin:0; height:32px;" onchange="runASCVD()">
-              <option value="white-male">White Male</option>
-              <option value="white-female">White Female</option>
-              <option value="black-male">Black Male</option>
-              <option value="black-female">Black Female</option>
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">Time Horizon:</label>
+            <select id="prevent-time" class="calc-select" style="margin:0; height:32px;" onchange="runPREVENT()">
+              <option value="10yr">10-Year Risk</option>
+              <option value="30yr">30-Year Risk (validated age 30-59)</option>
             </select>
           </div>
         </div>
-        <div class="calc-result-box" id="ascvd-result">10-Year ASCVD Risk: 5.4% (Borderline/Intermediate Risk)</div>
-        <button class="btn-insert-calc" onclick="insertASCVD()">Insert Result into EHR Note</button>
+        <div class="calc-result-box" id="prevent-result">10-Year PREVENT Risk: 4.1% (Low Risk)</div>
+        <button class="btn-insert-calc" onclick="insertPREVENT()">Insert Result into EHR Note</button>
       </div>
 
       <!-- CHADS2-VASc -->
@@ -1794,50 +1816,216 @@
       toggleCalculatorsDrawer();
     }
 
-    // Calculator Actions: ASCVD
-    function runASCVD() {
-      const age = parseFloat(document.getElementById('ascvd-age').value) || 55;
-      const sbp = parseFloat(document.getElementById('ascvd-sbp').value) || 130;
-      const tc = parseFloat(document.getElementById('ascvd-tc').value) || 200;
-      const hdl = parseFloat(document.getElementById('ascvd-hdl').value) || 50;
-      const smoker = document.getElementById('ascvd-smoker').checked;
-      const dm = document.getElementById('ascvd-dm').checked;
-      const htn = document.getElementById('ascvd-htn').checked;
-      const sexRace = document.getElementById('ascvd-sex-race').value;
-      
-      let lnAge = Math.log(age), lnTC = Math.log(tc), lnHdl = Math.log(hdl), lnSbp = Math.log(sbp);
-      
-      let sum = 0, mean = 0, baseline = 0;
-      
-      if (sexRace === 'white-female') {
-        sum = -29.799 * lnAge + 4.884 * Math.pow(lnAge, 2) + 13.540 * lnTC - 3.114 * lnAge * lnTC - 13.578 * lnHdl + 3.149 * lnAge * lnHdl + (htn ? 2.019 * lnSbp : 1.957 * lnSbp) + (smoker ? 7.574 : 0) - (smoker ? 1.665 * lnAge : 0) + (dm ? 0.661 : 0);
-        mean = -29.18; baseline = 0.9665;
-      } else if (sexRace === 'black-female') {
-        sum = 17.114 * lnAge + 0.94 * lnTC - 18.92 * lnHdl + 4.475 * lnAge * lnHdl + (htn ? 29.291 * lnSbp : 27.82 * lnSbp) - (htn ? 6.432 * lnAge * lnSbp : 6.087 * lnAge * lnSbp) + (smoker ? 0.691 : 0) + (dm ? 0.874 : 0);
-        mean = 86.61; baseline = 0.9533;
-      } else if (sexRace === 'white-male') {
-        sum = 12.344 * lnAge + 11.853 * lnTC - 2.664 * lnAge * lnTC - 7.99 * lnHdl + 1.769 * lnAge * lnHdl + (htn ? 1.916 * lnSbp : 1.764 * lnSbp) + (smoker ? 7.837 : 0) - (smoker ? 1.795 * lnAge : 0) + (dm ? 0.658 : 0);
-        mean = 61.18; baseline = 0.9144;
-      } else { // black male
-        sum = 2.469 * lnAge + 0.302 * lnTC - 0.307 * lnHdl + (htn ? 1.916 * lnSbp : 1.809 * lnSbp) + (smoker ? 0.549 : 0) + (dm ? 0.645 : 0);
-        mean = 19.54; baseline = 0.8954;
+    // Calculator Actions: PREVENT (AHA 2023)
+    function runPREVENT() {
+      const sex = document.getElementById('prevent-sex').value;
+      const age = parseFloat(document.getElementById('prevent-age').value) || 55;
+      const sbp = parseFloat(document.getElementById('prevent-sbp').value) || 130;
+      const tc = parseFloat(document.getElementById('prevent-tc').value) || 200;
+      const hdl = parseFloat(document.getElementById('prevent-hdl').value) || 50;
+      const smoker = document.getElementById('prevent-smoker').checked;
+      const dm = document.getElementById('prevent-dm').checked;
+      const htn = document.getElementById('prevent-htn-meds').checked;
+      const statin = document.getElementById('prevent-statin').checked;
+      const egfr = parseFloat(document.getElementById('prevent-egfr').value) || 90;
+      const bmi = parseFloat(document.getElementById('prevent-bmi').value) || 25;
+      const timeHorizon = document.getElementById('prevent-time').value;
+
+      // Validate inputs or constrain them
+      const age_c = Math.max(30, Math.min(79, age));
+      const total_c = Math.max(130, Math.min(320, tc));
+      const hdl_c = Math.max(20, Math.min(100, hdl));
+      const sbp_c = Math.max(90, Math.min(200, sbp));
+      const bmi_c = Math.max(18.5, Math.min(39.9, bmi));
+      const egfr_c = Math.max(15, Math.min(140, egfr));
+
+      const cholesterol_diff = total_c - hdl_c;
+      const adjusted_age = (age_c - 55.0) / 10.0;
+      const adjusted_age_squared = adjusted_age * adjusted_age;
+
+      // Select covariates based on sex and timeHorizon
+      let cov = {};
+      if (sex === "female") {
+        if (timeHorizon === "10yr") {
+          cov = {
+            constant: -3.819975,
+            diabetes_factor: 0.8348585,
+            smoker_factor: 0.4831078,
+            htn_meds_factor: 0.2265309,
+            cholesterol_meds_factor: -0.0592374,
+            age_adjustment_factor: 0.719883,
+            age_squared_factor: 0.0,
+            cholesterol_base_multiplier: 0.02586,
+            total_cholesterol_diff_factor: 0.1176967,
+            hdl_cholesterol_diff_factor: -0.151185,
+            systolic_bp_min_factor: -0.0835358,
+            systolic_bp_max_factor: 0.3592852,
+            egfr_min_factor: 0.4864619,
+            egfr_max_factor: 0.0397779,
+            htn_meds_systolic_bp_max_factor: -0.0395762,
+            cholesterol_meds_cholesterol_diff_factor: 0.0844423,
+            age_adjustment_cholesterol_diff_factor: -0.0567839,
+            age_adjustment_hdl_cholesterol_diff_factor: 0.0325692,
+            age_adjustment_systolic_bp_max_factor: -0.1035985,
+            diabetes_age_factor: -0.2417542,
+            smoker_age_factor: -0.0791142,
+            bmi_min_factor: 0.0,
+            age_min_egfr_factor: -0.1671492,
+            bmi_max_factor: 0.0,
+            age_bmi_max_factor: 0.0
+          };
+        } else { // 30yr female
+          cov = {
+            constant: -1.974074,
+            diabetes_factor: 0.6296707,
+            smoker_factor: 0.268292,
+            htn_meds_factor: 0.1875292,
+            cholesterol_meds_factor: 0.0152476,
+            age_adjustment_factor: 0.4669202,
+            age_squared_factor: -0.0893118,
+            cholesterol_base_multiplier: 0.02586,
+            total_cholesterol_diff_factor: 0.1256901,
+            hdl_cholesterol_diff_factor: -0.1542255,
+            systolic_bp_min_factor: -0.0018093,
+            systolic_bp_max_factor: 0.322949,
+            egfr_min_factor: 0.100106,
+            egfr_max_factor: 0.0499663,
+            htn_meds_systolic_bp_max_factor: -0.0276123,
+            cholesterol_meds_cholesterol_diff_factor: 0.0736147,
+            age_adjustment_cholesterol_diff_factor: -0.0521962,
+            age_adjustment_hdl_cholesterol_diff_factor: 0.0316918,
+            age_adjustment_systolic_bp_max_factor: -0.1046101,
+            diabetes_age_factor: -0.2727793,
+            smoker_age_factor: -0.1530907,
+            bmi_min_factor: 0.0,
+            age_min_egfr_factor: -0.1299149,
+            bmi_max_factor: 0.0,
+            age_bmi_max_factor: 0.0
+          };
+        }
+      } else { // male
+        if (timeHorizon === "10yr") {
+          cov = {
+            constant: -3.500655,
+            diabetes_factor: 0.7189597,
+            smoker_factor: 0.3956973,
+            htn_meds_factor: 0.2036522,
+            cholesterol_meds_factor: -0.0865581,
+            age_adjustment_factor: 0.7099847,
+            age_squared_factor: 0.0,
+            cholesterol_base_multiplier: 0.02586,
+            total_cholesterol_diff_factor: 0.1658663,
+            hdl_cholesterol_diff_factor: -0.1144285,
+            systolic_bp_min_factor: -0.2837212,
+            systolic_bp_max_factor: 0.3239977,
+            egfr_min_factor: 0.3690075,
+            egfr_max_factor: 0.0203619,
+            htn_meds_systolic_bp_max_factor: -0.0322916,
+            cholesterol_meds_cholesterol_diff_factor: 0.114563,
+            age_adjustment_cholesterol_diff_factor: -0.0300005,
+            age_adjustment_hdl_cholesterol_diff_factor: 0.0232747,
+            age_adjustment_systolic_bp_max_factor: -0.0927024,
+            diabetes_age_factor: -0.2018525,
+            smoker_age_factor: -0.0970527,
+            bmi_min_factor: 0.0,
+            age_min_egfr_factor: -0.1217081,
+            bmi_max_factor: 0.0,
+            age_bmi_max_factor: 0.0
+          };
+        } else { // 30yr male
+          cov = {
+            constant: -1.736444,
+            diabetes_factor: 0.4790257,
+            smoker_factor: 0.1782635,
+            htn_meds_factor: 0.1421182,
+            cholesterol_meds_factor: 0.0135996,
+            age_adjustment_factor: 0.3994099,
+            age_squared_factor: -0.0937484,
+            cholesterol_base_multiplier: 0.02586,
+            total_cholesterol_diff_factor: 0.1744643,
+            hdl_cholesterol_diff_factor: -0.120203,
+            systolic_bp_min_factor: -0.0665117,
+            systolic_bp_max_factor: 0.2753037,
+            egfr_min_factor: -0.0218789,
+            egfr_max_factor: 0.0602553,
+            htn_meds_systolic_bp_max_factor: -0.0218265,
+            cholesterol_meds_cholesterol_diff_factor: 0.1013148,
+            age_adjustment_cholesterol_diff_factor: -0.0312619,
+            age_adjustment_hdl_cholesterol_diff_factor: 0.020673,
+            age_adjustment_systolic_bp_max_factor: -0.0920935,
+            diabetes_age_factor: -0.2159947,
+            smoker_age_factor: -0.1548811,
+            bmi_min_factor: 0.0,
+            age_min_egfr_factor: -0.0712547,
+            bmi_max_factor: 0.0,
+            age_bmi_max_factor: 0.0
+          };
+        }
       }
-      
-      let risk = 1 - Math.pow(baseline, Math.exp(sum - mean));
-      let pct = (risk * 100).toFixed(1);
-      if (pct < 0) pct = 0.1;
-      
+
+      const diabetes_factor = dm ? cov.diabetes_factor : 0.0;
+      const smoker_factor = smoker ? cov.smoker_factor : 0.0;
+      const htn_meds_factor = htn ? cov.htn_meds_factor : 0.0;
+      const htn_cholesterol_treatment_factor = statin ? cov.cholesterol_meds_factor : 0.0;
+
+      const systolic_bp_adjusted_max = (Math.max(sbp_c, 110.0) - 130.0) / 20.0;
+      const systolic_bp_adjusted_min = (Math.min(sbp_c, 110.0) - 110.0) / 20.0;
+
+      const cholesterol_diff_factor = cov.cholesterol_base_multiplier * cholesterol_diff - 3.5;
+      const hdl_cholesterol_diff_factor = (cov.cholesterol_base_multiplier * hdl_c - 1.3) / 0.3;
+
+      const diabetes_age_factor = dm ? cov.diabetes_age_factor * adjusted_age : 0.0;
+      const smoker_age_factor = smoker ? cov.smoker_age_factor * adjusted_age : 0.0;
+
+      const egfr_adjusted_min = (Math.min(egfr_c, 60.0) - 60.0) / -15.0;
+      const egfr_adjusted_max = (Math.max(egfr_c, 60.0) - 90.0) / -15.0;
+
+      const bmi_adjusted_min = (Math.min(bmi_c, 30.0) - 25.0) / 5.0;
+      const bmi_adjusted_max = (Math.max(bmi_c, 30.0) - 30.0) / 5.0;
+
+      const terms = [
+        cov.age_adjustment_factor * adjusted_age,
+        cov.age_squared_factor * adjusted_age_squared,
+        cov.constant,
+        cov.total_cholesterol_diff_factor * cholesterol_diff_factor,
+        cov.hdl_cholesterol_diff_factor * hdl_cholesterol_diff_factor,
+        cov.systolic_bp_min_factor * systolic_bp_adjusted_min,
+        cov.systolic_bp_max_factor * systolic_bp_adjusted_max,
+        diabetes_factor,
+        smoker_factor,
+        cov.egfr_min_factor * egfr_adjusted_min,
+        cov.egfr_max_factor * egfr_adjusted_max,
+        htn_meds_factor,
+        htn_cholesterol_treatment_factor,
+        (htn ? cov.htn_meds_systolic_bp_max_factor * systolic_bp_adjusted_max : 0.0),
+        (statin ? cov.cholesterol_meds_cholesterol_diff_factor * cholesterol_diff_factor : 0.0),
+        cov.age_adjustment_cholesterol_diff_factor * adjusted_age * cholesterol_diff_factor,
+        cov.age_adjustment_hdl_cholesterol_diff_factor * adjusted_age * hdl_cholesterol_diff_factor,
+        cov.age_adjustment_systolic_bp_max_factor * adjusted_age * systolic_bp_adjusted_max,
+        diabetes_age_factor,
+        smoker_age_factor,
+        cov.age_min_egfr_factor * adjusted_age * egfr_adjusted_min,
+        cov.bmi_min_factor * bmi_adjusted_min,
+        cov.bmi_max_factor * bmi_adjusted_max,
+        cov.age_bmi_max_factor * adjusted_age * bmi_adjusted_max
+      ];
+
+      const calculation = terms.reduce((a, b) => a + b, 0.0);
+      const risk_score = Math.exp(calculation) / (1.0 + Math.exp(calculation)) * 100.0;
+      const pct = risk_score.toFixed(1);
+
       let category = "Low Risk (<5%)";
       if (pct >= 20) category = "High Risk (≥20%)";
       else if (pct >= 7.5) category = "Intermediate Risk (7.5% to 19.9%)";
       else if (pct >= 5) category = "Borderline Risk (5% to 7.4%)";
-      
-      document.getElementById('ascvd-result').innerText = `10-Year ASCVD Risk: ${pct}% (${category})`;
+
+      const horizonLabel = timeHorizon === "10yr" ? "10-Year" : "30-Year";
+      document.getElementById('prevent-result').innerText = `${horizonLabel} PREVENT Risk: ${pct}% (${category})`;
     }
 
-    function insertASCVD() {
-      const res = document.getElementById('ascvd-result').innerText;
-      const noteText = `[ASCVD Risk Calculator]\n${res}\nParameters: Age ${document.getElementById('ascvd-age').value}, SBP ${document.getElementById('ascvd-sbp').value}, TC ${document.getElementById('ascvd-tc').value}, HDL ${document.getElementById('ascvd-hdl').value}, Smoker: ${document.getElementById('ascvd-smoker').checked}, Diabetic: ${document.getElementById('ascvd-dm').checked}`;
+    function insertPREVENT() {
+      const res = document.getElementById('prevent-result').innerText;
+      const noteText = `[AHA PREVENT Cardiovascular Risk Assessment]\n${res}\nParameters: Age ${document.getElementById('prevent-age').value}, Sex: ${document.getElementById('prevent-sex').value}, SBP ${document.getElementById('prevent-sbp').value} mmHg, eGFR ${document.getElementById('prevent-egfr').value}, TC ${document.getElementById('prevent-tc').value}, HDL ${document.getElementById('prevent-hdl').value}, BMI ${document.getElementById('prevent-bmi').value}, Smoker: ${document.getElementById('prevent-smoker').checked}, Diabetic: ${document.getElementById('prevent-dm').checked}, On BP Meds: ${document.getElementById('prevent-htn-meds').checked}, On Statin: ${document.getElementById('prevent-statin').checked}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }

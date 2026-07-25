@@ -1,4 +1,4 @@
-﻿const DOTPHRASES_DATA = {
+const DOTPHRASES_DATA = {
     "Cardiovascular System": [
         {
             "name": "Chest Pain (Stable Angina / Low Risk)",
@@ -716,8 +716,8 @@
             "name": "Hyperlipidemia",
             "hx": "Diet, cardiovascular family history, smoking, diabetes, prior muscle aches with statins.",
             "diff": "Primary hypercholesterolemia > Familial hypercholesterolemia > Secondary d/t hypothyroidism/diet.",
-            "workup": "Fasting Lipid Panel, TSH (r/o hypothyroidism), ALT/AST (baseline). Calculate ASCVD 10-year risk.",
-            "rx": "Atorvastatin 20mg QD (moderate intensity) or 40-80mg QD (high intensity if ASCVD >7.5% or DM). DASH diet.",
+            "workup": "Fasting Lipid Panel, TSH (r/o hypothyroidism), ALT/AST (baseline). Calculate PREVENT 10-year risk.",
+            "rx": "Atorvastatin 20mg QD (moderate intensity) or 40-80mg QD (high intensity if PREVENT >7.5% or DM). DASH diet.",
             "fu": "Recheck lipid panel in 8-12 weeks to assess efficacy/adherence.",
             "ed": "Acute severe muscle pain/dark urine (rhabdomyolysis - stop statin immediately and go to ED)."
         },
