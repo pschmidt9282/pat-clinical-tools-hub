@@ -852,14 +852,21 @@
             <option value="5">High (severe acute/chronic threat to life/organ)</option>
           </select>
         </div>
-        <!-- Audit Checklist / Indicators (external review, independent historian) -->
-        <div style="display:flex; gap:12px; font-size:0.7rem; color:var(--text-muted); border-top:1px solid var(--border-color); padding-top:6px;">
-          <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
-            <input type="checkbox" id="audit-external-records" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Review Ext. Records (+1 Data)
-          </label>
-          <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
-            <input type="checkbox" id="audit-historian" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Independent Historian (+1 Data)
-          </label>
+        <!-- Audit Checklist / Indicators (external review, independent historian, acute threat) -->
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:0.7rem; color:var(--text-muted); border-top:1px solid var(--border-color); padding-top:6px;">
+          <div style="display:flex; gap:12px;">
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="audit-external-records" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Review Ext. Records (+1 Data)
+            </label>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+              <input type="checkbox" id="audit-historian" onchange="compileNote()" style="accent-color:var(--accent-purple);"> Independent Historian (+1 Data)
+            </label>
+          </div>
+          <div>
+            <label style="display:flex; align-items:center; gap:4px; cursor:pointer; color:#f472b6; font-weight:600;">
+              <input type="checkbox" id="audit-acute-threat" onchange="compileNote()" style="accent-color:var(--accent-pink);"> Acute Threat to Life/Function (Level 5 Upgrade)
+            </label>
+          </div>
         </div>
       </div>
 
@@ -1460,12 +1467,14 @@
 
     // Live E/M MDM Level Auditor Rules Engine (CMS 2023 Guidelines)
     function calculateMDM(hxList, workupList, rxList, edList) {
+      const isAcuteThreat = document.getElementById('audit-acute-threat') && document.getElementById('audit-acute-threat').checked;
+
       // 1. Problem Complexity
       let complexity = 3; // Low (Level 3)
       const complexityOverride = document.getElementById('audit-problem-complexity') ? document.getElementById('audit-problem-complexity').value : 'auto';
       
       if (complexityOverride === 'auto') {
-        if (edList.length > 0) complexity = 5; // High (Level 5)
+        if (isAcuteThreat) complexity = 5; // High (Level 5)
         else if (hxList.length > 0) complexity = 4; // Moderate (Level 4)
       } else {
         complexity = parseInt(complexityOverride);
@@ -1491,7 +1500,7 @@
 
       // 3. Complication Risk
       let risk = 3; // Low (Level 3)
-      if (edList.length > 0) risk = 5; // High (Level 5: hospitalization/urgent transfer risk)
+      if (isAcuteThreat) risk = 5; // High (Level 5: acute threat to life/function)
       else if (rxList.length > 0) risk = 4; // Moderate (Level 4: prescription drug management)
 
       // Calculate final CPT MDM Level (2 out of 3 components rule)
