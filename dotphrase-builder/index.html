@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive EHR Dotphrase Builder | E/M Billing Upgraded</title>
+  <title>Interactive EHR Note Builder | E/M Billing Upgraded</title>
   <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -499,7 +499,7 @@
   <!-- Header Banner -->
   <header class="header-banner">
     <div class="header-title-group">
-      <h1><i class="fa-solid fa-file-invoice"></i> Interactive EHR Dotphrase Builder</h1>
+      <h1><i class="fa-solid fa-file-invoice"></i> Interactive EHR Note Builder</h1>
       <p>Select a diagnosis, toggle components, and compile highly billable E/M chart notes instantly</p>
     </div>
     <div class="billing-badge">
@@ -855,7 +855,7 @@
       } else {
         diffList = defaultDiffs;
       }
-      const diffPart = `- **Differential Triage**: ${diffList.join(' > ')}. Clinical assessment completed to rule out secondary etiology.`;
+      const diffPart = `- **Differential Triage**: ${diffList.join(' > ')}`;
 
       // 3. Work-up
       let workupPart = '';
@@ -891,10 +891,27 @@
                   lower.includes('fludrocortisone') || lower.includes('cilostazol') || lower.includes('aspirin'));
         });
 
-        if (hasSystemic) {
-          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (empiric oral systemic therapy: ${checkedRx.join('; ')}) targeting disease process and symptom mitigation, pending clinical response.`;
+        // Format each selected med on a new line starting with a dash, adding grammatical joining
+        let rxLines = "";
+        if (checkedRx.length === 1) {
+          rxLines = `  -${checkedRx[0]}`;
         } else {
-          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management (${checkedRx.join('; ')}) for target therapeutic control.`;
+          const formatted = checkedRx.map((item, idx) => {
+            if (idx === checkedRx.length - 1) {
+              return `  -${item}`;
+            } else if (idx === checkedRx.length - 2) {
+              return `  -${item} and`;
+            } else {
+              return `  -${item},`;
+            }
+          });
+          rxLines = formatted.join('\n');
+        }
+
+        if (hasSystemic) {
+          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management with:\n${rxLines}\ntargeting disease process and symptom mitigation, pending clinical response.`;
+        } else {
+          rxPart = `- **Plan & Prescription Management**: Initiated active prescription drug management with:\n${rxLines}\nfor target therapeutic control.`;
         }
       } else {
         rxPart = `- **Plan & Management**: Conservative outpatient management and local supportive care; no active prescription drug therapy initiated today.`;
