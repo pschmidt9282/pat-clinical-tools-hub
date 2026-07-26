@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" id="theme-stylesheet" href="../theme.css">
+  <script src="../theme.js"></script>
   
   <style>
     :root {
@@ -952,6 +954,10 @@
       <option value="prevent">AHA PREVENT Cardiovascular Risk</option>
       <option value="chads">CHADS2-VASc Stroke Risk</option>
       <option value="gfr">Cockcroft-Gault Creatinine Clearance</option>
+      <option value="audit">AUDIT (Alcohol Use Screening)</option>
+      <option value="cage">CAGE Questionnaire (Alcohol Screening)</option>
+      <option value="phq9">PHQ-9 (Depression Severity Assessment)</option>
+      <option value="gad7">GAD-7 (Anxiety Severity Assessment)</option>
     </select>
     
     <div class="calc-body">
@@ -1102,6 +1108,289 @@
         <button class="btn-insert-calc" onclick="insertGFR()">Insert Result into EHR Note</button>
       </div>
 
+      <!-- AUDIT Calculator -->
+      <div id="calc-panel-audit" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Alcohol Use Disorders Identification Test (AUDIT). Screening tool for hazardous/harmful alcohol consumption.</p>
+        <div class="calc-card" style="max-height: 380px; overflow-y: auto; padding-right: 8px;">
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">1. Frequency of drinking containing alcohol:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Monthly or less (1)</option>
+              <option value="2">2-4 times a month (2)</option>
+              <option value="3">2-3 times a week (3)</option>
+              <option value="4">4 or more times a week (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">2. Typical number of drinks on a drinking day:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">1 or 2 (0)</option>
+              <option value="1">3 or 4 (1)</option>
+              <option value="2">5 or 6 (2)</option>
+              <option value="3">7 to 9 (3)</option>
+              <option value="4">10 or more (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">3. Frequency of having 6+ drinks on one occasion:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Less than monthly (1)</option>
+              <option value="2">Monthly (2)</option>
+              <option value="3">Weekly (3)</option>
+              <option value="4">Daily or almost daily (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">4. Inability to stop drinking once started:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Less than monthly (1)</option>
+              <option value="2">Monthly (2)</option>
+              <option value="3">Weekly (3)</option>
+              <option value="4">Daily or almost daily (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">5. Failed expectations due to drinking:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Less than monthly (1)</option>
+              <option value="2">Monthly (2)</option>
+              <option value="3">Weekly (3)</option>
+              <option value="4">Daily or almost daily (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">6. Needed first drink in morning (eye-opener):</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Less than monthly (1)</option>
+              <option value="2">Monthly (2)</option>
+              <option value="3">Weekly (3)</option>
+              <option value="4">Daily or almost daily (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">7. Feeling of guilt or remorse after drinking:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Less than monthly (1)</option>
+              <option value="2">Monthly (2)</option>
+              <option value="3">Weekly (3)</option>
+              <option value="4">Daily or almost daily (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">8. Unable to remember night before due to drinking:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">Never (0)</option>
+              <option value="1">Less than monthly (1)</option>
+              <option value="2">Monthly (2)</option>
+              <option value="3">Weekly (3)</option>
+              <option value="4">Daily or almost daily (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">9. Injury to self or others due to drinking:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">No (0)</option>
+              <option value="2">Yes, but not in the last year (2)</option>
+              <option value="4">Yes, during the last year (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">10. Others concerned / suggest cutting down:</label>
+            <select class="audit-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runAUDIT()">
+              <option value="0">No (0)</option>
+              <option value="2">Yes, but not in the last year (2)</option>
+              <option value="4">Yes, during the last year (4)</option>
+            </select>
+          </div>
+          <div class="calc-input-group" style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:8px;">
+            <label class="calc-input-label"><input type="checkbox" id="audit-female" onchange="runAUDIT()"> Patient is Female</label>
+          </div>
+        </div>
+        <div class="calc-result-box" id="audit-result">AUDIT Score: 0 (Zone I: Low risk, alcohol education)</div>
+        <button class="btn-insert-calc" onclick="insertAUDIT()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- CAGE Questionnaire -->
+      <div id="calc-panel-cage" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">CAGE Questionnaire for Alcohol Use. Quick screening tool where a score ≥2 indicates clinically significant risk.</p>
+        <div class="calc-card">
+          <div class="calc-input-group" style="margin-bottom:12px;"><label class="calc-input-label" style="display:flex; align-items:flex-start; gap:8px;"><input type="checkbox" class="cage-check" value="1" onchange="runCAGE()" style="margin-top:3px;"> <span>Have you ever felt you should <strong>C</strong>ut down on your drinking? (+1)</span></label></div>
+          <div class="calc-input-group" style="margin-bottom:12px;"><label class="calc-input-label" style="display:flex; align-items:flex-start; gap:8px;"><input type="checkbox" class="cage-check" value="1" onchange="runCAGE()" style="margin-top:3px;"> <span>Have people <strong>A</strong>nnoyed you by criticizing your drinking? (+1)</span></label></div>
+          <div class="calc-input-group" style="margin-bottom:12px;"><label class="calc-input-label" style="display:flex; align-items:flex-start; gap:8px;"><input type="checkbox" class="cage-check" value="1" onchange="runCAGE()" style="margin-top:3px;"> <span>Have you ever felt bad or <strong>G</strong>uilty about your drinking? (+1)</span></label></div>
+          <div class="calc-input-group" style="margin-bottom:12px;"><label class="calc-input-label" style="display:flex; align-items:flex-start; gap:8px;"><input type="checkbox" class="cage-check" value="1" onchange="runCAGE()" style="margin-top:3px;"> <span>Have you ever had a drink first thing in the morning to steady your nerves or get rid of a hangover (<strong>E</strong>ye-opener)? (+1)</span></label></div>
+        </div>
+        <div class="calc-result-box" id="cage-result">CAGE Score: 0 (Screen Negative)</div>
+        <button class="btn-insert-calc" onclick="insertCAGE()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- PHQ-9 Calculator -->
+      <div id="calc-panel-phq9" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Patient Health Questionnaire-9. Screens for and rates the severity of depressive symptoms over the past 2 weeks.</p>
+        <div class="calc-card" style="max-height: 380px; overflow-y: auto; padding-right: 8px;">
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">1. Little interest or pleasure in doing things:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">2. Feeling down, depressed, or hopeless:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">3. Trouble falling or staying asleep, or sleeping too much:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">4. Feeling tired or having little energy:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">5. Poor appetite or overeating:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">6. Feeling bad about yourself (failure/let down):</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">7. Trouble concentrating (reading/watching TV):</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">8. Slow speech/movement or fidgety/restless:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">9. Thoughts of death / self-harm:</label>
+            <select class="phq-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runPHQ9()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result-box" id="phq9-result">PHQ-9 Score: 0 (Minimal Depression)</div>
+        <button class="btn-insert-calc" onclick="insertPHQ9()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- GAD-7 Calculator -->
+      <div id="calc-panel-gad7" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Generalized Anxiety Disorder-7. Screen and severity metric for anxiety symptoms over the past 2 weeks.</p>
+        <div class="calc-card" style="max-height: 380px; overflow-y: auto; padding-right: 8px;">
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">1. Feeling nervous, anxious, or on edge:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">2. Not being able to stop or control worrying:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">3. Worrying too much about different things:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">4. Trouble relaxing:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">5. Being so restless that it is hard to sit still:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">6. Becoming easily annoyed or irritable:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+          <div class="calc-input-group">
+            <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:2px;">7. Feeling afraid as if something awful might happen:</label>
+            <select class="gad-input calc-select" style="margin:0; height:32px; font-size:0.78rem;" onchange="runGAD7()">
+              <option value="0">Not at all (0)</option>
+              <option value="1">Several days (1)</option>
+              <option value="2">More than half the days (2)</option>
+              <option value="3">Nearly every day (3)</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-result-box" id="gad7-result">GAD-7 Score: 0 (Minimal Anxiety)</div>
+        <button class="btn-insert-calc" onclick="insertGAD7()">Insert Result into EHR Note</button>
+      </div>
+
     </div>
   </div>
 
@@ -1119,7 +1408,12 @@
     let selectedDxCategory = '';
 
     // Favorites State
-    let favorites = JSON.parse(localStorage.getItem('fav_diagnoses') || '[]');
+    let favorites = [];
+    try {
+      favorites = JSON.parse(localStorage.getItem('fav_diagnoses') || '[]');
+    } catch (e) {
+      console.warn("localStorage is not accessible in this context:", e);
+    }
 
     // State for interactive checkboxes
     let primaryDiff = '';
@@ -1185,7 +1479,9 @@
       } else {
         favorites.push(dxName);
       }
-      localStorage.setItem('fav_diagnoses', JSON.stringify(favorites));
+      try {
+        localStorage.setItem('fav_diagnoses', JSON.stringify(favorites));
+      } catch (e) {}
       
       // Re-render lists & workspace header
       renderDxList();
@@ -2245,6 +2541,155 @@
       }
 
       const noteText = `[Cockcroft-Gault Renal Dosing Calculator]\n${res}\nRenal Stage: ${staging}\nInputs: Age ${age}y, Weight ${weight}kg, Creatinine ${scr} mg/dL, Female: ${female ? 'Yes' : 'No'}${plan}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: AUDIT
+    function runAUDIT() {
+      let score = 0;
+      document.querySelectorAll('.audit-input').forEach(sel => score += parseInt(sel.value));
+      const female = document.getElementById('audit-female').checked;
+
+      let zone = "";
+      let risk = "";
+      if (female) {
+        if (score <= 3) { zone = "Zone I"; risk = "Low risk (alcohol education)"; }
+        else if (score <= 15) { zone = "Zone II"; risk = "Hazardous/harmful use (simple advice)"; }
+        else if (score <= 19) { zone = "Zone III"; risk = "Harmful/high-risk use (brief counseling & monitoring)"; }
+        else { zone = "Zone IV"; risk = "Referral to specialist for evaluation/treatment (severe/dependency)"; }
+      } else {
+        if (score <= 7) { zone = "Zone I"; risk = "Low risk (alcohol education)"; }
+        else if (score <= 15) { zone = "Zone II"; risk = "Hazardous/harmful use (simple advice)"; }
+        else if (score <= 19) { zone = "Zone III"; risk = "Harmful/high-risk use (brief counseling & monitoring)"; }
+        else { zone = "Zone IV"; risk = "Referral to specialist for evaluation/treatment (severe/dependency)"; }
+      }
+
+      document.getElementById('audit-result').innerText = `AUDIT Score: ${score} (${zone}: ${risk})`;
+    }
+
+    function insertAUDIT() {
+      const scoreText = document.getElementById('audit-result').innerText;
+      const female = document.getElementById('audit-female').checked;
+      
+      let answers = [];
+      document.querySelectorAll('.audit-input').forEach((sel, idx) => {
+        answers.push(`Q${idx+1}: ${sel.value}`);
+      });
+
+      const noteText = `[AUDIT Alcohol Use Screen]\n${scoreText}\nResponses: ${answers.join(', ')} (Female: ${female ? 'Yes' : 'No'})\nPlan:\n` +
+             (scoreText.includes("Zone I") ? "  - Counsel on standard drinking guidelines and low-risk alcohol consumption levels." :
+              scoreText.includes("Zone II") ? "  - Provide brief intervention and educational materials on reducing alcohol intake.\n  - Set drinking limits and review at next follow-up." :
+              scoreText.includes("Zone III") ? "  - Initiate structured brief counseling session (e.g. FRAMES model).\n  - Set target reduction goal and follow-up in 2-4 weeks to monitor progress." :
+              "  - Refer patient to addiction/behavioral health specialist for diagnostic evaluation and intensive therapy.\n  - Discuss pharmacotherapy options (e.g., Naltrexone, Acamprosate) if appropriate.\n  - Schedule close medical follow-up.");
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: CAGE
+    function runCAGE() {
+      let score = 0;
+      document.querySelectorAll('.cage-check:checked').forEach(cb => score += parseInt(cb.value));
+      const res = score >= 2 ? "Screen Positive (Clinically significant risk)" : "Screen Negative";
+      document.getElementById('cage-result').innerText = `CAGE Score: ${score} (${res})`;
+    }
+
+    function insertCAGE() {
+      let score = 0;
+      let criteria = [];
+      document.querySelectorAll('.cage-check:checked').forEach(cb => {
+        score += parseInt(cb.value);
+        criteria.push(cb.closest('label').innerText.replace(/\(\+1\)/, '').trim());
+      });
+      const resText = document.getElementById('cage-result').innerText;
+      
+      let plan = "";
+      if (score >= 2) {
+        plan = "\nPlan:\n  - Positive screen indicates high likelihood of alcohol abuse/dependence.\n  - Conduct further clinical interview (AUDIT or DSM-5 criteria).\n  - Provide brief counseling and offer referral to behavioral health/addiction treatment.";
+      } else {
+        plan = "\nPlan:\n  - Negative screen. Emphasize low-risk drinking guidelines and reinforce positive behaviors.";
+      }
+
+      const noteText = `[CAGE Alcohol Screen]\n${resText}\nCriteria Met: ${criteria.length > 0 ? criteria.join(', ') : 'None'}${plan}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: PHQ-9
+    function runPHQ9() {
+      let score = 0;
+      document.querySelectorAll('.phq-input').forEach(sel => score += parseInt(sel.value));
+      const q9 = parseInt(document.querySelectorAll('.phq-input')[8].value);
+
+      let severity = "";
+      if (score <= 4) severity = "Minimal Depression";
+      else if (score <= 9) severity = "Mild Depression";
+      else if (score <= 14) severity = "Moderate Depression";
+      else if (score <= 19) severity = "Moderately Severe Depression";
+      else severity = "Severe Depression";
+
+      let text = `PHQ-9 Score: ${score} (${severity})`;
+      if (q9 > 0) {
+        text += ` *ALERT: Suicide risk screen positive (Q9 = ${q9})*`;
+      }
+      document.getElementById('phq9-result').innerText = text;
+    }
+
+    function insertPHQ9() {
+      const resText = document.getElementById('phq9-result').innerText;
+      const q9Val = parseInt(document.querySelectorAll('.phq-input')[8].value);
+      
+      let plan = "\nPlan:\n";
+      if (resText.includes("Minimal Depression")) {
+        plan += "  - Support, educate, and re-evaluate as clinically indicated.";
+      } else if (resText.includes("Mild Depression")) {
+        plan += "  - Active monitoring, support, and patient education on depression symptoms and self-care.\n  - Re-evaluate symptoms in 4-8 weeks.";
+      } else if (resText.includes("Moderate Depression")) {
+        plan += "  - Discuss treatment preferences: initiate psychotherapy (CBT) and/or antidepressant pharmacotherapy (e.g., SSRI like Sertraline or Escitalopram).\n  - Follow-up in 2-4 weeks to monitor tolerability and adherence.";
+      } else if (resText.includes("Moderately Severe")) {
+        plan += "  - Initiate antidepressant pharmacotherapy (e.g., SSRI/SNRI) and refer for psychotherapy.\n  - Schedule close follow-up (2 weeks) to monitor clinical response and safety.";
+      } else { // Severe
+        plan += "  - Initiate pharmacotherapy (consider combinations or high-dose SSRI/SNRI) and refer to mental health/psychiatry specialist for management.\n  - Ensure safety assessment completed.";
+      }
+
+      if (q9Val > 0) {
+        plan += "\n  *Suicide Risk Management:\n  - Completed safety assessment and suicide risk evaluation.\n  - Patient has no active suicidal intent or plan (or: safety plan established, coping strategies discussed, crisis numbers provided, and family/support network notified).";
+      }
+
+      const noteText = `[PHQ-9 Depression Severity Screen]\n${resText}${plan}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: GAD-7
+    function runGAD7() {
+      let score = 0;
+      document.querySelectorAll('.gad-input').forEach(sel => score += parseInt(sel.value));
+
+      let severity = "";
+      if (score <= 4) severity = "Minimal Anxiety";
+      else if (score <= 9) severity = "Mild Anxiety";
+      else if (score <= 14) severity = "Moderate Anxiety";
+      else severity = "Severe Anxiety";
+
+      document.getElementById('gad7-result').innerText = `GAD-7 Score: ${score} (${severity})`;
+    }
+
+    function insertGAD7() {
+      const resText = document.getElementById('gad7-result').innerText;
+      
+      let plan = "\nPlan:\n";
+      if (resText.includes("Minimal Anxiety")) {
+        plan += "  - Support, reassurance, and re-evaluate as clinically indicated.";
+      } else if (resText.includes("Mild Anxiety")) {
+        plan += "  - Active monitoring, support, and patient education on anxiety management / mindfulness.\n  - Re-evaluate symptoms in 4-8 weeks.";
+      } else if (resText.includes("Moderate Anxiety")) {
+        plan += "  - Discuss treatment options: CBT/psychotherapy and/or pharmacotherapy (e.g., SSRI like Escitalopram or SNRI like Duloxetine).\n  - Follow-up in 2-4 weeks to monitor response and side effects.";
+      } else { // Severe
+        plan += "  - Initiate antidepressant/anxiolytic pharmacotherapy and refer for formal psychotherapy.\n  - Consider brief benzodiazapines for acute panic/severe distress (short-term only) if appropriate.\n  - Follow-up in 2 weeks.";
+      }
+
+      const noteText = `[GAD-7 Anxiety Severity Screen]\n${resText}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }
