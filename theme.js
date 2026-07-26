@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     // Fallback detection using URL path depth
     const pathParts = window.location.pathname.split('/').filter(p => p.length > 0);
-    // If we are in a subdirectory, prefix with '../'
     if (pathParts.length > 1 && pathParts[pathParts.length - 2] !== 'pat-clinical-tools-hub') {
       prefix = '../';
     }
@@ -37,57 +36,107 @@ document.addEventListener('DOMContentLoaded', () => {
     document.head.appendChild(link);
   }
 
-  // Create theme toggle button
-  const toggleBtn = document.createElement('button');
-  toggleBtn.id = 'theme-toggle-btn';
-  toggleBtn.className = 'btn-theme-toggle';
-  toggleBtn.setAttribute('aria-label', 'Toggle theme');
-  
-  // Icon SVG markup with explicit width/height to prevent rendering issues in all engines
-  const sunIcon = `<svg class="theme-icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-  const moonIcon = `<svg class="theme-icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-  
+  // Apply theme class to body if it was active on html
+  try {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+    }
+  } catch (e) {}
+
+  // Check if a theme button already exists in the original page markup
+  let themeBtn = document.getElementById('themeBtn') || document.getElementById('theme-toggle-btn') || document.getElementById('theme-btn');
+  let isCreated = false;
+
+  if (!themeBtn) {
+    // Create theme toggle button matching the style of existing tools
+    themeBtn = document.createElement('button');
+    themeBtn.id = 'themeBtn';
+    themeBtn.className = 'btn btn-secondary btn-theme-toggle';
+    themeBtn.setAttribute('title', 'Toggle Light/Dark Theme');
+    themeBtn.setAttribute('aria-label', 'Toggle theme');
+    isCreated = true;
+  }
+
+  // FontAwesome icon HTML (using solid sun and moon)
+  const sunIcon = '<i class="fa-solid fa-sun"></i>';
+  const moonIcon = '<i class="fa-solid fa-moon"></i>';
+
   function updateBtnContent() {
     let isLight = false;
     try {
-      isLight = document.documentElement.classList.contains('light-theme');
+      isLight = document.documentElement.classList.contains('light-theme') || document.body.classList.contains('light-theme');
     } catch (e) {}
-    toggleBtn.innerHTML = `${isLight ? moonIcon : sunIcon} <span>${isLight ? 'Dark Mode' : 'Light Mode'}</span>`;
+    themeBtn.innerHTML = isLight ? moonIcon : sunIcon;
   }
-  
-  updateBtnContent();
-  
-  toggleBtn.addEventListener('click', () => {
-    let isLight = false;
-    try {
-      isLight = document.documentElement.classList.toggle('light-theme');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    } catch (e) {
-      // Fallback for sandboxed context
-      isLight = document.documentElement.classList.contains('light-theme');
-    }
-    updateBtnContent();
-  });
 
-  // Find container to insert the button
-  const headerActions = document.querySelector('.header-actions');
-  const backNav = document.querySelector('.back-nav');
-  
-  if (headerActions) {
-    // Main hub page
-    headerActions.insertBefore(toggleBtn, headerActions.firstChild);
-  } else if (backNav) {
-    // Tool/Builder subpage
-    backNav.style.display = 'flex';
-    backNav.style.justifyContent = 'space-between';
-    backNav.style.alignItems = 'center';
-    backNav.appendChild(toggleBtn);
-  } else {
-    // Fallback placement (top right of screen)
-    toggleBtn.style.position = 'fixed';
-    toggleBtn.style.top = '16px';
-    toggleBtn.style.right = '16px';
-    toggleBtn.style.zIndex = '9999';
-    document.body.appendChild(toggleBtn);
+  // Initial button update
+  updateBtnContent();
+
+  // If we created the button, we attach our toggle click handler
+  if (isCreated) {
+    themeBtn.addEventListener('click', () => {
+      let isLight = false;
+      try {
+        isLight = !document.documentElement.classList.contains('light-theme');
+        if (isLight) {
+          document.documentElement.classList.add('light-theme');
+          document.body.classList.add('light-theme');
+          localStorage.setItem('theme', 'light');
+        } else {
+          document.documentElement.classList.remove('light-theme');
+          document.body.classList.remove('light-theme');
+          localStorage.setItem('theme', 'dark');
+        }
+      } catch (e) {
+        // Fallback if localStorage is disabled
+        isLight = document.documentElement.classList.contains('light-theme');
+      }
+      updateBtnContent();
+    });
+
+    // Find container to insert our new button
+    const headerActions = document.querySelector('.header-actions');
+    const backNav = document.querySelector('.back-nav');
+
+    if (headerActions) {
+      // Main hub page - prepend so it sits nicely next to note builder link
+      headerActions.insertBefore(themeBtn, headerActions.firstChild);
+    } else if (backNav) {
+      // Tool subpage / builder
+      backNav.style.display = 'flex';
+      backNav.style.justifyContent = 'space-between';
+      backNav.style.alignItems = 'center';
+      backNav.appendChild(themeBtn);
+    } else {
+      // Fallback
+      themeBtn.style.position = 'fixed';
+      themeBtn.style.top = '16px';
+      themeBtn.style.right = '16px';
+      themeBtn.style.zIndex = '9999';
+      document.body.appendChild(themeBtn);
+    }
   }
+
+  // MutationObserver to sync theme class from body to html and vice versa
+  // This automatically syncs local page toggle clicks (which toggle body class) to documentElement and localStorage
+  try {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const bodyLight = document.body.classList.contains('light-theme');
+          const htmlLight = document.documentElement.classList.contains('light-theme');
+          
+          if (bodyLight !== htmlLight) {
+            document.documentElement.classList.toggle('light-theme', bodyLight);
+            try {
+              localStorage.setItem('theme', bodyLight ? 'light' : 'dark');
+            } catch (e) {}
+            updateBtnContent();
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { attributes: true });
+  } catch (e) {}
 });

@@ -1,0 +1,556 @@
+/* --- LIGHT/DARK MODE THEME OVERRIDES --- */
+
+/* Base classes for dark and light icons */
+.theme-icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2px;
+  transition: transform 0.3s ease;
+}
+
+.theme-icon.sun {
+  color: #fbbf24; /* Amber sun */
+}
+
+.theme-icon.moon {
+  color: #818cf8; /* Indigo moon */
+}
+
+.btn-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-theme-toggle:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--primary, #06b6d4);
+  transform: translateY(-1px);
+}
+
+.btn-theme-toggle:active {
+  transform: translateY(0);
+}
+
+/* Fallbacks for variable names mapping across different tools */
+:root {
+  --text-main: var(--text-primary, #f8fafc);
+  --radius-sm: var(--border-radius-sm, 6px);
+  --radius-md: var(--border-radius-md, 10px);
+  --radius-lg: var(--border-radius-lg, 16px);
+}
+
+/* --- LIGHT THEME DEFINITIONS --- */
+:root.light-theme, body.light-theme {
+  /* Basic Color Theme - Light Slate */
+  --bg-dark: #f8fafc;        /* slate 50 */
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;  /* slate 100 */
+  --border-color: #cbd5e1;   /* slate 300 */
+  --text-main: #0f172a;      /* slate 900 */
+  --text-muted: #64748b;     /* slate 500 */
+  
+  /* Main Hub Specific Variable Mappings */
+  --bg-main: #f8fafc;
+  --bg-card: rgba(255, 255, 255, 0.95);
+  --bg-card-hover: rgba(241, 245, 249, 0.95);
+  --border-color: rgba(15, 23, 42, 0.12);
+  --border-hover: rgba(6, 182, 212, 0.6);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --primary: #0891b2;
+  --primary-hover: #0e7490;
+  --glass-blur: blur(0px);
+  --shadow-soft: 0 10px 30px -10px rgba(15, 23, 42, 0.1);
+  --shadow-glow: 0 0 25px -5px rgba(6, 182, 212, 0.1);
+}
+
+/* Body and main page elements */
+.light-theme body, body.light-theme {
+  background-color: var(--bg-main, var(--bg-dark)) !important;
+  color: var(--text-primary, var(--text-main)) !important;
+}
+
+/* Main Hub Glow Backdrops */
+.light-theme .bg-glow-1 {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, rgba(255, 255, 255, 0) 70%) !important;
+}
+
+.light-theme .bg-glow-2 {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.05) 0%, rgba(255, 255, 255, 0) 70%) !important;
+}
+
+/* Header Banner - Subpages & Tools */
+.light-theme .header-banner {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%) !important;
+  border: 1px solid #bae6fd !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.05) !important;
+}
+
+.light-theme .header-title-group h1 {
+  background: linear-gradient(90deg, #0369a1, #0891b2, #db2777) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.light-theme .header-title-group p {
+  color: #334155 !important;
+}
+
+/* Main Hub Header Logo Area styling */
+.light-theme .logo-area h1 {
+  color: #0f172a !important;
+}
+
+.light-theme .main-header .subtitle {
+  color: #475569 !important;
+}
+
+/* Badges and tags in light mode */
+.light-theme .oe-badge {
+  background: rgba(14, 165, 233, 0.12) !important;
+  border-color: rgba(14, 165, 233, 0.3) !important;
+  color: #0369a1 !important;
+}
+
+.light-theme .billing-badge {
+  background: rgba(219, 39, 119, 0.12) !important;
+  border-color: rgba(219, 39, 119, 0.3) !important;
+  color: #be185d !important;
+}
+
+.light-theme .count-badge {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Search bar on main hub & tools */
+.light-theme .search-wrapper {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .search-wrapper input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.light-theme .search-wrapper input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.light-theme .search-icon {
+  color: #64748b !important;
+}
+
+/* Category Filters */
+.light-theme .category-btn {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+.light-theme .category-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.light-theme .category-btn.active {
+  background: #0891b2 !important;
+  border-color: #0891b2 !important;
+  color: #ffffff !important;
+}
+
+/* Cards & Grid elements */
+.light-theme .tool-card {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+.light-theme .tool-card:hover {
+  border-color: #0891b2 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+.light-theme .tool-card h3 {
+  color: #0f172a !important;
+}
+
+.light-theme .tool-card p {
+  color: #475569 !important;
+}
+
+.light-theme .card-meta {
+  border-color: #f1f5f9 !important;
+}
+
+/* Step-by-Step PCP Algorithm Header Card */
+.light-theme .algorithm-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
+  border-color: #0891b2 !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03) !important;
+}
+
+.light-theme .algorithm-card h3 {
+  color: #0891b2 !important;
+}
+
+.light-theme .step-box {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .step-box.active-step {
+  border-color: #0891b2 !important;
+  background: rgba(6, 182, 212, 0.06) !important;
+}
+
+.light-theme .step-title {
+  color: #0f172a !important;
+}
+
+/* Tool page specific containers (e.g. toolbars, controls) */
+.light-theme .toolbar-container,
+.light-theme .filter-section {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Note builder specific panels */
+.light-theme .sidebar {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .alphabet-grid {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .letter-btn {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+.light-theme .letter-btn:hover {
+  background: #f1f5f9 !important;
+}
+
+.light-theme .letter-btn.active {
+  background: #db2777 !important;
+  border-color: #db2777 !important;
+  color: #ffffff !important;
+}
+
+.light-theme .search-input-inside,
+.light-theme .search-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .search-icon-inside {
+  color: #64748b !important;
+}
+
+.light-theme .dx-list-container {
+  background: #ffffff !important;
+}
+
+.light-theme .dx-item {
+  color: #334155 !important;
+}
+
+.light-theme .dx-item:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.light-theme .dx-item.active {
+  background: rgba(219, 39, 119, 0.08) !important;
+  border-color: #db2777 !important;
+  color: #be185d !important;
+}
+
+.light-theme .workspace {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .workspace-header {
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .workspace-header h2 {
+  color: #0f172a !important;
+}
+
+.light-theme .option-section {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .option-section h4 {
+  color: #475569 !important;
+}
+
+.light-theme .checkbox-label,
+.light-theme .radio-label {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+.light-theme .checkbox-label:hover,
+.light-theme .radio-label:hover {
+  border-color: #db2777 !important;
+  background: #f8fafc !important;
+}
+
+.light-theme .radio-label.primary-selected {
+  border-color: #db2777 !important;
+  background: rgba(219, 39, 119, 0.05) !important;
+}
+
+/* Right Panel: Live Note & Auditor */
+.light-theme .right-panel {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .right-panel h3 {
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .mdm-auditor-card {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .mdm-badge {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .mdm-badge-val {
+  color: #0f172a !important;
+}
+
+.light-theme .mdm-badge-val.low { color: #0284c7 !important; }
+.light-theme .mdm-badge-val.mod { color: #7c3aed !important; }
+.light-theme .mdm-badge-val.high { color: #db2777 !important; }
+
+.light-theme .mdm-tooltip {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15) !important;
+}
+
+.light-theme .mdm-final {
+  background: linear-gradient(90deg, rgba(219, 39, 119, 0.05), rgba(168, 85, 247, 0.05)) !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+}
+
+.light-theme .mdm-final-title {
+  color: #475569 !important;
+}
+
+.light-theme .mdm-final-code {
+  color: #6d28d9 !important;
+}
+
+.light-theme .note-output {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .empty-workspace i {
+  color: #cbd5e1 !important;
+}
+
+/* Modals */
+.light-theme .modal-container {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.light-theme .modal-header {
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .modal-header h3 {
+  color: #0f172a !important;
+}
+
+.light-theme .modal-close {
+  color: #64748b !important;
+}
+
+.light-theme .modal-close:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.light-theme .form-group label {
+  color: #475569 !important;
+}
+
+.light-theme .form-group input,
+.light-theme .form-group select,
+.light-theme .form-group textarea {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .form-group input:focus,
+.light-theme .form-group select:focus,
+.light-theme .form-group textarea:focus {
+  border-color: #0891b2 !important;
+  outline: none;
+}
+
+.light-theme .modal-footer {
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .code-export-tip {
+  color: #64748b !important;
+}
+
+/* Calculators Drawer & Form Elements */
+.light-theme .calc-drawer {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+.light-theme .calc-drawer-header {
+  border-color: #e2e8f0 !important;
+}
+
+.light-theme .calc-drawer-close {
+  color: #64748b !important;
+}
+
+.light-theme .calc-select,
+.light-theme .inline-select,
+.light-theme .inline-number,
+.light-theme .inline-input {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .calc-card {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+.light-theme .calc-input-label {
+  color: #334155 !important;
+}
+
+.light-theme .calc-result-box {
+  background: rgba(124, 58, 237, 0.08) !important;
+  border-color: rgba(124, 58, 237, 0.3) !important;
+  color: #6d28d9 !important;
+}
+
+/* Standard HTML elements / Markdown tables inside matrices */
+.light-theme table, body.light-theme table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.light-theme th, body.light-theme th {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  font-weight: 600;
+  border: 1px solid #cbd5e1 !important;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.light-theme td, body.light-theme td {
+  background-color: #ffffff !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 8px 12px;
+}
+
+.light-theme tr:hover td, body.light-theme tr:hover td {
+  background-color: #f8fafc !important;
+}
+
+/* List elements, text elements */
+.light-theme ul li, body.light-theme ul li {
+  color: #334155 !important;
+}
+
+.light-theme p, body.light-theme p {
+  color: #475569 !important;
+}
+
+.light-theme strong, body.light-theme strong {
+  color: #0f172a !important;
+}
+
+/* Back button */
+.light-theme .btn-back, body.light-theme .btn-back {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+.light-theme .btn-back:hover, body.light-theme .btn-back:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: var(--primary, #0891b2) !important;
+}
+
+/* Footer elements */
+.light-theme .main-footer, body.light-theme .main-footer {
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+}
+
+.light-theme .main-footer .disclaimer, body.light-theme .main-footer .disclaimer {
+  color: #64748b !important;
+}
+
+/* Make sure scrollbars match the theme */
+.light-theme *, body.light-theme * {
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.light-theme select,
+.light-theme input,
+.light-theme textarea,
+body.light-theme select,
+body.light-theme input,
+body.light-theme textarea {
+  color-scheme: light;
+}
