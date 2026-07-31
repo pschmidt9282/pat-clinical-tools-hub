@@ -778,6 +778,58 @@
     .btn-insert-calc:hover {
       opacity: 0.9;
     }
+
+    /* METs and RCRI tooltips and custom components */
+    .custom-tooltip-trigger {
+      position: relative;
+      cursor: help;
+      display: inline-flex;
+      align-items: center;
+      margin-left: 6px;
+      color: var(--accent-cyan);
+      font-size: 0.9rem;
+      vertical-align: middle;
+      transition: color 0.2s;
+    }
+    .custom-tooltip-trigger:hover {
+      color: var(--text-main);
+    }
+    .custom-tooltip {
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      background: #111827;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+      pointer-events: none;
+      white-space: normal;
+    }
+    .custom-tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: #111827 transparent transparent transparent;
+    }
+    .custom-tooltip-trigger:hover .custom-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(-4px);
+    }
   </style>
 </head>
 <body>
@@ -951,6 +1003,7 @@
     <select class="calc-select" id="calc-selector" onchange="selectCalculator(this.value)">
       <option value="centor">Centor Score (Strep Pharyngitis)</option>
       <option value="wells">Wells Criteria (DVT Probability)</option>
+      <option value="rcri">Revised Cardiac Risk Index (RCRI)</option>
       <option value="prevent">AHA PREVENT Cardiovascular Risk</option>
       <option value="chads">CHADS2-VASc Stroke Risk</option>
       <option value="gfr">Cockcroft-Gault Creatinine Clearance</option>
@@ -997,6 +1050,21 @@
         </div>
         <div class="calc-result-box" id="wells-result">Wells Score: 0 points (DVT Unlikely)</div>
         <button class="btn-insert-calc" onclick="insertWells()">Insert Result into EHR Note</button>
+      </div>
+
+      <!-- Revised Cardiac Risk Index (RCRI) -->
+      <div id="calc-panel-rcri" class="calc-panel" style="display:none;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Revised Cardiac Risk Index (RCRI) estimates risk of major cardiac complications after non-cardiac surgery.</p>
+        <div class="calc-card">
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="rcri-check" value="1" onchange="runRCRI()"> High-risk surgery (intrathoracic, intraabdominal, or suprainguinal vascular) (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="rcri-check" value="1" onchange="runRCRI()"> History of ischemic heart disease (IHD) (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="rcri-check" value="1" onchange="runRCRI()"> History of congestive heart failure (CHF) (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="rcri-check" value="1" onchange="runRCRI()"> History of cerebrovascular disease (stroke or TIA) (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="rcri-check" value="1" onchange="runRCRI()"> Preoperative treatment with insulin (+1)</label></div>
+          <div class="calc-input-group"><label class="calc-input-label"><input type="checkbox" class="rcri-check" value="1" onchange="runRCRI()"> Preoperative serum creatinine &gt; 2.0 mg/dL (+1)</label></div>
+        </div>
+        <div class="calc-result-box" id="rcri-result">RCRI Score: 0 points (Class I, 0.4% MACE risk)</div>
+        <button class="btn-insert-calc" onclick="insertRCRI()">Insert Result into EHR Note</button>
       </div>
 
       <!-- PREVENT Risk -->
@@ -1498,6 +1566,16 @@
       const lowerItem = item.toLowerCase();
       const lowerDx = dxName.toLowerCase();
       
+      // METs override for Pre-operative Clearance
+      if (lowerDx.includes('pre-operative') && lowerItem.includes('mets')) {
+        return `<span class="item-text">exercise tolerance: <select class="inline-select mets-select" onchange="compileNote()"><option value=">4 METs" selected>&gt;4 METs</option><option value="<4 METs">&lt;4 METs</option></select><span class="custom-tooltip-trigger"><i class="fa-solid fa-circle-info"></i><span class="custom-tooltip"><strong>METs Criteria:</strong><br><span style="color:#22d3ee; font-weight:600;">&gt;4 METs (Favorable):</span> Climb a flight of stairs, walk up a hill, walk on level ground at 4 mph, run a short distance, do heavy housework, or play golf/singles tennis.<br><span style="color:#f472b6; font-weight:600;">&lt;4 METs:</span> Only light activities like eating, dressing, using toilet, walking slowly (2-3 mph), or light housework.</span></span></span>`;
+      }
+
+      // RCRI score override for Pre-operative Clearance
+      if (lowerDx.includes('pre-operative') && lowerItem.includes('rcri score')) {
+        return `<span class="item-text">RCRI score: <select class="inline-select rcri-score-select" onchange="compileNote()"><option value="Class I (0.4% MACE risk - Low risk)">Class I (0 points, 0.4% risk)</option><option value="Class II (0.9% MACE risk - Low-Moderate risk)">Class II (1 point, 0.9% risk)</option><option value="Class III (6.6% MACE risk - Moderate-High risk)">Class III (2 points, 6.6% risk)</option><option value="Class IV (11.0% MACE risk - High risk)">Class IV (&gt;=3 points, 11.0% risk)</option></select><span class="custom-tooltip-trigger"><i class="fa-solid fa-circle-info"></i><span class="custom-tooltip"><strong>RCRI Classes:</strong><br><span style="color:#34d399; font-weight:600;">Class I (0 pts):</span> 0.4% MACE risk<br><span style="color:#fbbf24; font-weight:600;">Class II (1 pt):</span> 0.9% MACE risk<br><span style="color:#f97316; font-weight:600;">Class III (2 pts):</span> 6.6% MACE risk<br><span style="color:#ef4444; font-weight:600;">Class IV (&gt;=3 pts):</span> 11.0% MACE risk</span></span></span>`;
+      }
+      
       // Vertigo duration override
       if (lowerDx.includes('vertigo') && lowerItem.includes('duration') && lowerItem.includes('seconds')) {
         return `<span class="item-text">duration (<input type="number" class="inline-number" value="10" style="width:50px;" onchange="compileNote()"> <select class="inline-select" onchange="compileNote()"><option value="seconds">seconds</option><option value="minutes">minutes</option><option value="hours">hours</option><option value="days">days</option></select>)</span>`;
@@ -1599,6 +1677,14 @@
               const colorVal = textSpan.querySelectorAll('input')[0].value || "green";
               const consistencyVal = textSpan.querySelectorAll('input')[1].value || "thick";
               baseText = `sputum character (color: ${colorVal}, consistency: ${consistencyVal})`;
+            } else if (baseText.toLowerCase().includes('exercise tolerance') || baseText.toLowerCase().includes('mets')) {
+              const metsSelect = textSpan.querySelector('.mets-select');
+              const metsVal = metsSelect ? metsSelect.value : '>4 METs';
+              baseText = `exercise tolerance (${metsVal})`;
+            } else if (baseText.toLowerCase().includes('rcri score')) {
+              const rcriSelect = textSpan.querySelector('.rcri-score-select');
+              const rcriVal = rcriSelect ? rcriSelect.value : 'Class I';
+              baseText = `RCRI score: ${rcriVal}`;
             } else {
               // General replacement
               inputs.forEach(input => {
@@ -1937,10 +2023,18 @@
 
       // 1. History / Subjective MDM upgrade (Problem Complexity)
       let hxPart = '';
-      if (hxChecked.length > 0) {
-        hxPart = `- **Clinical Presentation**: Moderate-complexity presentation of suspected ${selectedDx.name} with risk of acute progression, characterized by: ${hxChecked.join(', ')}.`;
+      if (selectedDx.name === "Pre-operative Clearance") {
+        if (hxChecked.length > 0) {
+          hxPart = `- **Pre-operative Assessment**: Perioperative risk assessment and evaluation, characterized by: ${hxChecked.join(', ')}.`;
+        } else {
+          hxPart = `- **Pre-operative Assessment**: Perioperative risk assessment and evaluation.`;
+        }
       } else {
-        hxPart = `- **Clinical Presentation**: Clinical presentation of suspected ${selectedDx.name} evaluated at moderate severity.`;
+        if (hxChecked.length > 0) {
+          hxPart = `- **Clinical Presentation**: Moderate-complexity presentation of suspected ${selectedDx.name} with risk of acute progression, characterized by: ${hxChecked.join(', ')}.`;
+        } else {
+          hxPart = `- **Clinical Presentation**: Clinical presentation of suspected ${selectedDx.name} evaluated at moderate severity.`;
+        }
       }
 
       // 2. Differential (Rearranged: primary item moves to front)
@@ -1951,7 +2045,13 @@
       } else {
         diffList = defaultDiffs;
       }
-      const diffPart = `- **Differential Triage**: ${diffList.join(' > ')}`;
+      
+      let diffPart = '';
+      if (selectedDx.name === "Pre-operative Clearance") {
+        diffPart = `- **Risk Assessment Triage**: ${diffList.join(' > ')}`;
+      } else {
+        diffPart = `- **Differential Triage**: ${diffList.join(' > ')}`;
+      }
 
       // 3. Work-up
       let workupPart = '';
@@ -2153,6 +2253,69 @@
       }
 
       const noteText = `[Wells Criteria DVT Assessment]\nScore: ${score} points (${prob})\nCriteria Met: ${criteria.join(', ')}${plan}`;
+      insertCalculatorResult(noteText);
+      toggleCalculatorsDrawer();
+    }
+
+    // Calculator Actions: RCRI
+    function runRCRI() {
+      let score = 0;
+      document.querySelectorAll('.rcri-check:checked').forEach(cb => score += parseInt(cb.value));
+
+      let maceRisk = "Class I (0.4% MACE risk - Low risk)";
+      if (score >= 3) maceRisk = "Class IV (11.0% MACE risk - High risk)";
+      else if (score === 2) maceRisk = "Class III (6.6% MACE risk - Moderate-High risk)";
+      else if (score === 1) maceRisk = "Class II (0.9% MACE risk - Low-Moderate risk)";
+
+      document.getElementById('rcri-result').innerText = `RCRI Score: ${score} point${score !== 1 ? 's' : ''} (${maceRisk})`;
+    }
+
+    function insertRCRI() {
+      let score = 0;
+      let criteria = [];
+      document.querySelectorAll('.rcri-check:checked').forEach(cb => {
+        score += parseInt(cb.value);
+        criteria.push(cb.closest('label').innerText.trim().replace(/\s*\(\+1\)$/, ''));
+      });
+
+      let maceRisk = "";
+      let classVal = "";
+      let plan = "";
+      if (score >= 3) {
+        classVal = "Class IV";
+        maceRisk = "11.0% risk of major adverse cardiac events (MACE)";
+        plan = "\nPlan:\n" +
+               "  - Patient is at HIGH cardiac risk for non-cardiac surgery.\n" +
+               "  - Recommend cardiology consultation for optimized management.\n" +
+               "  - Consider preoperative ECG, echocardiogram, or non-invasive stress testing if indicated.\n" +
+               "  - Perioperative beta-blocker continuation (do not initiate acutely on surgery day).\n" +
+               "  - Postoperative ECG and troponin monitoring.";
+      } else if (score === 2) {
+        classVal = "Class III";
+        maceRisk = "6.6% risk of major adverse cardiac events (MACE)";
+        plan = "\nPlan:\n" +
+               "  - Patient is at MODERATE-HIGH cardiac risk.\n" +
+               "  - Consider cardiology consultation or risk-reduction strategies.\n" +
+               "  - Ensure optimization of medical therapy (beta-blockers, statins, ACE-I).\n" +
+               "  - Postoperative monitoring per protocol.";
+      } else if (score === 1) {
+        classVal = "Class II";
+        maceRisk = "0.9% risk of major adverse cardiac events (MACE)";
+        plan = "\nPlan:\n" +
+               "  - Patient is at LOW-MODERATE cardiac risk.\n" +
+               "  - Proceed with standard perioperative care.\n" +
+               "  - Continue baseline cardiac medications morning of surgery (holding ACE-I/ARBs as per local guidelines).";
+      } else {
+        classVal = "Class I";
+        maceRisk = "0.4% risk of major adverse cardiac events (MACE)";
+        plan = "\nPlan:\n" +
+               "  - Patient is at LOW cardiac risk.\n" +
+               "  - Proceed with standard perioperative care.";
+      }
+
+      if (criteria.length === 0) criteria.push("None");
+
+      const noteText = `[Revised Cardiac Risk Index (RCRI)]\nScore: ${score} points (${classVal}, ${maceRisk})\nPredictors Met: ${criteria.join(', ')}${plan}`;
       insertCalculatorResult(noteText);
       toggleCalculatorsDrawer();
     }

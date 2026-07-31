@@ -1340,7 +1340,7 @@ const DOTPHRASES_DATA = {
         },
         {
             "name": "Pre-operative Clearance",
-            "hx": "Type of surgery, anesthesia history, exercise tolerance (METs >=4), active medical issues.",
+            "hx": "Type of surgery, anesthesia history, exercise tolerance (METs >=4), RCRI score, active medical issues.",
             "diff": "Perioperative risk assessment.",
             "workup": "ECG (if cardiac disease or high risk), CBC, BMP, PT/INR (depending on surgery/comorbidities).",
             "rx": "Instructions on holding meds (e.g., hold ACE-I/ARBs morning of surgery, hold anticoagulants per protocol).",
