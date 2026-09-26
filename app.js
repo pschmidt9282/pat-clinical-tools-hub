@@ -225,6 +225,27 @@ const INITIAL_TOOLS = [
         url: "./adhd-matrix/",
         category: "Psychiatry",
         description: "Comparative guide for first-line stimulants (methylphenidate/amphetamine) vs. second-line non-stimulant SNRIs and third-line alpha-2 agonists, detailing dosing and side-effects."
+    },
+    {
+        id: "copd-matrix",
+        title: "COPD Step-Up/Step-Down Management Matrix",
+        url: "./copd-matrix/",
+        category: "Primary Care",
+        description: "GOLD 2024 evidence-based treatment pathway ladder featuring ABE Group triage, blood eosinophil profiling, inhaler escalation (LAMA/LABA/ICS), and exacerbation mitigation."
+    },
+    {
+        id: "dm-prescribing-matrix",
+        title: "Type 2 Diabetes Prescribing & Regimen Adjustment Matrix",
+        url: "./dm-prescribing-matrix/",
+        category: "Endocrinology",
+        description: "ADA 2024 guideline-directed prescribing matrix for newly diagnosed T2D and interactive treat-to-target basal insulin titration engine based on fasting/post-meal logs."
+    },
+    {
+        id: "sleep-aid-matrix",
+        title: "Sleep-Aid & Insomnia Management Matrix",
+        url: "./sleep-aid-matrix/",
+        category: "Psychiatry",
+        description: "AASM & Lancet NMA clinical matrix featuring secondary cause screening (STOP-BANG OSA screener, labs), CBT-I non-pharm framework, and tiered medicine bank."
     }
 ];
 

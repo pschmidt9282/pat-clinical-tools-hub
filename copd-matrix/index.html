@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COPD Step-Up/Step-Down Management Matrix | GOLD 2024 Guidelines</title>
+  <link rel="stylesheet" href="../asthma-matrix/shared.css">
+  <style>
+    .step-slider-container {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+    }
+    .step-indicator-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    .step-dot {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem 0.4rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .step-dot:first-child { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); }
+    .step-dot:last-child { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); }
+    .step-dot.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .pill-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .group-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 0.6rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      text-align: center;
+      font-size: 0.88rem;
+    }
+    .group-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .evidence-box {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-color);
+      padding-top: 0.75rem;
+      margin-top: 1rem;
+    }
+    .gold-group-badge {
+      font-size: 1.1rem;
+      font-weight: 800;
+      padding: 0.3rem 0.8rem;
+      border-radius: var(--radius-md);
+    }
+  </style>
+
+  <link rel="stylesheet" id="theme-stylesheet" href="../theme.css">
+  <script src="../theme.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../asthma-matrix/" class="nav-link">Asthma Matrix</a>
+      <a href="../dm-prescribing-matrix/" class="nav-link">Diabetes Matrix</a>
+      <a href="../sleep-aid-matrix/" class="nav-link">Sleep-Aid Matrix</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">COPD Step-Up/Step-Down Management Matrix</h1>
+          <p class="page-subtitle">GOLD 2024/2025 evidence-based ladder: ABE Group triage, blood eosinophil profiling, inhaler escalation, and exacerbation mitigation.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">GOLD 2024 / ATS / ERS Guidelines</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Input Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Step 1: COPD Symptom & Exacerbation Triage -->
+        <div class="card">
+          <h2 class="card-title">
+            <svg style="width:20px;height:20px;color:var(--primary);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12a9 9 0 1 1-9-9"/></svg>
+            1. GOLD ABE Classification & Risk Triage
+          </h2>
+          <p class="card-desc">Select patient symptom burden, exacerbation history, and eosinophil status:</p>
+
+          <div class="form-group">
+            <label class="form-label">Symptom Burden (mMRC or CAT Score)</label>
+            <select id="sel-symptoms" class="form-select">
+              <option value="low">Low Symptoms: mMRC 0–1 or CAT < 10 (Dyspnea only with strenuous exercise / light breathlessness)</option>
+              <option value="high">High Symptoms: mMRC ≥ 2 or CAT ≥ 10 (Walks slower than peers due to breathlessness or stops for breath)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Exacerbation History (Past 12 Months)</label>
+            <select id="sel-exacerbations" class="form-select">
+              <option value="0-1_mod">0 or 1 Moderate Exacerbation (No hospital admissions)</option>
+              <option value="freq_or_hosp">≥ 2 Moderate Exacerbations OR ≥ 1 Severe (Required Hospitalization)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Blood Eosinophil Count (cells/µL)</label>
+            <select id="sel-eos" class="form-select">
+              <option value="low">< 100 cells/µL (ICS low utility / potential harm)</option>
+              <option value="mid">100 – 299 cells/µL (Moderate ICS benefit if frequent exacerbations)</option>
+              <option value="high">≥ 300 cells/µL (Strong ICS benefit for exacerbation prevention)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Spirometry FEV1 % Predicted (Airflow Limitation)</label>
+            <select id="sel-fev1" class="form-select">
+              <option value="gold1">GOLD 1: FEV1 ≥ 80% predicted (Mild)</option>
+              <option value="gold2" selected>GOLD 2: FEV1 50–79% predicted (Moderate)</option>
+              <option value="gold3">GOLD 3: FEV1 30–49% predicted (Severe)</option>
+              <option value="gold4">GOLD 4: FEV1 < 30% predicted (Very Severe)</option>
+            </select>
+          </div>
+
+          <div id="gold-triage-output" class="alert alert-low">
+            <!-- Triage level injected here -->
+          </div>
+        </div>
+
+        <!-- Step 2: Treatment Pathway Ladder Selector -->
+        <div class="card">
+          <h2 class="card-title">2. COPD Treatment Pathway Ladder</h2>
+          <p class="card-desc">Click through the treatment ladder to view guideline-recommended step-up/step-down regimens:</p>
+
+          <div class="form-group">
+            <label class="form-label">Current Treatment Ladder Level</label>
+            <div class="step-indicator-group">
+              <button class="step-dot active" id="step-btn-1" onclick="selectCopdStep(1)">Step 1<br><small style="font-weight:400;font-size:0.75rem;">Initial / Mild</small></button>
+              <button class="step-dot" id="step-btn-2" onclick="selectCopdStep(2)">Step 2<br><small style="font-weight:400;font-size:0.75rem;">LAMA + LABA</small></button>
+              <button class="step-dot" id="step-btn-3" onclick="selectCopdStep(3)">Step 3<br><small style="font-weight:400;font-size:0.75rem;">Triple Therapy</small></button>
+              <button class="step-dot" id="step-btn-4" onclick="selectCopdStep(4)">Step 4<br><small style="font-weight:400;font-size:0.75rem;">Advanced Add-on</small></button>
+            </div>
+          </div>
+
+          <div class="checkbox-group" style="margin-top:1rem;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-chronic-bronchitis">
+              <div>
+                <strong>Patient has Chronic Bronchitis Phenotype</strong>
+                <div class="form-hint">Chronic productive cough for ≥ 3 months/year in 2 consecutive years (FEV1 < 50%).</div>
+              </div>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-former-smoker" checked>
+              <div>
+                <strong>Former / Current Tobacco Use History</strong>
+                <div class="form-hint">Relevant for long-term Macrolide (Azithromycin) anti-inflammatory therapy.</div>
+              </div>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-pneumonia-hx">
+              <div>
+                <strong>History of Repeated Pneumonia / Severe Mycobacterial Infection</strong>
+                <div class="form-hint">Relative or absolute contraindication for Inhaled Corticosteroids (ICS).</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Output Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Treatment Details -->
+        <div class="card">
+          <h2 class="card-title">3. Recommended Pharmacotherapy Regimen</h2>
+          <div id="copd-regimen-content">
+            <!-- Dynamic Regimen Injected Here -->
+          </div>
+        </div>
+
+        <!-- Step-Up / Step-Down Transition Logic -->
+        <div class="card">
+          <h2 class="card-title">4. Escalation / De-Escalation Guidelines</h2>
+          <div id="copd-transition-content">
+            <!-- Dynamic Transition Criteria Injected Here -->
+          </div>
+        </div>
+
+        <!-- Non-Pharmacologic & Health Maintenance -->
+        <div class="card">
+          <h2 class="card-title">5. Non-Pharmacologic & Risk Reduction Protocol</h2>
+          <div style="font-size:0.9rem; display:flex; flex-direction:column; gap:0.6rem; color:var(--text-secondary);">
+            <div>• <strong>Smoking Cessation (Single Most Effective Intervention):</strong> Offer Varenicline, Bupropion SR, or Nicotine Replacement (Patch + Gum/Lozenge) alongside behavioral counseling at every visit.</div>
+            <div>• <strong>Pulmonary Rehabilitation:</strong> Indicated for all patients in GOLD Groups B and E. Improves exercise capacity, dyspnea, and health-related quality of life.</div>
+            <div>• <strong>Vaccinations (Essential):</strong> Influenza (annual), COVID-19, Pneumococcal (PCV20 or PCV15 followed by PPSV23), RSV (single dose for ≥60 yo), Tdap.</div>
+            <div>• <strong>Long-Term Oxygen Therapy (LTOT):</strong> Indicated if resting PaO2 ≤ 55 mmHg (or SaO2 ≤ 88%), or PaO2 56–59 mmHg with cor pulmonale or polycythemia (hematocrit > 55%). Titrate target SaO2 88–92%.</div>
+          </div>
+        </div>
+
+        <!-- Copy EHR note -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-copd">Copy Note to Clipboard</button>
+          </div>
+          <div class="copy-box" id="copd-note">Generating clinical summary...</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from GOLD 2024 Global Strategy for Prevention, Diagnosis, and Management of COPD & CHEST Clinical Guidelines</p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    // State
+    let currentStep = 1;
+
+    // Database of COPD Steps
+    const STEP_DATABASE = {
+      1: {
+        title: "Step 1: Initial Monotherapy (LAMA or LABA)",
+        groupA_pref: "LAMA Monotherapy (e.g. Umeclidinium 62.5 mcg 1 puff daily OR Tiotropium 18 mcg 1 puff daily)",
+        groupB_pref: "LAMA Monotherapy or Dual LAMA+LABA",
+        groupE_pref: "Dual LAMA+LABA (Group E should step up to Step 2)",
+        reliever: "Albuterol HFA 90 mcg 2 puffs q4-6h PRN for acute dyspnea (or Ipratropium/Albuterol Combivent Respimat 1 puff QID PRN)",
+        cost: "~$60–$180/month",
+        warnings: "Check dry-mouth for LAMA. Monitor inhaler actuation technique."
+      },
+      2: {
+        title: "Step 2: Dual Bronchodilator (LAMA + LABA)",
+        details: "LAMA + LABA Fixed-Dose Combination (FDC)",
+        options: [
+          "Umeclidinium / Vilanterol (Anoro Ellipta) 62.5/25 mcg — 1 inhalation once daily",
+          "Tiotropium / Olodaterol (Stiolto Respimat) 2.5/2.5 mcg — 2 inhalations once daily",
+          "Glycopyrrolate / Formoterol (Bevespi Aerosphere) 9/4.8 mcg — 2 inhalations BID"
+        ],
+        reliever: "Albuterol HFA 90 mcg 2 puffs q4-6h PRN",
+        cost: "~$250–$380/month",
+        warnings: "Superior to monotherapy for improving FEV1, reducing dyspnea, and preventing exacerbations without ICS risks."
+      },
+      3: {
+        title: "Step 3: Triple Therapy (ICS + LAMA + LABA)",
+        details: "Single-Inhaler Triple Therapy (SITT) FDC",
+        options: [
+          "Fluticasone furoate / Umeclidinium / Vilanterol (Trelegy Ellipta) 100/62.5/25 mcg — 1 inhalation once daily (Preferred for Eos ≥ 300)",
+          "Budesonide / Glycopyrrolate / Formoterol (Breztri Aerosphere) 160/9/4.8 mcg — 2 inhalations BID"
+        ],
+        reliever: "Albuterol HFA 90 mcg 2 puffs PRN",
+        cost: "~$450–$620/month",
+        warnings: "Increased risk of oral candidiasis and pneumonia. Rinse mouth and spit out after every inhalation. Best indicated when Blood Eosinophils ≥ 300 or ≥ 100 with frequent flares."
+      },
+      4: {
+        title: "Step 4: Advanced Add-On Non-Inhaler Therapies",
+        details: "Targeted Add-On Therapies for Severe Refractory COPD",
+        options: [
+          "Roflumilast (Daliresp) 500 mcg oral tablet once daily (If FEV1 < 50% predicted + Chronic Bronchitis phenotype). Selective PDE4 inhibitor.",
+          "Azithromycin 250 mg oral tablet 3 times weekly (in former smokers with recurrent exacerbations on maximal inhalers). Anti-inflammatory macrolide.",
+          "N-Acetylcysteine (NAC) / Mucolytics for tenacious sputum hypersecretion."
+        ],
+        reliever: "Albuterol HFA PRN + Triple Therapy Inhaler baseline",
+        cost: "~$150–$500/month add-on",
+        warnings: "Roflumilast warning: Weight loss, diarrhea, mood changes/depression. Azithromycin warning: Hearing impairment, QTc prolongation, atypical mycobacterial resistance (screen AFB prior to start)."
+      }
+    };
+
+    function selectCopdStep(stepNum) {
+      currentStep = stepNum;
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`step-btn-${i}`);
+        btn.classList.toggle('active', i === stepNum);
+      }
+      updateCopdMatrix();
+    }
+
+    function calculateGoldGroup() {
+      const symptoms = document.getElementById('sel-symptoms').value;
+      const exacerbations = document.getElementById('sel-exacerbations').value;
+      const eos = document.getElementById('sel-eos').value;
+
+      let group = 'A';
+      let groupText = '';
+      let badgeStyle = 'badge-low';
+
+      if (exacerbations === 'freq_or_hosp') {
+        group = 'E';
+        groupText = 'Group E (High Exacerbation Risk)';
+        badgeStyle = 'badge-high';
+      } else if (symptoms === 'high') {
+        group = 'B';
+        groupText = 'Group B (High Symptom Burden, Low Exacerbation Risk)';
+        badgeStyle = 'badge-int';
+      } else {
+        group = 'A';
+        groupText = 'Group A (Low Symptoms, Low Exacerbation Risk)';
+        badgeStyle = 'badge-low';
+      }
+
+      return { group, groupText, badgeStyle, symptoms, exacerbations, eos };
+    }
+
+    function updateCopdMatrix() {
+      const triage = calculateGoldGroup();
+      const fev1Val = document.getElementById('sel-fev1').value;
+      const fev1Text = document.getElementById('sel-fev1').options[document.getElementById('sel-fev1').selectedIndex].text;
+      const chronicBronchitis = document.getElementById('chk-chronic-bronchitis').checked;
+      const formerSmoker = document.getElementById('chk-former-smoker').checked;
+      const pneumoniaHx = document.getElementById('chk-pneumonia-hx').checked;
+
+      // Render Triage Banner
+      const triageBox = document.getElementById('gold-triage-output');
+      triageBox.className = `alert ${triage.group === 'A' ? 'alert-low' : (triage.group === 'B' ? 'alert-int' : 'alert-high')}`;
+      triageBox.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <div>
+          <div style="margin-bottom:0.25rem;">GOLD 2024 Category: <span class="badge ${triage.badgeStyle}">${triage.groupText}</span></div>
+          <div style="font-size:0.875rem;">
+            • <strong>Initial Recommended Level:</strong> ${triage.group === 'A' ? 'Step 1 (Monotherapy)' : (triage.group === 'B' ? 'Step 2 (LAMA + LABA)' : (triage.eos === 'high' ? 'Step 3 (Triple Therapy)' : 'Step 2 (LAMA + LABA)'))}
+            <br>• <strong>Eosinophil Guidance:</strong> ${triage.eos === 'high' ? 'High Eos (≥300) strongly favors ICS addition.' : (triage.eos === 'mid' ? 'Moderate Eos (100-299): consider ICS if exacerbations persist on LAMA+LABA.' : 'Low Eos (<100): ICS has low efficacy and increases pneumonia risk.')}
+          </div>
+        </div>
+      `;
+
+      // Render Regimen Box
+      const stepData = STEP_DATABASE[currentStep];
+      const regimenBox = document.getElementById('copd-regimen-content');
+
+      let regimenHTML = `<h3 style="font-size:1.1rem; font-weight:700; color:var(--primary-text); margin-bottom:0.75rem;">${stepData.title}</h3>`;
+
+      if (currentStep === 1) {
+        regimenHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--primary);">
+            <strong>Maintenance Bronchodilator:</strong>
+            <div style="margin-top:0.35rem; font-size:0.9rem;">
+              • <strong>First Choice:</strong> ${stepData.groupA_pref}<br>
+              • <strong>Estimated Cost:</strong> ${stepData.cost}<br>
+              • <strong>Key Note:</strong> LAMA (anticholinergic) superior to LABA for exacerbation reduction.
+            </div>
+          </div>
+        `;
+      } else if (currentStep === 2) {
+        regimenHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--accent);">
+            <strong>Dual Bronchodilator Inhalers (Select One):</strong>
+            <div style="margin-top:0.35rem; font-size:0.9rem;">
+              ${stepData.options.map(opt => `• ${opt}`).join('<br>')}<br>
+              • <strong>Estimated Cost:</strong> ${stepData.cost}<br>
+              • <strong>Clinical Pearls:</strong> ${stepData.warnings}
+            </div>
+          </div>
+        `;
+      } else if (currentStep === 3) {
+        regimenHTML += `
+          <div class="check-list-item" style="border-left: 4px solid ${pneumoniaHx ? 'var(--risk-high)' : 'var(--risk-int)'};">
+            <strong>Single-Inhaler Triple Therapy (ICS / LAMA / LABA):</strong>
+            <div style="margin-top:0.35rem; font-size:0.9rem;">
+              ${stepData.options.map(opt => `• ${opt}`).join('<br>')}<br>
+              • <strong>Estimated Cost:</strong> ${stepData.cost}<br>
+              • <strong style="color:${pneumoniaHx ? 'var(--risk-high-text)' : 'inherit'};">Safety Warning:</strong> ${pneumoniaHx ? 'CRITICAL: Patient has repeated pneumonia history! Use extreme caution when adding ICS.' : stepData.warnings}
+            </div>
+          </div>
+        `;
+      } else if (currentStep === 4) {
+        regimenHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--risk-high);">
+            <strong>Advanced Oral Add-on Options:</strong>
+            <div style="margin-top:0.35rem; font-size:0.9rem;">
+              ${stepData.options.map(opt => `• ${opt}`).join('<br>')}<br>
+              • <strong>Cost & Monitoring:</strong> ${stepData.cost} | ${stepData.warnings}
+            </div>
+          </div>
+        `;
+      }
+
+      // Add Rescue Info
+      regimenHTML += `
+        <div class="check-list-item" style="border-left: 4px solid var(--risk-low); margin-top:0.75rem;">
+          <strong>Rescue Medication (All Steps):</strong>
+          <div style="margin-top:0.25rem; font-size:0.9rem;">
+            • ${stepData.reliever}
+          </div>
+        </div>
+      `;
+
+      regimenBox.innerHTML = regimenHTML;
+
+      // Render Transition Box
+      const transitionBox = document.getElementById('copd-transition-content');
+      let transHTML = '';
+
+      if (currentStep < (triage.group === 'E' ? 3 : 2)) {
+        transHTML = `
+          <div class="alert alert-int" style="flex-direction:column; align-items:flex-start;">
+            <strong>Step-Up Escalation Logic:</strong>
+            <div style="margin-top:0.35rem; font-size:0.875rem;">
+              • Patient's GOLD Group (${triage.group}) indicates current Step ${currentStep} may be undertreating.<br>
+              • <strong>Recommended Action:</strong> Step up to <strong>${triage.group === 'E' ? 'Step 2 or Step 3' : 'Step 2 (LAMA + LABA)'}</strong> to optimize bronchodilation and reduce flare risk.<br>
+              • <em>Before stepping up:</em> Verify inhaler technique (watch patient actuate device) and confirm medication adherence.
+            </div>
+          </div>
+        `;
+      } else {
+        transHTML = `
+          <div class="alert alert-low" style="flex-direction:column; align-items:flex-start;">
+            <strong>Maintenance & Step-Down Considerations:</strong>
+            <div style="margin-top:0.35rem; font-size:0.875rem;">
+              • <strong>If Dyspnea Persists:</strong> Switch inhaler device type (e.g. DPI to MDI/Respimat), evaluate for pulmonary rehabilitation, rule out comorbidities (HF, GERD, OSA).<br>
+              • <strong>If Exacerbations Persist:</strong> Check Blood Eosinophils. If Eos ≥ 100, escalate to Triple Therapy (Step 3). If Eos < 100, consider Roflumilast (if chronic bronchitis) or Azithromycin (Step 4).<br>
+              • <strong>Step-Down / ICS Taper:</strong> If patient is on ICS without history of exacerbations or has developed recurrent pneumonia, taper and withdraw ICS while maintaining dual LAMA+LABA.
+            </div>
+          </div>
+        `;
+      }
+      transitionBox.innerHTML = transHTML;
+
+      // Build EHR Note
+      const note = `COPD STEP-UP/STEP-DOWN CLINICAL DECISION NOTE
+--------------------------------------------------
+PATIENT CLINICAL ASSESSMENT:
+- Spirometry Severity: ${fev1Text}
+- Symptom Burden: ${triage.symptoms === 'high' ? 'High (mMRC >= 2 / CAT >= 10)' : 'Low (mMRC 0-1 / CAT < 10)'}
+- Exacerbation History (12 mo): ${triage.exacerbations === 'freq_or_hosp' ? '>= 2 Moderate or >= 1 Hospitalization' : '0-1 Moderate (No hospitalizations)'}
+- Blood Eosinophils: ${triage.eos === 'high' ? '>= 300 cells/uL' : (triage.eos === 'mid' ? '100-299 cells/uL' : '< 100 cells/uL')}
+- Chronic Bronchitis Phenotype: ${chronicBronchitis ? 'Yes' : 'No'}
+- Pneumonia History: ${pneumoniaHx ? 'YES (ICS Caution Required)' : 'None reported'}
+
+GOLD 2024 TRIAGE:
+- Calculated Category: ${triage.groupText}
+- Selected Treatment Ladder Level: Step ${currentStep} (${stepData.title})
+
+RECOMMENDED PHARMACOTHERAPY PLAN:
+- Maintenance Inhaler: ${currentStep === 1 ? stepData.groupA_pref : (currentStep === 2 ? 'LAMA + LABA Dual Bronchodilator' : (currentStep === 3 ? 'Triple Therapy (ICS + LAMA + LABA)' : 'Step 3 Triple Inhaler + Advanced Oral Add-on'))}
+- Rescue Inhaler: ${stepData.reliever}
+
+NON-PHARMACOLOGIC & PREVENTIVE PLAN:
+- Smoking Cessation Counseling & Pharmacotherapy offered/reviewed.
+- Pulmonary Rehabilitation: ${triage.group !== 'A' ? 'Referred / Encouraged' : 'Maintain activity'}
+- Vaccines Reviewed: Influenza, COVID-19, Pneumococcal, RSV, Tdap.
+- Patient educated on correct inhaler technique & mouth rinsing post-inhalation.`;
+
+      document.getElementById('copd-note').textContent = note;
+    }
+
+    // Event listeners
+    document.getElementById('sel-symptoms').addEventListener('change', updateCopdMatrix);
+    document.getElementById('sel-exacerbations').addEventListener('change', updateCopdMatrix);
+    document.getElementById('sel-eos').addEventListener('change', updateCopdMatrix);
+    document.getElementById('sel-fev1').addEventListener('change', updateCopdMatrix);
+    document.getElementById('chk-chronic-bronchitis').addEventListener('change', updateCopdMatrix);
+    document.getElementById('chk-former-smoker').addEventListener('change', updateCopdMatrix);
+    document.getElementById('chk-pneumonia-hx').addEventListener('change', updateCopdMatrix);
+
+    document.getElementById('btn-copy-copd').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('copd-note').textContent).then(() => {
+        alert('COPD Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Init
+    updateCopdMatrix();
+  </script>
+</body>
+</html>

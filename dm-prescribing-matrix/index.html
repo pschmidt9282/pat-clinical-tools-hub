@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Type 2 Diabetes Prescribing & Regimen Adjustment Matrix | ADA 2024 Standards of Care</title>
+  <link rel="stylesheet" href="../asthma-matrix/shared.css">
+  <style>
+    .su-warning-card {
+      background: var(--risk-high-bg);
+      border: 1px solid var(--risk-high-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .pill-tab-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .pill-tab {
+      flex: 1;
+      padding: 0.6rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+      font-size: 0.88rem;
+    }
+    .pill-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .titration-step-box {
+      background: var(--bg-tertiary);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem;
+      margin-top: 0.75rem;
+    }
+  </style>
+
+  <link rel="stylesheet" id="theme-stylesheet" href="../theme.css">
+  <script src="../theme.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../t2d-glucose-lowering/" class="nav-link">Glycemic Dashboard</a>
+      <a href="../copd-matrix/" class="nav-link">COPD Matrix</a>
+      <a href="../sleep-aid-matrix/" class="nav-link">Sleep-Aid Matrix</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">Type 2 Diabetes Prescribing & Regimen Adjustment Matrix</h1>
+          <p class="page-subtitle">ADA 2024 / 2025 Guideline-directed initial prescribing order, comorbidity-first selection, basal insulin titration engine, and drug monographs.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">ADA 2024 Standards of Care</span>
+      </div>
+    </div>
+
+    <!-- Mode Selector Tabs -->
+    <div class="pill-tab-group">
+      <button class="pill-tab active" id="tab-mode-init" onclick="switchMode('init')">1. Initial Prescribing Pathways (New Diagnosis)</button>
+      <button class="pill-tab" id="tab-mode-titrate" onclick="switchMode('titrate')">2. Regimen Titration & Insulin Adjustment Engine</button>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Input Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Patient Clinical & Comorbidity Inputs -->
+        <div class="card">
+          <h2 class="card-title">
+            <svg style="width:20px;height:20px;color:var(--primary);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            Patient Comorbidity & Laboratory Profile
+          </h2>
+
+          <div class="form-group">
+            <label class="form-label">Glycated Hemoglobin (A1C %)</label>
+            <select id="sel-a1c" class="form-select">
+              <option value="mild">A1C < 7.5% (Mild Elevation / Single Agent Target)</option>
+              <option value="mod" selected>A1C 7.5% – 8.9% (Moderate Elevation / Dual Therapy Standard)</option>
+              <option value="high">A1C 9.0% – 9.9% (High Elevation / Dual or Triple Therapy)</option>
+              <option value="severe">A1C ≥ 10.0% OR Fasting Glucose ≥ 300 mg/dL (Severe / Basal Insulin Indicated)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Renal Function (eGFR mL/min/1.73m²)</label>
+            <select id="sel-egfr" class="form-select">
+              <option value="normal">eGFR ≥ 60 mL/min (Normal / Mild CKD)</option>
+              <option value="ckd3a">eGFR 45–59 mL/min (CKD Stage 3a)</option>
+              <option value="ckd3b">eGFR 30–44 mL/min (CKD Stage 3b - Metformin max 1000mg/day)</option>
+              <option value="ckd4">eGFR < 30 mL/min (CKD Stage 4/5 - Metformin Contraindicated)</option>
+            </select>
+          </div>
+
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-ascvd">
+              <div>
+                <strong>Established ASCVD or High CVD Risk</strong>
+                <div class="form-hint">History of CAD, MI, stroke, TIA, peripheral arterial disease, or carotid stenosis. (Favors GLP-1 RA / SGLT2i).</div>
+              </div>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-hf">
+              <div>
+                <strong>Heart Failure (HFrEF or HFpEF)</strong>
+                <div class="form-hint">LVEF ≤ 40% or preserved EF with symptoms/hospitalization. (Mandates SGLT2i).</div>
+              </div>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-ckd">
+              <div>
+                <strong>CKD with Persistent Albuminuria (UACR &gt; 30 mg/g)</strong>
+                <div class="form-hint">Diabetic kidney disease. (Mandates SGLT2i + GLP-1 RA).</div>
+              </div>
+            </label>
+
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-weight-priority" checked>
+              <div>
+                <strong>Weight Loss Priority / Obesity (BMI &ge; 27)</strong>
+                <div class="form-hint">Favors Tirzepatide (Mounjaro) or Semaglutide (Ozempic) / SGLT2i.</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Sulfonylurea Disfavor Alert Box -->
+          <div class="su-warning-card">
+            <div style="display:flex; gap:0.5rem; align-items:flex-start;">
+              <svg style="width:22px;height:22px;color:var(--risk-high-text);flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              <div>
+                <strong style="color:var(--risk-high-text); font-size:0.9rem;">Sulfonylurea Safety & Prescribing Warning:</strong>
+                <div style="font-size:0.825rem; color:var(--text-secondary); margin-top:0.3rem;">
+                  Sulfonylureas (Glipizide, Glimepiride, Glyburide) are <strong>DISFAVORED</strong> as first- or second-line therapy in modern ADA guidelines. They cause significant <strong>hypoglycemia</strong>, weight gain, accelerate beta-cell exhaustion, and lack cardiorenal protective benefits. Prefer SGLT2i, GLP-1 RA, Tirzepatide, or DPP-4i.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Titration Inputs (Only Visible in Titration Mode) -->
+        <div class="card" id="card-titration-inputs" style="display:none;">
+          <h2 class="card-title">
+            <svg style="width:20px;height:20px;color:var(--accent);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Blood Glucose Monitoring & Current Regimen Logs
+          </h2>
+
+          <div class="form-group">
+            <label class="form-label">Current Active Regimen</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" id="chk-reg-met" checked> Metformin ER (e.g. 500mg BID or 1000mg BID)</label>
+              <label class="checkbox-label"><input type="checkbox" id="chk-reg-sglt2" checked> SGLT2 Inhibitor (e.g. Empagliflozin 10mg daily)</label>
+              <label class="checkbox-label"><input type="checkbox" id="chk-reg-glp1"> GLP-1 RA / Tirzepatide (e.g. Semaglutide 0.5mg qwk)</label>
+              <label class="checkbox-label"><input type="checkbox" id="chk-reg-basal"> Basal Insulin (Glargine / Detemir / Degludec)</label>
+            </div>
+          </div>
+
+          <div class="form-group" id="group-current-basal-dose" style="display:none;">
+            <label class="form-label">Current Nightly Basal Insulin Dose (Units)</label>
+            <input type="number" id="num-basal-dose" class="form-input" value="10" min="2" max="100">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Average Morning Fasting Glucose Log (FBG)</label>
+            <select id="sel-fbg" class="form-select">
+              <option value="hypo">Fasting < 80 mg/dL (Hypoglycemia / Over-basalized)</option>
+              <option value="target">Fasting 80 – 130 mg/dL (ON TARGET)</option>
+              <option value="mod_high" selected>Fasting 131 – 180 mg/dL (Moderately Elevated)</option>
+              <option value="high">Fasting 181 – 240 mg/dL (High)</option>
+              <option value="very_high">Fasting > 240 mg/dL (Severely High)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Average 2-Hour Post-Prandial / Evening Glucose Log (PBG)</label>
+            <select id="sel-pbg" class="form-select">
+              <option value="target">Post-Meal < 180 mg/dL (ON TARGET)</option>
+              <option value="high" selected>Post-Meal 181 – 240 mg/dL (Elevated Spike)</option>
+              <option value="very_high">Post-Meal > 240 mg/dL (Severe Spike)</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Output Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Prescribing & Titration Guidance -->
+        <div class="card">
+          <h2 class="card-title" id="out-card-title">Recommended Initial Prescribing Regimen</h2>
+          <div id="dm-guidance-content">
+            <!-- Dynamic Content Injected Here -->
+          </div>
+        </div>
+
+        <!-- Drug Monographs & Dosing Rules -->
+        <div class="card">
+          <h2 class="card-title">Agent Dosing, Monitoring & Titration Schedules</h2>
+          <div id="dm-monographs-content">
+            <!-- Dynamic Monographs Injected Here -->
+          </div>
+        </div>
+
+        <!-- Live EHR Note Generator -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-dm">Copy Note to Clipboard</button>
+          </div>
+          <div class="copy-box" id="dm-note">Generating clinical summary...</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from ADA 2024 Standards of Care in Diabetes & AACE Clinical Guidelines</p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    // State
+    let activeMode = 'init'; // 'init' or 'titrate'
+
+    function switchMode(mode) {
+      activeMode = mode;
+      document.getElementById('tab-mode-init').classList.toggle('active', mode === 'init');
+      document.getElementById('tab-mode-titrate').classList.toggle('active', mode === 'titrate');
+      document.getElementById('card-titration-inputs').style.display = mode === 'titrate' ? 'block' : 'none';
+      document.getElementById('out-card-title').textContent = mode === 'init' ? 'Recommended Initial Prescribing Regimen' : 'Actionable Regimen Adjustment & Titration Plan';
+      updateDmMatrix();
+    }
+
+    // Toggle Basal Dose Input
+    document.getElementById('chk-reg-basal').addEventListener('change', (e) => {
+      document.getElementById('group-current-basal-dose').style.display = e.target.checked ? 'block' : 'none';
+      updateDmMatrix();
+    });
+
+    function updateDmMatrix() {
+      const a1c = document.getElementById('sel-a1c').value;
+      const egfr = document.getElementById('sel-egfr').value;
+      const ascvd = document.getElementById('chk-ascvd').checked;
+      const hf = document.getElementById('chk-hf').checked;
+      const ckd = document.getElementById('chk-ckd').checked;
+      const weightPriority = document.getElementById('chk-weight-priority').checked;
+
+      const guidanceContent = document.getElementById('dm-guidance-content');
+      const monographsContent = document.getElementById('dm-monographs-content');
+
+      if (activeMode === 'init') {
+        // Mode 1: Initial Prescribing
+        let recAgents = [];
+        let primaryRationale = [];
+
+        // Metformin baseline check
+        let metDose = "Metformin ER 500 mg once daily with evening meal x 7 days, then 500 mg BID x 7 days, targeting 1000 mg BID (2000 mg/day).";
+        if (egfr === 'ckd3b') {
+          metDose = "Metformin ER 500 mg once daily with evening meal, max dose 1000 mg daily due to eGFR 30–44 mL/min.";
+          primaryRationale.push("eGFR 30–44: Metformin capped at 1000 mg/day.");
+        } else if (egfr === 'ckd4') {
+          metDose = "CONTRAINDICATED (eGFR < 30 mL/min). Omit Metformin.";
+          primaryRationale.push("eGFR < 30: Metformin contraindicated due to lactic acidosis risk.");
+        } else {
+          recAgents.push({ name: "Metformin ER", dose: metDose, role: "First-line foundation agent for glycemic efficacy & neutral weight." });
+        }
+
+        // Comorbidity first agents
+        if (hf || ckd || ascvd) {
+          recAgents.push({
+            name: "SGLT2 Inhibitor (Empagliflozin 10mg daily OR Dapagliflozin 10mg daily)",
+            dose: "10 mg once daily in the morning",
+            role: "MANDATORY Cardiorenal Protection: Reduces HF hospitalization, slows CKD progression, and provides glycemic reduction without hypoglycemia."
+          });
+          primaryRationale.push("HF / CKD / ASCVD present: SGLT2i strongly indicated regardless of A1C level.");
+        }
+
+        if (ascvd || weightPriority) {
+          recAgents.push({
+            name: "GLP-1 RA / Dual GIP-GLP-1 RA (Semaglutide / Ozempic OR Tirzepatide / Mounjaro)",
+            dose: "Semaglutide 0.25 mg SQ once weekly x 4 weeks, then 0.5 mg weekly OR Tirzepatide 2.5 mg SQ weekly x 4 weeks, then 5 mg weekly",
+            role: "High-Efficacy Glycemic & Weight Reduction: Proven MACE reduction (Semaglutide/Dulaglutide) and superior weight loss."
+          });
+          primaryRationale.push("ASCVD / Weight Priority: GLP-1 RA / Tirzepatide preferred second agent.");
+        }
+
+        // A1C-based stratification
+        let a1cNote = "";
+        if (a1c === 'severe') {
+          a1cNote = "CRITICAL: A1C ≥ 10% or Glucose ≥ 300 mg/dL. Initiate Basal Insulin (Glargine 10 units nightly) immediately alongside oral agents (Metformin ER + SGLT2i).";
+          recAgents.push({
+            name: "Basal Insulin (Glargine / Basaglar / Lantus OR Degludec / Tresiba)",
+            dose: "10 units SQ once nightly at bedtime (or 0.1–0.2 units/kg/day)",
+            role: "Rapidly reverses glucotoxicity. Titrate by +2 units q3d based on fasting blood glucose."
+          });
+        } else if (a1c === 'high' && recAgents.length < 3) {
+          a1cNote = "A1C 9.0–9.9%: Dual or Triple oral/injectable combination therapy recommended at onset to reach target A1C < 7.0%.";
+        }
+
+        // Render Guidance
+        guidanceContent.innerHTML = `
+          ${a1cNote ? `<div class="alert alert-high" style="margin-top:0;">${a1cNote}</div>` : ''}
+          <div style="display:flex; flex-direction:column; gap:0.75rem;">
+            ${recAgents.map(ag => `
+              <div class="check-list-item" style="border-left: 4px solid var(--primary);">
+                <strong style="color:var(--primary-text); font-size:1rem;">${ag.name}</strong>
+                <div style="margin-top:0.35rem; font-size:0.875rem;">
+                  • <strong>Starting Dosing Schedule:</strong> ${ag.dose}<br>
+                  • <strong>Clinical Rationale:</strong> ${ag.role}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        // Render Monographs
+        monographsContent.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.875rem;">
+            <div class="check-list-item">
+              <strong>1. Metformin Extended-Release (Glucophage XR)</strong><br>
+              • <em>Titration:</em> 500mg daily x7d -> 500mg BID x7d -> 1000mg BID with dinner to avoid GI upset/diarrhea.<br>
+              • <em>Monitoring:</em> eGFR at baseline & annually. Check Vitamin B12 levels periodically (risk of neuropathy mimicry).
+            </div>
+            <div class="check-list-item">
+              <strong>2. SGLT2 Inhibitors (Empagliflozin 10-25mg / Dapagliflozin 10mg)</strong><br>
+              • <em>Dosing:</em> 10mg once daily in morning. (eGFR cutoff: Empa/Dapa eGFR ≥ 20 for CKD benefit).<br>
+              • <em>Side Effects & Monitoring:</em> Mycotic genital infections (counsel hygiene/hydration), mild volume depletion/orthostasis, rare euglycemic DKA (hold 3 days prior to elective surgery).
+            </div>
+            <div class="check-list-item">
+              <strong>3. GLP-1 RA / Tirzepatide (Semaglutide 0.25->2mg / Tirzepatide 2.5->15mg)</strong><br>
+              • <em>Titration:</em> Stepwise monthly dose escalations to minimize nausea/vomiting.<br>
+              • <em>Warnings:</em> History of Medullary Thyroid Carcinoma or MEN 2 (Contraindicated). Pancreatitis history.
+            </div>
+          </div>
+        `;
+
+      } else {
+        // Mode 2: Titration & Glucose Adjustment Engine
+        const fbg = document.getElementById('sel-fbg').value;
+        const pbg = document.getElementById('sel-pbg').value;
+        const regBasal = document.getElementById('chk-reg-basal').checked;
+        const currentBasalDose = parseInt(document.getElementById('num-basal-dose').value) || 10;
+
+        let actionAlert = "";
+        let actionSteps = [];
+
+        if (regBasal) {
+          if (fbg === 'hypo') {
+            actionAlert = "ALERT: Fasting Hypoglycemia (< 80 mg/dL). Immediate Basal Insulin Dose Reduction Required.";
+            actionSteps.push(`• <strong>Basal Insulin Adjustment:</strong> Decrease Glargine/Degludec by -2 to -4 units immediately (Reduce from <strong>${currentBasalDose} units -> ${Math.max(currentBasalDose - 3, 2)} units nightly</strong>).`);
+            actionSteps.push(`• <strong>Safety Check:</strong> Review bedtime snack habit, alcohol intake, or accidental double-dosing.`);
+          } else if (fbg === 'target') {
+            actionAlert = "SUCCESS: Fasting Blood Glucose is ON TARGET (80–130 mg/dL).";
+            actionSteps.push(`• <strong>Basal Insulin Adjustment:</strong> Maintain current dose of <strong>${currentBasalDose} units nightly</strong>. Do not adjust basal insulin.`);
+            if (pbg !== 'target') {
+              actionSteps.push(`• <strong>Next Step for Post-Meal Spikes:</strong> Fasting glucose is controlled, but 2-hr post-meal glucose is elevated (${pbg === 'high' ? '181-240' : '>240'} mg/dL). Consider adding GLP-1 RA or Mealtime Rapid-Acting Insulin (Lispro 4 units before largest meal).`);
+            }
+          } else if (fbg === 'mod_high') {
+            actionAlert = "MODERATE ELEVATION: Fasting Glucose 131–180 mg/dL. Step-up Basal Titration.";
+            const newDose = currentBasalDose + 2;
+            actionSteps.push(`• <strong>Treat-to-Target Protocol:</strong> Increase Glargine/Degludec by <strong>+2 units every 3 days</strong> until fasting morning blood glucose reaches 80–130 mg/dL.`);
+            actionSteps.push(`• <strong>Immediate Action:</strong> Increase tonight from <strong>${currentBasalDose} units -> ${newDose} units nightly</strong>.`);
+          } else {
+            actionAlert = "HIGH FASTING GLUCOSE: Fasting Glucose > 180 mg/dL. Aggressive Basal Titration.";
+            const newDose = currentBasalDose + 4;
+            actionSteps.push(`• <strong>Treat-to-Target Protocol:</strong> Increase Glargine/Degludec by <strong>+3 to +4 units every 3 days</strong>.`);
+            actionSteps.push(`• <strong>Immediate Action:</strong> Increase tonight from <strong>${currentBasalDose} units -> ${newDose} units nightly</strong>.`);
+            actionSteps.push(`• <strong>Log Instructions:</strong> Patient to check FBG every morning before eating and log numbers for 3 days.`);
+          }
+        } else {
+          // No Basal Insulin currently
+          if (fbg === 'very_high' || a1c === 'severe') {
+            actionAlert = "INITIATE BASAL INSULIN: Fasting glucose > 240 mg/dL or severe glycemic escape.";
+            actionSteps.push(`• <strong>Initiation Protocol:</strong> Start Glargine (Basaglar / Lantus) <strong>10 units once daily at bedtime</strong> (or 0.1–0.2 u/kg/day).`);
+            actionSteps.push(`• <strong>Patient Self-Titration Rule:</strong> Check fasting blood glucose every morning. If FBG > 130 mg/dL for 3 consecutive days, increase dose by +2 units (from 10 -> 12 -> 14 units).`);
+          } else {
+            actionAlert = "NON-INSULIN TITRATION PROTOCOL:";
+            actionSteps.push(`• <strong>Metformin Optimization:</strong> Ensure Metformin ER is titrated up to 1000 mg BID (2000 mg daily) as tolerated.`);
+            actionSteps.push(`• <strong>GLP-1 RA Escalation:</strong> If on Semaglutide, escalate from 0.25 mg -> 0.5 mg -> 1.0 mg monthly until glucose target met.`);
+            actionSteps.push(`• <strong>Add SGLT2i:</strong> Add Empagliflozin 10 mg daily for additive non-glycemic cardiorenal protection.`);
+          }
+        }
+
+        guidanceContent.innerHTML = `
+          <div class="alert ${fbg === 'hypo' ? 'alert-high' : (fbg === 'target' ? 'alert-low' : 'alert-int')}" style="margin-top:0;">
+            ${actionAlert}
+          </div>
+          <div class="titration-step-box">
+            <strong style="color:var(--text-primary);">Specific Regimen Adjustment Instructions:</strong>
+            <div style="margin-top:0.5rem; font-size:0.9rem; line-height:1.6;">
+              ${actionSteps.join('<br>')}
+            </div>
+          </div>
+        `;
+
+        monographsContent.innerHTML = `
+          <div style="font-size:0.875rem; color:var(--text-secondary);">
+            <strong>Standard ADA Basal Insulin Titration Algorithm (Treat-to-Target):</strong>
+            <ul style="margin-left:1.25rem; margin-top:0.4rem;">
+              <li><strong>Target FBG:</strong> 80–130 mg/dL</li>
+              <li><strong>Titration Frequency:</strong> Adjust every 3 days based on average of last 3 FBG readings.</li>
+              <li><strong>Increment:</strong> +2 units if FBG 131–180 mg/dL; +4 units if FBG > 180 mg/dL.</li>
+              <li><strong>Hypoglycemia Rule:</strong> If FBG < 70 mg/dL or any unexplained hypoglycemia, decrease dose by 2–4 units (10–20%) immediately.</li>
+            </ul>
+          </div>
+        `;
+      }
+
+      // Build EHR Note
+      const note = `TYPE 2 DIABETES PRESCRIBING & REGIMEN ADJUSTMENT CLINICAL NOTE
+--------------------------------------------------
+PATIENT CLINICAL PROFILE:
+- Baseline A1C Category: ${document.getElementById('sel-a1c').options[document.getElementById('sel-a1c').selectedIndex].text}
+- Renal Function (eGFR): ${document.getElementById('sel-egfr').options[document.getElementById('sel-egfr').selectedIndex].text}
+- Comorbidities Present: ASCVD=${ascvd ? 'Yes' : 'No'}, Heart Failure=${hf ? 'Yes' : 'No'}, CKD/Albuminuria=${ckd ? 'Yes' : 'No'}, Obesity=${weightPriority ? 'Yes' : 'No'}
+- Sulfonylurea Policy: DISFAVORED due to severe hypoglycemia and weight gain risk.
+
+CLINICAL MODE: ${activeMode === 'init' ? 'INITIAL PRESCRIBING PATHWAY' : 'REGIMEN TITRATION ENGINE'}
+
+RECOMMENDED REGIMEN & TITRATION PLAN:
+${activeMode === 'init' 
+  ? '- Metformin ER: Titrate 500mg daily -> 500mg BID -> target 1000mg BID with dinner.\n- SGLT2i / GLP-1 RA: Add as indicated for cardiorenal risk reduction & glycemic efficacy.' 
+  : `- Fasting Glucose Log: ${document.getElementById('sel-fbg').options[document.getElementById('sel-fbg').selectedIndex].text}\n- Post-Prandial Log: ${document.getElementById('sel-pbg').options[document.getElementById('sel-pbg').selectedIndex].text}\n- Basal Insulin Status: ${regBasal ? `Current ${document.getElementById('num-basal-dose').value} units nightly` : 'Not currently on basal insulin'}`}
+
+MONITORING & FOLLOW-UP:
+- Repeat Fasting & 2-hr Post-Meal Blood Glucose Logs daily.
+- Repeat eGFR, Comprehensive Metabolic Panel, and A1C in 3 months.
+- Patient educated on hypoglycemia signs/symptoms and 15/15 Rule (15g fast-acting glucose).`;
+
+      document.getElementById('dm-note').textContent = note;
+    }
+
+    // Event Listeners
+    document.getElementById('sel-a1c').addEventListener('change', updateDmMatrix);
+    document.getElementById('sel-egfr').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-ascvd').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-hf').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-ckd').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-weight-priority').addEventListener('change', updateDmMatrix);
+    document.getElementById('sel-fbg').addEventListener('change', updateDmMatrix);
+    document.getElementById('sel-pbg').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-reg-met').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-reg-sglt2').addEventListener('change', updateDmMatrix);
+    document.getElementById('chk-reg-glp1').addEventListener('change', updateDmMatrix);
+    document.getElementById('num-basal-dose').addEventListener('input', updateDmMatrix);
+
+    document.getElementById('btn-copy-dm').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('dm-note').textContent).then(() => {
+        alert('Diabetes Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Init
+    updateDmMatrix();
+  </script>
+</body>
+</html>

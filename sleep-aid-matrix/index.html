@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sleep-Aid & Insomnia Management Matrix | AASM & Lancet Guidelines</title>
+  <link rel="stylesheet" href="../asthma-matrix/shared.css">
+  <style>
+    .stop-bang-box {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 0.75rem;
+    }
+    .tier-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+    }
+    .tier-1 { background: var(--risk-low-bg); color: var(--risk-low-text); border: 1px solid var(--risk-low-border); }
+    .tier-2 { background: var(--risk-int-bg); color: var(--risk-int-text); border: 1px solid var(--risk-int-border); }
+    .tier-3 { background: var(--risk-high-bg); color: var(--risk-high-text); border: 1px solid var(--risk-high-border); }
+  </style>
+
+  <link rel="stylesheet" id="theme-stylesheet" href="../theme.css">
+  <script src="../theme.js"></script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="../index.html" class="nav-brand">
+      <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>Clinical Reference Hub</span>
+    </a>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Hub Home</a>
+      <a href="../insomnia/" class="nav-link">Insomnia NMA</a>
+      <a href="../copd-matrix/" class="nav-link">COPD Matrix</a>
+      <a href="../dm-prescribing-matrix/" class="nav-link">Diabetes Matrix</a>
+      <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle Theme">
+        <span id="theme-text">Theme</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">Sleep-Aid & Insomnia Management Matrix</h1>
+          <p class="page-subtitle">AASM & Lancet NMA clinical guide: secondary cause screening (STOP-BANG, labs), CBT-I non-pharmacologic framework, and tiered medicine bank.</p>
+        </div>
+        <span class="badge badge-low" style="font-size:0.85rem; padding:0.4rem 0.8rem;">AASM / ACP Guidelines</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Input Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Section 1: Secondary Causes & Workup Matrix -->
+        <div class="card">
+          <h2 class="card-title">
+            <svg style="width:20px;height:20px;color:var(--primary);" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            1. Rule Out Secondary Causes & Triggers
+          </h2>
+          <p class="card-desc">Evaluate for underlying medical conditions, laboratory deficiencies, and substance triggers:</p>
+
+          <!-- Diagnostic Workup Checklist -->
+          <div class="checkbox-group">
+            <strong style="font-size:0.9rem; color:var(--text-primary); margin-top:0.2rem;">Laboratory & Endocrine Screener:</strong>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-tsh-done">
+              <div><strong>TSH / Thyroid Panel Checked</strong> (Rule out hyperthyroidism / thyroiditis causing nocturnal tachycardia & insomnia)</div>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-ferritin-done">
+              <div><strong>Serum Ferritin Checked</strong> (Target &gt; 75 ng/mL to rule out Restless Legs Syndrome / Willis-Ekbom disease)</div>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-vitd-b12">
+              <div><strong>Vitamin D 25-OH &amp; B12 Levels Checked</strong> (Deficiencies associated with impaired circadian regulation)</div>
+            </label>
+
+            <strong style="font-size:0.9rem; color:var(--text-primary); margin-top:0.6rem;">Medication &amp; Substance Triggers Screener:</strong>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-caffeine" class="trigger-chk">
+              <div>Caffeine Intake past 2:00 PM (Blocks adenosine receptors)</div>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-alcohol" class="trigger-chk">
+              <div>Nightly Alcohol Use (Causes REM suppression, sleep fragmentation, &amp; 3 AM waking)</div>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-med-triggers" class="trigger-chk">
+              <div>Medication Triggers Present (Beta-blockers, Steroids, Decongestants, SSRIs, Stimulants, Late Diuretics)</div>
+            </label>
+          </div>
+
+          <!-- STOP-BANG Screener for OSA -->
+          <div class="stop-bang-box">
+            <strong style="font-size:0.95rem; color:var(--text-primary);">STOP-BANG Screener for Obstructive Sleep Apnea (OSA):</strong>
+            <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.5rem;">Check all that apply to screen for OSA:</div>
+            <div class="checkbox-group" style="gap:0.4rem;">
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>S:</strong> Loud Snoring (heard through closed doors)</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>T:</strong> Daytime Tiredness / Fatigue / Sleepiness</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>O:</strong> Observed Apnea (gasping or choking overnight)</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>P:</strong> High Blood Pressure / Treated Hypertension</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>B:</strong> Body Mass Index (BMI) &gt; 35 kg/m²</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>A:</strong> Age &gt; 50 years old</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>N:</strong> Neck Circumference &gt; 40 cm (16 inches)</label>
+              <label class="checkbox-label"><input type="checkbox" class="sb-chk"> <strong>G:</strong> Male Gender</label>
+            </div>
+
+            <div id="sb-score-output" class="alert alert-low" style="margin-top:0.75rem; padding:0.6rem 0.8rem;">
+              <!-- STOP-BANG Score Injected Here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Clinical Presentation & Patient Safety Profile -->
+        <div class="card">
+          <h2 class="card-title">2. Sleep Profile & Safety Selectors</h2>
+
+          <div class="form-group">
+            <label class="form-label">Insomnia Symptom Pattern</label>
+            <select id="sel-pattern" class="form-select">
+              <option value="onset">Sleep Onset Insomnia (Difficulty falling asleep > 30 mins)</option>
+              <option value="maint">Sleep Maintenance Insomnia (Frequent nocturnal awakenings / early waking)</option>
+              <option value="mixed" selected>Mixed Insomnia (Both Onset and Maintenance difficulty)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Patient Vulnerability / Special Population Profile</label>
+            <select id="sel-pop" class="form-select">
+              <option value="standard">Standard Adult Patient (Low fall & addiction risk)</option>
+              <option value="elderly">Geriatric Patient (≥ 65 yo) — BEERS Criteria Restrictions Apply</option>
+              <option value="substance_hx">History of Substance Use Disorder / Addiction Risk</option>
+              <option value="anxiety">Co-morbid Anxiety or Depression Present</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Output Panel -->
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        
+        <!-- Section 3: Non-Pharmacologic Guidance (CBT-I) -->
+        <div class="card">
+          <h2 class="card-title">3. Non-Pharmacologic Gold Standard: CBT-I Protocols</h2>
+          <div style="font-size:0.875rem; display:flex; flex-direction:column; gap:0.6rem; color:var(--text-secondary);">
+            <div style="background:var(--primary-light); padding:0.75rem; border-radius:var(--radius-md); color:var(--primary-text);">
+              <strong>First-Line Guideline Recommendation:</strong> Cognitive Behavioral Therapy for Insomnia (CBT-I) is recommended as initial treatment for ALL adult insomnia patients prior to or alongside pharmacotherapy.
+            </div>
+            <div>• <strong>Stimulus Control (20-Minute Rule):</strong> If unable to sleep after ~20 minutes, get out of bed immediately. Go to another dimly lit room and do a quiet activity (e.g. read paper book). Return to bed ONLY when drowsy. Bed is strictly for sleep &amp; sex.</div>
+            <div>• <strong>Sleep Restriction Therapy:</strong> Match time spent in bed to actual total sleep time (minimum 5.5 hours) to consolidate sleep drive. Gradually expand time in bed by 15 mins once sleep efficiency &gt; 85%.</div>
+            <div>• <strong>Sleep Hygiene Rules:</strong> Set a fixed wake-up time 7 days/week (no sleeping in on weekends). Avoid blue light screens 60 mins before bed. Keep bedroom cool (65–68°F) and pitch dark.</div>
+          </div>
+        </div>
+
+        <!-- Section 4: Medicine Bank & Tiered Therapy -->
+        <div class="card">
+          <h2 class="card-title">4. Pharmacotherapy Medicine Bank & Line of Therapy</h2>
+          <div id="sleep-meds-content">
+            <!-- Dynamic Med List Injected Here -->
+          </div>
+        </div>
+
+        <!-- Live EHR Note Summary -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+            <h3 style="font-size:1.1rem; font-weight:600;">EHR Note Summary</h3>
+            <button class="btn btn-secondary btn-sm" id="btn-copy-sleep">Copy Note to Clipboard</button>
+          </div>
+          <div class="copy-box" id="sleep-note">Generating clinical summary...</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Primary Care Decision Toolkit • Sourced from AASM Practice Guidelines & 2022 Lancet Network Meta-Analysis on Insomnia Pharmacotherapy</p>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeText = document.getElementById('theme-text');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      themeText.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    applyTheme(savedTheme);
+    themeToggleBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      applyTheme(cur === 'dark' ? 'light' : 'dark');
+    });
+
+    // Calculate STOP-BANG Score
+    function calcStopBang() {
+      const sbChks = document.querySelectorAll('.sb-chk');
+      let score = 0;
+      sbChks.forEach(chk => { if (chk.checked) score++; });
+
+      const out = document.getElementById('sb-score-output');
+      if (score >= 5) {
+        out.className = 'alert alert-high';
+        out.innerHTML = `<strong>STOP-BANG Score: ${score}/8 (HIGH OSA RISK)</strong><br>• HIGH probability of moderate-to-severe Obstructive Sleep Apnea.<br>• <strong>Action:</strong> Order Diagnostic Polysomnography (PSG / Home Sleep Test). Avoid central sedatives/hypnotics!`;
+      } else if (score >= 3) {
+        out.className = 'alert alert-int';
+        out.innerHTML = `<strong>STOP-BANG Score: ${score}/8 (Intermediate OSA Risk)</strong><br>• Moderate probability of Sleep Apnea. Evaluate clinical symptoms.`;
+      } else {
+        out.className = 'alert alert-low';
+        out.innerHTML = `<strong>STOP-BANG Score: ${score}/8 (Low OSA Risk)</strong><br>• Low probability of Obstructive Sleep Apnea.`;
+      }
+      return score;
+    }
+
+    function updateSleepMatrix() {
+      const sbScore = calcStopBang();
+      const pattern = document.getElementById('sel-pattern').value;
+      const pop = document.getElementById('sel-pop').value;
+      const tsh = document.getElementById('chk-tsh-done').checked;
+      const ferritin = document.getElementById('chk-ferritin-done').checked;
+      const vitd = document.getElementById('chk-vitd-b12').checked;
+      const caffeine = document.getElementById('chk-caffeine').checked;
+      const alcohol = document.getElementById('chk-alcohol').checked;
+      const medTrig = document.getElementById('chk-med-triggers').checked;
+
+      const medContent = document.getElementById('sleep-meds-content');
+
+      // Build Tiered Medicine Bank Recommendations
+      let medsHTML = '';
+
+      if (sbScore >= 5) {
+        medsHTML += `
+          <div class="alert alert-high" style="margin-top:0; margin-bottom:1rem;">
+            <strong>WARNING: HIGH OSA RISK (STOP-BANG ${sbScore}/8).</strong> Sedatives, Z-drugs, and Benzodiazepines can aggravate airway collapse and respiratory depression. Prioritize PSG Sleep Study &amp; CBT-I before prescribing sedatives.
+          </div>
+        `;
+      }
+
+      // Tier 1 Meds
+      medsHTML += `<div style="margin-bottom:1rem;"><span class="tier-badge tier-1">Tier 1: First-Line Preferred / Low Risk</span></div>`;
+
+      if (pattern === 'maint' || pattern === 'mixed') {
+        medsHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--risk-low);">
+            <strong>Dual Orexin Receptor Antagonists (DORAs) — Dayvigo (Lemborexant 5–10mg) / Quviviq (Daridorexant 25–50mg)</strong>
+            <div style="margin-top:0.35rem; font-size:0.875rem;">
+              • <strong>Indication:</strong> Preferred for Sleep Maintenance &amp; Mixed Insomnia.<br>
+              • <strong>Efficacy &amp; Safety:</strong> Excellent long-term efficacy without rebound insomnia or physical dependence. Preserves natural NREM/REM sleep architecture.<br>
+              • <strong>Geriatric Profile:</strong> Safe in elderly (non-anticholinergic, lower fall risk than Z-drugs/benzos).
+            </div>
+          </div>
+        `;
+      }
+
+      if (pattern === 'maint' || pop === 'elderly') {
+        medsHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--risk-low);">
+            <strong>Low-Dose Doxepin (Silenor) 3mg – 6mg bedtime</strong>
+            <div style="margin-top:0.35rem; font-size:0.875rem;">
+              • <strong>Indication:</strong> Preferred for Sleep Maintenance Insomnia in Elderly.<br>
+              • <strong>Efficacy &amp; Safety:</strong> Highly selective H1 antagonist at low doses (3-6mg) with ZERO anticholinergic burden. Non-controlled, zero abuse potential.
+            </div>
+          </div>
+        `;
+      }
+
+      if (pattern === 'onset' || pop === 'substance_hx') {
+        medsHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--risk-low);">
+            <strong>Melatonin Receptor Agonist — Ramelteon (Rozerem) 8mg bedtime</strong>
+            <div style="margin-top:0.35rem; font-size:0.875rem;">
+              • <strong>Indication:</strong> Sleep Onset Insomnia in patients with Substance Use History or Elderly.<br>
+              • <strong>Efficacy &amp; Safety:</strong> Selective MT1/MT2 agonist. Non-controlled, no abuse potential, no motor impairment or fall risk.
+            </div>
+          </div>
+        `;
+      }
+
+      if (pop === 'anxiety') {
+        medsHTML += `
+          <div class="check-list-item" style="border-left: 4px solid var(--risk-low);">
+            <strong>Trazodone 25mg – 50mg bedtime (Off-label)</strong>
+            <div style="margin-top:0.35rem; font-size:0.875rem;">
+              • <strong>Indication:</strong> Insomnia with co-morbid Anxiety or Depression.<br>
+              • <strong>Notes:</strong> Low cost, non-controlled. Monitor for orthostatic hypotension and rare priapism.
+            </div>
+          </div>
+        `;
+      }
+
+      // Tier 2 Meds
+      medsHTML += `<div style="margin-top:1.25rem; margin-bottom:0.75rem;"><span class="tier-badge tier-2">Tier 2: Second-Line Controlled Z-Drugs (Short-Term Only)</span></div>`;
+      medsHTML += `
+        <div class="check-list-item" style="border-left: 4px solid var(--risk-int);">
+          <strong>Non-Benzodiazepine Z-Drugs — Zolpidem (Ambien 5–10mg) / Eszopiclone (Lunesta 1–3mg)</strong>
+          <div style="margin-top:0.35rem; font-size:0.875rem;">
+            • <strong>Indication:</strong> Short-term refractory insomnia (< 2 to 4 weeks).<br>
+            • <strong style="color:var(--risk-high-text);">BLACK BOX WARNING:</strong> Risk of complex sleep behaviors (sleep-walking, sleep-driving, sleep-eating resulting in serious injury or death).<br>
+            • <strong>Beers Criteria Warning:</strong> Avoid in elderly (high risk of falls, delirium, and motor vehicle accidents). Max dose 5mg in females/elderly.
+          </div>
+        </div>
+      `;
+
+      // Tier 3 Meds
+      medsHTML += `<div style="margin-top:1.25rem; margin-bottom:0.75rem;"><span class="tier-badge tier-3">Tier 3: Disfavored / High Risk Agents</span></div>`;
+      medsHTML += `
+        <div class="check-list-item" style="border-left: 4px solid var(--risk-high);">
+          <strong>Benzodiazepines &amp; OTC Antihistamines (Diphenhydramine / Benadryl)</strong>
+          <div style="margin-top:0.35rem; font-size:0.875rem;">
+            • <strong>DISFAVORED:</strong> Benzodiazepines (Temazepam) carry high abuse, dependence, and fall risks.<br>
+            • <strong>OTC Antihistamines:</strong> Strong anticholinergic load causing urinary retention, dry mouth, cognitive decline/dementia risk, and rapid tachyphylaxis (tolerance within 3-4 days).
+          </div>
+        </div>
+      `;
+
+      medContent.innerHTML = medsHTML;
+
+      // Build EHR Note
+      const note = `SLEEP-AID & INSOMNIA MANAGEMENT CLINICAL DECISION NOTE
+--------------------------------------------------
+WORKUP & SECONDARY CAUSE SCREENING:
+- Diagnostic Labs Completed: TSH=${tsh ? 'Yes' : 'Pending'}, Ferritin=${ferritin ? 'Yes (Target > 75 ng/mL)' : 'Pending'}, Vit D/B12=${vitd ? 'Yes' : 'Pending'}
+- STOP-BANG OSA Screener: Score ${sbScore}/8 (${sbScore >= 5 ? 'HIGH OSA RISK - PSG Sleep Study Recommended' : 'Low/Mod Risk'})
+- Triggers Screened: Late Caffeine=${caffeine ? 'YES' : 'No'}, Alcohol=${alcohol ? 'YES' : 'No'}, Med Triggers=${medTrig ? 'YES' : 'No'}
+
+SLEEP PROFILE & SPECIAL POPULATION:
+- Symptom Pattern: ${document.getElementById('sel-pattern').options[document.getElementById('sel-pattern').selectedIndex].text}
+- Patient Profile: ${document.getElementById('sel-pop').options[document.getElementById('sel-pop').selectedIndex].text}
+
+NON-PHARMACOLOGIC PLAN (CBT-I FIRST LINE):
+- Stimulus Control: Educated on 20-minute rule (leave bed if awake >20 mins; bed for sleep/sex only).
+- Sleep Hygiene: Fixed wake-up time 7 days/wk, no screens 60m before bed, cool dark room (65-68F).
+
+PHARMACOTHERAPY PLAN:
+- Selected Agent: ${pattern === 'maint' || pattern === 'mixed' ? 'Lemborexant (Dayvigo) 5-10mg OR Low-Dose Doxepin 3-6mg' : 'Ramelteon 8mg OR Lemborexant 5mg'}
+- Line of Therapy: Tier 1 Preferred non-controlled / low abuse potential agent.
+- Z-drug / Benzo Policy: Disfavored / Avoided due to fall and complex sleep behavior risks.`;
+
+      document.getElementById('sleep-note').textContent = note;
+    }
+
+    // Listeners
+    document.querySelectorAll('.sb-chk').forEach(chk => chk.addEventListener('change', updateSleepMatrix));
+    document.getElementById('sel-pattern').addEventListener('change', updateSleepMatrix);
+    document.getElementById('sel-pop').addEventListener('change', updateSleepMatrix);
+    document.getElementById('chk-tsh-done').addEventListener('change', updateSleepMatrix);
+    document.getElementById('chk-ferritin-done').addEventListener('change', updateSleepMatrix);
+    document.getElementById('chk-vitd-b12').addEventListener('change', updateSleepMatrix);
+    document.querySelectorAll('.trigger-chk').forEach(chk => chk.addEventListener('change', updateSleepMatrix));
+
+    document.getElementById('btn-copy-sleep').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('sleep-note').textContent).then(() => {
+        alert('Sleep-Aid Clinical Note copied to clipboard!');
+      });
+    });
+
+    // Init
+    updateSleepMatrix();
+  </script>
+</body>
+</html>
